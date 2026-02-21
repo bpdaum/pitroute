@@ -13,7 +13,7 @@ async function geocode(address: string): Promise<{ lat: number; lng: number } | 
     try {
         const res = await axios.get('https://nominatim.openstreetmap.org/search', {
             params: { q: address, format: 'json', limit: 1 },
-            headers: { 'User-Agent': 'CookrBBQApp/1.0 (dev@cookr.app)' }
+            headers: { 'User-Agent': 'PitRouteBBQ/1.0 (dev@pitroute.io)' }
         });
         if (res.data && res.data.length > 0) {
             return { lat: parseFloat(res.data[0].lat), lng: parseFloat(res.data[0].lon) };

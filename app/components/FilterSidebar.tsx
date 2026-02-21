@@ -36,9 +36,9 @@ export function FilterSidebar({ filters, onChange, eventCount }: Props) {
     return (
         <aside className="w-72 shrink-0 flex flex-col bg-zinc-900 border-r border-zinc-800 overflow-hidden">
             {/* Header */}
-            <div className="p-5 border-b border-zinc-800">
-                <h1 className="font-bebas text-4xl tracking-widest text-white leading-none">COOKR</h1>
-                <p className="text-xs text-zinc-500 mt-1">BBQ Competition Finder</p>
+            <div className="px-5 pt-6 pb-4 border-b border-zinc-800">
+                <h1 className="font-bebas text-4xl tracking-widest text-white leading-none">PITROUTE.IO</h1>
+                <p className="text-[10px] text-zinc-600 mt-0.5 uppercase tracking-widest">BBQ Competition Finder</p>
             </div>
 
             {/* Filters */}

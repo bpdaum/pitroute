@@ -14,7 +14,7 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "Cookr — BBQ Competition Finder",
+  title: "PitRoute.io — BBQ Competition Finder",
   description: "Find BBQ competitions near you from KCBS, MBN, SCA, FBA, and IBCA — all in one place.",
 };
 

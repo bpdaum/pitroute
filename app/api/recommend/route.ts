@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
     }
 
     const now = new Date();
-    // Search the next 180 days of events, regardless of trip length
+    // Search the next 180 days of events
     const horizon = new Date(now);
     horizon.setDate(horizon.getDate() + 180);
 
@@ -80,83 +80,175 @@ export async function GET(req: NextRequest) {
         .sort((a: EventWithDist, b: EventWithDist) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     if (reachable.length === 0) {
-        return NextResponse.json({ stops: [], totalMiles: 0, totalDriveHours: 0, returnMiles: 0, returnHours: 0, tripDays, maxOneWayMiles: Math.round(maxOneWayMiles) });
+        return NextResponse.json({
+            stops: [], totalMiles: 0, totalDriveHours: 0, returnMiles: 0, returnHours: 0,
+            tripDays, maxOneWayMiles: Math.round(maxOneWayMiles), totalReachableCount: 0, totalPurse: 0
+        });
     }
 
-    // Find the first "weekend cluster": group events that fall within `tripDays` of each other
-    // Start from the nearest-date reachable event and greedily collect events
-    // that can be chained within the trip duration
-    const firstEvent = reachable[0];
-    const tripWindowEnd = new Date(firstEvent.date);
-    tripWindowEnd.setDate(tripWindowEnd.getDate() + tripDays - 1);
+    let bestRoute: RecommendedStop[] = [];
+    let bestTotalPurse: number = -1;
+    let bestTotalMiles: number = Infinity;
 
-    // Collect all events in this cluster window
-    const clusterEvents = reachable.filter(
-        e => new Date(e.date) >= new Date(firstEvent.date) && new Date(e.date) <= tripWindowEnd
-    );
+    // Helper to evaluate a path
+    function evaluatePath(path: RecommendedStop[], totalPurse: number) {
+        // Calculate total miles including return
+        const lastStop = path[path.length - 1];
+        const returnMiles = haversine(lastStop.event.latitude, lastStop.event.longitude, lat, lng);
+        const pathMiles = path.reduce((sum, stop) => sum + stop.driveFromPrevMiles, 0) + returnMiles;
 
-    // Greedy route within the cluster: nearest-neighbor from user location
-    const visited = new Set<string>();
-    const route: RecommendedStop[] = [];
-    let currentLat = lat;
-    let currentLng = lng;
+        // Scoring rules:
+        // 1. Higher total purse wins
+        // 2. If purses are equal, the path with MORE stops wins (we want to encourage multi-stop trips)
+        // 3. If purses and stops are equal, the path with FEWER miles wins
 
-    while (true) {
-        let best: (typeof clusterEvents)[0] | null = null;
-        let bestDist = Infinity;
+        const isBetterPurse = totalPurse > bestTotalPurse;
+        const isEqualPurse = totalPurse === bestTotalPurse;
+        const isMoreStops = path.length > bestRoute.length;
+        const isEqualStops = path.length === bestRoute.length;
+        const isFewerMiles = pathMiles < bestTotalMiles;
 
-        for (const event of clusterEvents) {
-            if (visited.has(event.id)) continue;
-            const dist = haversine(currentLat, currentLng, event.latitude!, event.longitude!);
-            if (dist < bestDist) {
-                best = event;
-                bestDist = dist;
+        if (
+            isBetterPurse ||
+            (isEqualPurse && isMoreStops) ||
+            (isEqualPurse && isEqualStops && isFewerMiles)
+        ) {
+            bestTotalPurse = totalPurse;
+            bestTotalMiles = pathMiles;
+            bestRoute = [...path];
+        }
+    }
+
+    // DFS to explore valid paths within a specific trip window
+    function dfs(
+        currentIndex: number,
+        currentPath: RecommendedStop[],
+        currentPurse: number,
+        windowEndDate: Date,
+        clusterEvents: EventWithDist[]
+    ) {
+        evaluatePath(currentPath, currentPurse);
+
+        const currentEvent = currentPath[currentPath.length - 1].event;
+        const currentDate = new Date(currentEvent.date);
+
+        for (let i = currentIndex + 1; i < clusterEvents.length; i++) {
+            const nextEvent = clusterEvents[i];
+            const nextDate = new Date(nextEvent.date);
+
+            // Constraint: Must be on or after current date (allow same day if different event IDs, and sorted by date naturally)
+            // Constraint: Must be within the trip window
+            if (nextDate.getTime() >= currentDate.getTime() && nextDate.getTime() <= windowEndDate.getTime()) {
+                const distMiles = haversine(
+                    currentEvent.latitude, currentEvent.longitude,
+                    nextEvent.latitude!, nextEvent.longitude!
+                );
+
+                // Optional constraint: limit daily drive time between events (e.g. max 8 hours)
+                if (distMiles / AVG_MPH <= MAX_DRIVE_HOURS_PER_DAY) {
+                    currentPath.push({
+                        event: {
+                            id: nextEvent.id,
+                            name: nextEvent.name,
+                            date: nextEvent.date.toISOString(),
+                            locationAddress: nextEvent.locationAddress,
+                            latitude: nextEvent.latitude!,
+                            longitude: nextEvent.longitude!,
+                            purseAmount: nextEvent.purseAmount,
+                            detailsUrl: nextEvent.detailsUrl,
+                            organization: nextEvent.organization,
+                        },
+                        driveFromPrevMiles: Math.round(distMiles),
+                        driveFromPrevHours: Math.round((distMiles / AVG_MPH) * 10) / 10,
+                        dayOfTrip: currentPath.length + 1,
+                        arrivalDate: nextEvent.date.toISOString(),
+                    });
+
+                    dfs(
+                        i,
+                        currentPath,
+                        currentPurse + (nextEvent.purseAmount || 0),
+                        windowEndDate,
+                        clusterEvents
+                    );
+
+                    currentPath.pop();
+                }
             }
         }
-
-        if (!best) break;
-
-        visited.add(best.id);
-        const driveHours = bestDist / AVG_MPH;
-
-        route.push({
-            event: {
-                id: best.id,
-                name: best.name,
-                date: best.date.toISOString(),
-                locationAddress: best.locationAddress,
-                latitude: best.latitude!,
-                longitude: best.longitude!,
-                purseAmount: best.purseAmount,
-                detailsUrl: best.detailsUrl,
-                organization: best.organization,
-            },
-            driveFromPrevMiles: Math.round(bestDist),
-            driveFromPrevHours: Math.round(driveHours * 10) / 10,
-            dayOfTrip: route.length + 1,
-            arrivalDate: best.date.toISOString(),
-        });
-
-        currentLat = best.latitude!;
-        currentLng = best.longitude!;
     }
 
-    const returnMiles = haversine(currentLat, currentLng, lat, lng);
-    const returnHours = returnMiles / AVG_MPH;
-    const totalMiles = route.reduce((s, r) => s + r.driveFromPrevMiles, 0) + Math.round(returnMiles);
-    const totalDriveHours = route.reduce((s, r) => s + r.driveFromPrevHours, 0) + Math.round(returnHours * 10) / 10;
+    // Sliding window: Use every reachable event as a potential starting point
+    for (let i = 0; i < reachable.length; i++) {
+        const startEvent = reachable[i];
 
-    // Also return count of total reachable competitions across all 180 days
+        // Window ends tripDays - 1 after the start event
+        const windowEnd = new Date(startEvent.date);
+        windowEnd.setDate(windowEnd.getDate() + tripDays - 1);
+
+        // Optimization: Only cluster events within this potential window to reduce inner loop size
+        // AND ensuring we include all events even ones on the same date as our start event
+        const clusterEvents = reachable.filter(
+            e => new Date(e.date).getTime() >= new Date(startEvent.date).getTime() &&
+                new Date(e.date).getTime() <= windowEnd.getTime()
+        );
+
+        // Find index of startEvent in clusterEvents
+        const clusterStartIndex = clusterEvents.findIndex(e => e.id === startEvent.id);
+
+        const initialMiles = haversine(lat, lng, startEvent.latitude!, startEvent.longitude!);
+        const initialPath: RecommendedStop[] = [{
+            event: {
+                id: startEvent.id,
+                name: startEvent.name,
+                date: startEvent.date.toISOString(),
+                locationAddress: startEvent.locationAddress,
+                latitude: startEvent.latitude!,
+                longitude: startEvent.longitude!,
+                purseAmount: startEvent.purseAmount,
+                detailsUrl: startEvent.detailsUrl,
+                organization: startEvent.organization,
+            },
+            driveFromPrevMiles: Math.round(initialMiles),
+            driveFromPrevHours: Math.round((initialMiles / AVG_MPH) * 10) / 10,
+            dayOfTrip: 1,
+            arrivalDate: startEvent.date.toISOString(),
+        }];
+
+        dfs(
+            clusterStartIndex,
+            initialPath,
+            (startEvent.purseAmount || 0),
+            windowEnd,
+            clusterEvents
+        );
+    }
+
+
+    let finalReturnMiles = 0;
+    let finalReturnHours = 0;
+    let finalTotalMiles = 0;
+    let finalTotalDriveHours = 0;
+
+    if (bestRoute.length > 0) {
+        const lastStop = bestRoute[bestRoute.length - 1];
+        finalReturnMiles = haversine(lastStop.event.latitude, lastStop.event.longitude, lat, lng);
+        finalReturnHours = finalReturnMiles / AVG_MPH;
+        finalTotalMiles = bestRoute.reduce((s, r) => s + r.driveFromPrevMiles, 0) + Math.round(finalReturnMiles);
+        finalTotalDriveHours = bestRoute.reduce((s, r) => s + r.driveFromPrevHours, 0) + Math.round(finalReturnHours * 10) / 10;
+    }
+
     const totalReachableCount = reachable.length;
 
     return NextResponse.json({
-        stops: route,
-        totalMiles: Math.round(totalMiles),
-        totalDriveHours: Math.round(totalDriveHours * 10) / 10,
-        returnMiles: Math.round(returnMiles),
-        returnHours: Math.round(returnHours * 10) / 10,
+        stops: bestRoute,
+        totalMiles: Math.round(finalTotalMiles),
+        totalDriveHours: Math.round(finalTotalDriveHours * 10) / 10,
+        returnMiles: Math.round(finalReturnMiles),
+        returnHours: Math.round(finalReturnHours * 10) / 10,
         tripDays,
         maxOneWayMiles: Math.round(maxOneWayMiles),
         totalReachableCount,
+        totalPurse: bestTotalPurse > -1 ? bestTotalPurse : 0
     });
 }

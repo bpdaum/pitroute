@@ -21,6 +21,7 @@ interface TripResult {
     tripDays: number;
     maxOneWayMiles: number;
     totalReachableCount: number;
+    totalPurse: number;
 }
 
 const TRIP_PRESETS = [
@@ -207,7 +208,7 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
     }
 
     // ─── ITINERARY RESULT ─────────────────────────────────────────────────────
-    const { stops, totalMiles, totalDriveHours, returnMiles, returnHours } = result;
+    const { stops, totalMiles, totalDriveHours, returnMiles, returnHours, totalPurse } = result;
 
     return (
         <div className="flex flex-col h-full overflow-hidden">
@@ -230,6 +231,15 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                 </div>
                 {stops.length > 0 ? (
                     <div className="flex gap-4 flex-wrap">
+                        {totalPurse > 0 && (
+                            <>
+                                <div className="flex items-center gap-1.5">
+                                    <span className="text-xl font-bebas tracking-wider text-emerald-400">${totalPurse.toLocaleString()}</span>
+                                    <span className="text-[10px] text-zinc-600 uppercase tracking-wider">potential winnings</span>
+                                </div>
+                                <div className="w-px bg-zinc-800" />
+                            </>
+                        )}
                         <div className="flex items-center gap-1.5">
                             <span className="text-xl font-bebas tracking-wider text-white">{stops.length}</span>
                             <span className="text-[10px] text-zinc-600 uppercase tracking-wider">stops this trip</span>
