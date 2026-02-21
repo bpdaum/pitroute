@@ -43,27 +43,34 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const lat = parseFloat(searchParams.get('lat') ?? '');
     const lng = parseFloat(searchParams.get('lng') ?? '');
-    const tripDays = parseInt(searchParams.get('days') ?? '3');
+    const startDateParam = searchParams.get('startDate');
+    const endDateParam = searchParams.get('endDate');
 
-    if (isNaN(lat) || isNaN(lng)) {
-        return NextResponse.json({ error: 'lat and lng are required' }, { status: 400 });
+    if (isNaN(lat) || isNaN(lng) || !startDateParam || !endDateParam) {
+        return NextResponse.json({ error: 'lat, lng, startDate, and endDate are required' }, { status: 400 });
     }
 
-    const now = new Date();
-    // Search the next 180 days of events
-    const horizon = new Date(now);
-    horizon.setDate(horizon.getDate() + 180);
+    const startWindow = new Date(startDateParam);
+    startWindow.setHours(0, 0, 0, 0);
+    const endWindow = new Date(endDateParam);
+    endWindow.setHours(23, 59, 59, 999);
+
+    if (endWindow.getTime() < startWindow.getTime()) {
+        return NextResponse.json({ error: 'endDate must be after startDate' }, { status: 400 });
+    }
+
+    const tripDays = Math.max(1, Math.ceil((endWindow.getTime() - startWindow.getTime()) / (1000 * 60 * 60 * 24)));
 
     // Max one-way drive distance based on trip length
     const maxOneWayHours = tripDaysToOneWayHours(tripDays);
     const maxOneWayMiles = maxOneWayHours * AVG_MPH;
 
-    // Fetch all upcoming geocoded events
+    // Fetch all upcoming geocoded events within exact window
     const allEvents = await prisma.event.findMany({
         where: {
             latitude: { not: null },
             longitude: { not: null },
-            date: { gte: now, lte: horizon },
+            date: { gte: startWindow, lte: endWindow },
         },
         include: { organization: { select: { name: true } } },
         orderBy: { date: 'asc' },
@@ -101,7 +108,6 @@ export async function GET(req: NextRequest) {
         // 1. Higher total purse wins
         // 2. If purses are equal, the path with MORE stops wins (we want to encourage multi-stop trips)
         // 3. If purses and stops are equal, the path with FEWER miles wins
-
         const isBetterPurse = totalPurse > bestTotalPurse;
         const isEqualPurse = totalPurse === bestTotalPurse;
         const isMoreStops = path.length > bestRoute.length;
@@ -123,22 +129,19 @@ export async function GET(req: NextRequest) {
     function dfs(
         currentIndex: number,
         currentPath: RecommendedStop[],
-        currentPurse: number,
-        windowEndDate: Date,
-        clusterEvents: EventWithDist[]
+        currentPurse: number
     ) {
         evaluatePath(currentPath, currentPurse);
 
         const currentEvent = currentPath[currentPath.length - 1].event;
         const currentDate = new Date(currentEvent.date);
 
-        for (let i = currentIndex + 1; i < clusterEvents.length; i++) {
-            const nextEvent = clusterEvents[i];
+        for (let i = currentIndex + 1; i < reachable.length; i++) {
+            const nextEvent = reachable[i];
             const nextDate = new Date(nextEvent.date);
 
-            // Constraint: Must be on or after current date (allow same day if different event IDs, and sorted by date naturally)
-            // Constraint: Must be within the trip window
-            if (nextDate.getTime() >= currentDate.getTime() && nextDate.getTime() <= windowEndDate.getTime()) {
+            // Constraint: Must be on or after current date 
+            if (nextDate.getTime() >= currentDate.getTime()) {
                 const distMiles = haversine(
                     currentEvent.latitude, currentEvent.longitude,
                     nextEvent.latitude!, nextEvent.longitude!
@@ -167,9 +170,7 @@ export async function GET(req: NextRequest) {
                     dfs(
                         i,
                         currentPath,
-                        currentPurse + (nextEvent.purseAmount || 0),
-                        windowEndDate,
-                        clusterEvents
+                        currentPurse + (nextEvent.purseAmount || 0)
                     );
 
                     currentPath.pop();
@@ -178,24 +179,10 @@ export async function GET(req: NextRequest) {
         }
     }
 
-    // Sliding window: Use every reachable event as a potential starting point
+    // Since the window is strictly defined by the user (startDate to endDate)
+    // We treat every event as a potential starting point for the route
     for (let i = 0; i < reachable.length; i++) {
         const startEvent = reachable[i];
-
-        // Window ends tripDays - 1 after the start event
-        const windowEnd = new Date(startEvent.date);
-        windowEnd.setDate(windowEnd.getDate() + tripDays - 1);
-
-        // Optimization: Only cluster events within this potential window to reduce inner loop size
-        // AND ensuring we include all events even ones on the same date as our start event
-        const clusterEvents = reachable.filter(
-            e => new Date(e.date).getTime() >= new Date(startEvent.date).getTime() &&
-                new Date(e.date).getTime() <= windowEnd.getTime()
-        );
-
-        // Find index of startEvent in clusterEvents
-        const clusterStartIndex = clusterEvents.findIndex(e => e.id === startEvent.id);
-
         const initialMiles = haversine(lat, lng, startEvent.latitude!, startEvent.longitude!);
         const initialPath: RecommendedStop[] = [{
             event: {
@@ -216,14 +203,11 @@ export async function GET(req: NextRequest) {
         }];
 
         dfs(
-            clusterStartIndex,
+            i,
             initialPath,
-            (startEvent.purseAmount || 0),
-            windowEnd,
-            clusterEvents
+            (startEvent.purseAmount || 0)
         );
     }
-
 
     let finalReturnMiles = 0;
     let finalReturnHours = 0;

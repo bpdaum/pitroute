@@ -25,13 +25,7 @@ interface TripResult {
     totalPurse: number;
 }
 
-const TRIP_PRESETS = [
-    { label: "Day Trip", days: 1, icon: "☀️", desc: "1 day" },
-    { label: "Weekend", days: 3, icon: "⚡", desc: "3 days" },
-    { label: "Long Weekend", days: 5, icon: "🔥", desc: "5 days" },
-    { label: "Full Week", days: 7, icon: "💪", desc: "7 days" },
-    { label: "Two Weeks", days: 14, icon: "🏆", desc: "14 days" },
-];
+
 
 function formatHours(h: number) {
     if (h < 1) return `${Math.round(h * 60)}m`;
@@ -49,7 +43,15 @@ interface Props {
 export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChange }: Props) {
     const [locationQuery, setLocationQuery] = useState("");
     const [userCoords, setUserCoords] = useState<{ lat: number; lng: number; label: string } | null>(null);
-    const [tripDayIdx, setTripDayIdx] = useState(1); // default: Weekend
+    const [startDate, setStartDate] = useState(() => {
+        const d = new Date();
+        return d.toISOString().split("T")[0];
+    });
+    const [endDate, setEndDate] = useState(() => {
+        const d = new Date();
+        d.setDate(d.getDate() + 3);
+        return d.toISOString().split("T")[0];
+    });
     const [loading, setLoading] = useState(false);
     const [geoLoading, setGeoLoading] = useState(false);
     const [result, setResult] = useState<TripResult | null>(null);
@@ -57,8 +59,6 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
     const { data: session } = useSession();
     const [isSaving, setIsSaving] = useState(false);
     const [saveSuccess, setSaveSuccess] = useState(false);
-
-    const tripPreset = TRIP_PRESETS[tripDayIdx];
 
     async function geocodeLocation(query: string) {
         const res = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
@@ -102,7 +102,7 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
         setError("");
         setResult(null);
         try {
-            const url = `/api/recommend?lat=${coords.lat}&lng=${coords.lng}&days=${tripPreset.days}`;
+            const url = `/api/recommend?lat=${coords.lat}&lng=${coords.lng}&startDate=${startDate}&endDate=${endDate}`;
             const res = await fetch(url);
             const data: TripResult = await res.json();
             setResult(data);
@@ -171,26 +171,25 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                     {/* Trip length */}
                     <div>
                         <label className="block text-[10px] uppercase tracking-widest text-zinc-600 mb-1.5 text-left">
-                            How long can you go?
+                            When are you travelling?
                         </label>
-                        <div className="grid grid-cols-5 gap-1.5">
-                            {TRIP_PRESETS.map((p, i) => (
-                                <button
-                                    key={p.label}
-                                    onClick={() => setTripDayIdx(i)}
-                                    className={`flex flex-col items-center gap-0.5 py-2.5 px-1 rounded-xl border text-xs font-medium transition-all ${i === tripDayIdx
-                                        ? "bg-orange-500 border-orange-500 text-white"
-                                        : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white"
-                                        }`}
-                                >
-                                    <span className="text-base">{p.icon}</span>
-                                    <span className="leading-tight text-center" style={{ fontSize: "10px" }}>{p.label}</span>
-                                </button>
-                            ))}
+                        <div className="flex gap-2">
+                            <input
+                                type="date"
+                                value={startDate}
+                                onChange={e => setStartDate(e.target.value)}
+                                className="flex-1 bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors"
+                            />
+                            <span className="flex items-center text-zinc-600 font-bold">→</span>
+                            <input
+                                type="date"
+                                value={endDate}
+                                min={startDate}
+                                onChange={e => setEndDate(e.target.value)}
+                                className="flex-1 bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors"
+                            />
                         </div>
                     </div>
-
-                    {/* Start date removed — API now auto-finds next available */}
 
                     {error && <p className="text-red-400 text-xs text-left">{error}</p>}
 
@@ -246,7 +245,7 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                     <div>
                         <p className="text-xs text-zinc-500">
                             Trip from <span className="text-zinc-300 font-medium">{userCoords?.label}</span>
-                            {" "}· {tripPreset.label}
+                            {" "}· {result.tripDays} days
                             {stops.length > 0 && <> · first event {new Date(stops[0].arrivalDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</>}
                         </p>
                     </div>
