@@ -116,7 +116,33 @@ function Directions({ routeStops, userCoords, onRouteCalculated }: { routeStops?
 
 export function EventMap({ events, onSelectEvent, routeStops, userCoords }: Props) {
     const [routeMeta, setRouteMeta] = useState<RouteMeta | null>(null);
-    const mappable = events.filter(e => e.latitude && e.longitude);
+    const rawMappable = events.filter(e => e.latitude && e.longitude);
+
+    // Group identical coordinates to offset markers so they don't overlap completely
+    const groupedByLocation: Record<string, typeof rawMappable> = {};
+    rawMappable.forEach(e => {
+        const key = `${e.latitude},${e.longitude}`;
+        if (!groupedByLocation[key]) groupedByLocation[key] = [];
+        groupedByLocation[key].push(e);
+    });
+
+    const mappable: typeof rawMappable = [];
+    Object.values(groupedByLocation).forEach((eventsAtLoc) => {
+        if (eventsAtLoc.length === 1) {
+            mappable.push(eventsAtLoc[0]);
+        } else {
+            const total = eventsAtLoc.length;
+            const RADIUS_DEG = 0.00015; // ~50 feet offset
+            eventsAtLoc.forEach((e, i) => {
+                const angle = (Math.PI * 2 * i) / total;
+                mappable.push({
+                    ...e,
+                    latitude: e.latitude! + Math.cos(angle) * RADIUS_DEG,
+                    longitude: e.longitude! + Math.sin(angle) * RADIUS_DEG,
+                });
+            });
+        }
+    });
     const routeEventIds = new Set(routeStops?.map(s => s.event.id) ?? []);
 
     // We must provide an API key. For safety, it should come from env, but we'll accept NEXT_PUBLIC_GOOGLE_MAPS_API_KEY

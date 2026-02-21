@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 
 import { EventMap } from "./components/EventMap";
 
-const TripPlanner = dynamic(() => import("./components/TripPlanner").then(mod => mod.TripPlanner), { ssr: false });
+import { TripPlanner } from "./components/TripPlanner";
 
 type Tab = "plan" | "map" | "calendar" | "list" | "saved";
 
@@ -44,6 +44,9 @@ export default function Home() {
 
   const { data: session } = useSession();
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   // Filtering State
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedOrgs, setSelectedOrgs] = useState<string[]>([]);
@@ -57,9 +60,7 @@ export default function Home() {
 
   function handleRouteGenerated(stops: RouteStop[]) {
     setRouteStops(stops);
-    if (stops.length > 0) {
-      setTimeout(() => setActiveTab("map"), 800);
-    }
+    // Don't switch tabs anymore, keep them on the planner to see the timeline!
   }
 
   function toggleOrg(org: string) {
@@ -94,6 +95,8 @@ export default function Home() {
       return true;
     });
   }, [allEvents, searchQuery, selectedOrgs, minPurse]);
+
+  if (!mounted) return <div className="bg-zinc-950 min-h-screen" />;
 
   return (
     <div className="flex h-screen overflow-hidden bg-zinc-950">
@@ -223,9 +226,9 @@ export default function Home() {
           )}
         </div>
 
-        <div className="flex flex-1 overflow-hidden">
-          <div className="flex-1 overflow-hidden">
-            {activeTab === "plan" && (
+        <div className="flex flex-1 overflow-hidden relative">
+          {activeTab === "plan" && (
+            <div className="w-[420px] shrink-0 border-r border-zinc-800 bg-zinc-950 flex flex-col h-full z-10 shadow-2xl overflow-hidden relative">
               <TripPlanner
                 onRouteGenerated={(stops) => {
                   handleRouteGenerated(stops as RouteStop[]);
@@ -233,14 +236,19 @@ export default function Home() {
                 onSelectEvent={e => { setSelectedEvent(e); }}
                 onUserCoordsChange={setUserCoords}
               />
-            )}
-            {activeTab === "map" && (
-              <EventMap
-                events={filteredEvents}
-                onSelectEvent={setSelectedEvent}
-                routeStops={routeStops}
-                userCoords={userCoords}
-              />
+            </div>
+          )}
+
+          <div className="flex-1 overflow-hidden bg-zinc-950 relative">
+            {(activeTab === "map" || activeTab === "plan") && (
+              <div className="absolute inset-0">
+                <EventMap
+                  events={filteredEvents}
+                  onSelectEvent={setSelectedEvent}
+                  routeStops={routeStops}
+                  userCoords={userCoords}
+                />
+              </div>
             )}
             {activeTab === "calendar" && (
               <EventCalendar events={filteredEvents} onSelectEvent={setSelectedEvent} />
@@ -265,6 +273,7 @@ export default function Home() {
                   const firstStop = routeData.stops[0];
                   setUserCoords({ lat: firstStop.event.latitude, lng: firstStop.event.longitude });
                 }
+                setActiveTab("plan");
               }} />
             )}
           </div>
