@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import { APIProvider, Map, useMap, useMapsLibrary, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 import { EventItem, getOrgColor, OrgBadge } from "./EventCard";
 
@@ -25,19 +25,19 @@ function Directions({ routeStops, userCoords, onRouteCalculated }: { routeStops?
     const routesLibrary = useMapsLibrary('routes');
     const [directionsService, setDirectionsService] = useState<google.maps.DirectionsService | null>(null);
     const [directionsRenderer, setDirectionsRenderer] = useState<google.maps.DirectionsRenderer | null>(null);
+    const polylinesRef = useRef<google.maps.Polyline[]>([]);
+
+    // A vivid palette of colors to cycle through for each leg of the trip
+    const LEG_COLORS = ["#EC4899", "#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#14B8A6"];
 
     useEffect(() => {
         if (!routesLibrary || !map) return;
         setDirectionsService(new routesLibrary.DirectionsService());
-        // Configure renderer to NOT show default markers since we draw our own
+        // Configure renderer to NOT show default markers OR the default single-color line
         setDirectionsRenderer(new routesLibrary.DirectionsRenderer({
             map,
             suppressMarkers: true,
-            polylineOptions: {
-                strokeColor: "#FF5C00",
-                strokeWeight: 4,
-                strokeOpacity: 0.8
-            }
+            suppressPolylines: true, // We will draw our own multi-colored lines
         }));
     }, [routesLibrary, map]);
 
@@ -61,15 +61,42 @@ function Directions({ routeStops, userCoords, onRouteCalculated }: { routeStops?
         }).then(response => {
             directionsRenderer.setDirections(response);
 
-            // Extract total time and distance
+            // Clear any previously painted polylines before drawing new ones
+            polylinesRef.current.forEach(poly => poly.setMap(null));
+            polylinesRef.current = [];
+
+            // Extract sequence data and draw custom multi-colored legs
             if (response.routes && response.routes.length > 0) {
                 const route = response.routes[0];
                 let totalSeconds = 0;
                 let totalMeters = 0;
-                route.legs.forEach(leg => {
+
+                route.legs.forEach((leg, index) => {
+                    // Accumulate meta info
                     totalSeconds += leg.duration?.value || 0;
                     totalMeters += leg.distance?.value || 0;
+
+                    // Extract all coordinates in this specific leg
+                    const legPath: google.maps.LatLng[] = [];
+                    leg.steps.forEach(step => {
+                        step.path.forEach(point => legPath.push(point));
+                    });
+
+                    // Determine repeating color for the leg
+                    const color = LEG_COLORS[index % LEG_COLORS.length];
+
+                    // Draw the custom leg
+                    const polyline = new google.maps.Polyline({
+                        path: legPath,
+                        strokeColor: color,
+                        strokeWeight: 5,
+                        strokeOpacity: 0.9,
+                        map: map
+                    });
+
+                    polylinesRef.current.push(polyline);
                 });
+
                 onRouteCalculated({ totalSeconds, totalMeters });
             }
 
@@ -77,7 +104,12 @@ function Directions({ routeStops, userCoords, onRouteCalculated }: { routeStops?
             console.error("Directions request failed", e);
         });
 
-    }, [directionsService, directionsRenderer, userCoords, routeStops, onRouteCalculated]);
+        // Cleanup function for when component unmounts or inputs change
+        return () => {
+            polylinesRef.current.forEach(poly => poly.setMap(null));
+        };
+
+    }, [directionsService, directionsRenderer, userCoords, routeStops, onRouteCalculated, map]);
 
     return null;
 }
