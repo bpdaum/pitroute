@@ -13,10 +13,10 @@ export async function GET(req: NextRequest) {
             ...(orgs && orgs.length > 0
                 ? { organization: { name: { in: orgs } } }
                 : {}),
-            ...(from || to
+            ...(from || to || !from
                 ? {
                     date: {
-                        ...(from ? { gte: new Date(from) } : {}),
+                        ...(from ? { gte: new Date(from) } : { gte: new Date(new Date().setHours(0, 0, 0, 0)) }),
                         ...(to ? { lte: new Date(to) } : {}),
                     },
                 }

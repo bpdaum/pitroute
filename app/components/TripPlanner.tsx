@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import { getOrgColor, OrgBadge } from "./EventCard";
 import type { EventItem } from "./EventCard";
@@ -129,6 +129,10 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
         }
     }
 
+    const todayString = useMemo(() => {
+        return new Date().toISOString().split("T")[0];
+    }, []);
+
     // ─── HERO (no result yet) ─────────────────────────────────────────────────
     if (!result) {
         return (
@@ -177,6 +181,7 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                             <input
                                 type="date"
                                 value={startDate}
+                                min={todayString}
                                 onChange={e => setStartDate(e.target.value)}
                                 className="flex-1 bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors"
                             />

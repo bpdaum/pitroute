@@ -52,14 +52,20 @@ export async function GET(req: NextRequest) {
 
     const startWindow = new Date(startDateParam);
     startWindow.setHours(0, 0, 0, 0);
+
+    // Enforce "today" as the absolute minimum bound so historical routes can't be planned
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const windowStartBounded = new Date(Math.max(startWindow.getTime(), today.getTime()));
+
     const endWindow = new Date(endDateParam);
     endWindow.setHours(23, 59, 59, 999);
 
-    if (endWindow.getTime() < startWindow.getTime()) {
-        return NextResponse.json({ error: 'endDate must be after startDate' }, { status: 400 });
+    if (endWindow.getTime() < windowStartBounded.getTime()) {
+        return NextResponse.json({ error: 'endDate must be after startDate (or today)' }, { status: 400 });
     }
 
-    const tripDays = Math.max(1, Math.ceil((endWindow.getTime() - startWindow.getTime()) / (1000 * 60 * 60 * 24)));
+    const tripDays = Math.max(1, Math.ceil((endWindow.getTime() - windowStartBounded.getTime()) / (1000 * 60 * 60 * 24)));
 
     // Max one-way drive distance based on trip length
     const maxOneWayHours = tripDaysToOneWayHours(tripDays);
@@ -70,7 +76,7 @@ export async function GET(req: NextRequest) {
         where: {
             latitude: { not: null },
             longitude: { not: null },
-            date: { gte: startWindow, lte: endWindow },
+            date: { gte: windowStartBounded, lte: endWindow },
         },
         include: { organization: { select: { name: true } } },
         orderBy: { date: 'asc' },
