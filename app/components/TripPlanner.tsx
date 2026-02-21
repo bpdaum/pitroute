@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { getOrgColor, OrgBadge } from "./EventCard";
 import type { EventItem } from "./EventCard";
 
@@ -53,6 +54,9 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
     const [geoLoading, setGeoLoading] = useState(false);
     const [result, setResult] = useState<TripResult | null>(null);
     const [error, setError] = useState("");
+    const { data: session } = useSession();
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveSuccess, setSaveSuccess] = useState(false);
 
     const tripPreset = TRIP_PRESETS[tripDayIdx];
 
@@ -210,6 +214,30 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
     // ─── ITINERARY RESULT ─────────────────────────────────────────────────────
     const { stops, totalMiles, totalDriveHours, returnMiles, returnHours, totalPurse } = result;
 
+    async function handleSaveTrip() {
+        if (!session?.user) return;
+        setIsSaving(true);
+        try {
+            const res = await fetch("/api/trips", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    title: `BBQ Trip from ${userCoords?.label}`,
+                    routeData: result,
+                    totalPurse
+                })
+            });
+            if (res.ok) {
+                setSaveSuccess(true);
+                setTimeout(() => setSaveSuccess(false), 3000);
+            }
+        } catch {
+            console.error("Failed to save trip");
+        } finally {
+            setIsSaving(false);
+        }
+    }
+
     return (
         <div className="flex flex-col h-full overflow-hidden">
             {/* Trip summary header */}
@@ -222,12 +250,24 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                             {stops.length > 0 && <> · first event {new Date(stops[0].arrivalDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</>}
                         </p>
                     </div>
-                    <button
-                        onClick={() => { setResult(null); onRouteGenerated([]); onUserCoordsChange(null); }}
-                        className="text-xs text-orange-400 hover:text-orange-300 transition-colors"
-                    >
-                        ← New trip
-                    </button>
+                    <div className="flex items-center gap-4">
+                        {session?.user && stops.length > 0 && (
+                            <button
+                                onClick={handleSaveTrip}
+                                disabled={isSaving || saveSuccess}
+                                className={`text-xs px-3 py-1.5 rounded-md font-semibold transition-all ${saveSuccess ? "bg-emerald-500/20 text-emerald-400" : "bg-orange-500/20 text-orange-400 hover:bg-orange-500/30"
+                                    }`}
+                            >
+                                {saveSuccess ? "✓ Saved" : isSaving ? "Saving..." : "Save Route"}
+                            </button>
+                        )}
+                        <button
+                            onClick={() => { setResult(null); onRouteGenerated([]); onUserCoordsChange(null); }}
+                            className="text-xs text-orange-400 hover:text-orange-300 transition-colors"
+                        >
+                            ← New trip
+                        </button>
+                    </div>
                 </div>
                 {stops.length > 0 ? (
                     <div className="flex gap-4 flex-wrap">

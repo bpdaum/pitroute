@@ -18,13 +18,17 @@ export const metadata: Metadata = {
   description: "Find BBQ competitions near you from KCBS, MBN, SCA, FBA, and IBCA — all in one place.",
 };
 
+import { Providers } from "./providers";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${bebasNeue.variable} antialiased bg-zinc-950 text-zinc-100`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

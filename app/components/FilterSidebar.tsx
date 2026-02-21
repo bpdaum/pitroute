@@ -1,5 +1,7 @@
 "use client";
 
+import { AuthWidget } from "./AuthWidget";
+
 const ORGS = ["KCBS", "MBN", "SCA", "FBA", "IBCA"] as const;
 
 const ORG_COLORS: Record<string, string> = {
@@ -116,6 +118,8 @@ export function FilterSidebar({ filters, onChange, eventCount }: Props) {
                     </p>
                 </div>
             </div>
+
+            <AuthWidget />
         </aside>
     );
 }

@@ -5,19 +5,23 @@ import dynamic from "next/dynamic";
 import { EventItem, EventCard } from "./components/EventCard";
 import { EventCalendar } from "./components/EventCalendar";
 import { TripPlanner } from "./components/TripPlanner";
+import { AuthWidget } from "./components/AuthWidget";
+import { SavedTrips } from "./components/SavedTrips";
+import { useSession } from "next-auth/react";
 
 const EventMap = dynamic(
   () => import("./components/EventMap").then(m => m.EventMap),
   { ssr: false, loading: () => <div className="h-full flex items-center justify-center text-zinc-600">Loading map…</div> }
 );
 
-type Tab = "plan" | "map" | "calendar" | "list";
+type Tab = "plan" | "map" | "calendar" | "list" | "saved";
 
-const TABS: { id: Tab; icon: string; label: string }[] = [
+const ALL_TABS: { id: Tab; icon: string; label: string, requireAuth?: boolean }[] = [
   { id: "plan", icon: "🔥", label: "Plan a Trip" },
   { id: "map", icon: "🗺", label: "Map" },
   { id: "calendar", icon: "📅", label: "Calendar" },
   { id: "list", icon: "☰", label: "All Events" },
+  { id: "saved", icon: "⭐", label: "Saved Trips", requireAuth: true },
 ];
 
 const ORGANIZATIONS = ["KCBS", "MBN", "SCA", "FBA", "IBCA"];
@@ -39,6 +43,8 @@ export default function Home() {
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
   const [routeStops, setRouteStops] = useState<RouteStop[]>([]);
   const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
+
+  const { data: session } = useSession();
 
   // Filtering State
   const [searchQuery, setSearchQuery] = useState("");
@@ -101,7 +107,7 @@ export default function Home() {
         </div>
 
         <nav className="p-3 space-y-1">
-          {TABS.map(tab => (
+          {ALL_TABS.filter(tab => !tab.requireAuth || session?.user).map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -203,13 +209,14 @@ export default function Home() {
             </div>
           )}
         </div>
+        <AuthWidget />
       </aside>
 
       {/* Main area */}
       <div className="flex-1 flex flex-col overflow-hidden relative">
         <div className="px-5 py-2.5 border-b border-zinc-800 bg-zinc-950 shrink-0 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-zinc-300">
-            {TABS.find(t => t.id === activeTab)?.label}
+            {ALL_TABS.find(t => t.id === activeTab)?.label}
           </h2>
           {routeStops.length > 0 && activeTab !== "plan" && (
             <p className="text-[11px] text-orange-400">
@@ -252,6 +259,15 @@ export default function Home() {
                   ))
                 )}
               </div>
+            )}
+            {activeTab === "saved" && (
+              <SavedTrips onLoadRoute={(routeData) => {
+                handleRouteGenerated(routeData.stops);
+                if (routeData.stops?.length > 0) {
+                  const firstStop = routeData.stops[0];
+                  setUserCoords({ lat: firstStop.event.latitude, lng: firstStop.event.longitude });
+                }
+              }} />
             )}
           </div>
 
