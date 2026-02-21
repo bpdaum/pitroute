@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scraper development dump files
+*.html
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+fba_*.txt
+ibca_*.txt
+kcbs_*.txt
+mbn_*.txt
+sca_*.txt
