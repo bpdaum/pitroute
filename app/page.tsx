@@ -9,10 +9,7 @@ import { AuthWidget } from "./components/AuthWidget";
 import { SavedTrips } from "./components/SavedTrips";
 import { useSession } from "next-auth/react";
 
-const EventMap = dynamic(
-  () => import("./components/EventMap").then(m => m.EventMap),
-  { ssr: false, loading: () => <div className="h-full flex items-center justify-center text-zinc-600">Loading map…</div> }
-);
+import { EventMap } from "./components/EventMap";
 
 type Tab = "plan" | "map" | "calendar" | "list" | "saved";
 
