@@ -4,12 +4,13 @@ import { useState, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { EventItem, EventCard } from "./components/EventCard";
 import { EventCalendar } from "./components/EventCalendar";
-import { TripPlanner } from "./components/TripPlanner";
 import { AuthWidget } from "./components/AuthWidget";
 import { SavedTrips } from "./components/SavedTrips";
 import { useSession } from "next-auth/react";
 
 import { EventMap } from "./components/EventMap";
+
+const TripPlanner = dynamic(() => import("./components/TripPlanner").then(mod => mod.TripPlanner), { ssr: false });
 
 type Tab = "plan" | "map" | "calendar" | "list" | "saved";
 

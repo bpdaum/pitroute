@@ -242,6 +242,44 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
         }
     }
 
+    // ─── ITINERARY TIMELINE CALCULATIONS ──────────────────────────────────────
+    const processedStops = stops.map((stop, i) => {
+        const eventDate = new Date(stop.event.date);
+
+        // Assumption: Arrive at 3:00 PM the day BEFORE the event
+        const arrivalTime = new Date(eventDate);
+        arrivalTime.setDate(arrivalTime.getDate() - 1);
+        arrivalTime.setHours(15, 0, 0, 0);
+
+        // Assumption: Depart at 5:00 PM the day OF the event
+        const departureTime = new Date(eventDate);
+        departureTime.setHours(17, 0, 0, 0);
+
+        // Calculate drive start time to make it to the arrival time
+        const driveTotalMs = stop.driveFromPrevHours * 60 * 60 * 1000;
+        const driveStartTime = new Date(arrivalTime.getTime() - driveTotalMs);
+
+        // Calculate stay duration
+        const stayDurationHours = (departureTime.getTime() - arrivalTime.getTime()) / (1000 * 60 * 60);
+
+        return {
+            ...stop,
+            absoluteArrival: arrivalTime,
+            absoluteDeparture: departureTime,
+            driveStartTime: driveStartTime,
+            stayDurationHours: Math.round(stayDurationHours)
+        };
+    });
+
+    // Calculate final return timeline
+    let finalReturnArrivalStr = "";
+    if (processedStops.length > 0) {
+        const finalStop = processedStops[processedStops.length - 1];
+        const returnDriveMs = returnHours * 60 * 60 * 1000;
+        const returnArrival = new Date(finalStop.absoluteDeparture.getTime() + returnDriveMs);
+        finalReturnArrivalStr = returnArrival.toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    }
+
     return (
         <div className="flex flex-col h-full overflow-hidden">
             {/* Trip summary header */}
@@ -329,25 +367,40 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                 ) : (
                     <div className="space-y-0">
                         {/* Start node */}
-                        <StartNode label={userCoords?.label ?? "Start"} />
+                        <StartNode
+                            label={userCoords?.label ?? "Start"}
+                            departureTime={processedStops.length > 0 ? processedStops[0].driveStartTime : undefined}
+                        />
 
-                        {stops.map((stop, i) => (
+                        {processedStops.map((stop, i) => (
                             <div key={stop.event.id}>
                                 {/* Drive connector */}
-                                <DriveConnector miles={stop.driveFromPrevMiles} hours={stop.driveFromPrevHours} />
+                                <DriveConnector
+                                    miles={stop.driveFromPrevMiles}
+                                    hours={stop.driveFromPrevHours}
+                                    departureTime={stop.driveStartTime}
+                                />
 
                                 {/* Event stop */}
                                 <StopCard
                                     stop={stop}
                                     index={i + 1}
+                                    arrivalTime={stop.absoluteArrival}
+                                    departureTime={stop.absoluteDeparture}
+                                    stayHours={stop.stayDurationHours}
                                     onClick={() => onSelectEvent(stop.event as unknown as EventItem)}
                                 />
                             </div>
                         ))}
 
                         {/* Return home */}
-                        <DriveConnector miles={returnMiles} hours={returnHours} isReturn />
-                        <EndNode label={userCoords?.label ?? "Home"} />
+                        <DriveConnector
+                            miles={returnMiles}
+                            hours={returnHours}
+                            isReturn
+                            departureTime={processedStops.length > 0 ? processedStops[processedStops.length - 1].absoluteDeparture : undefined}
+                        />
+                        <EndNode label={userCoords?.label ?? "Home"} arrivalTimeStr={finalReturnArrivalStr} />
                     </div>
                 )}
             </div>
@@ -357,35 +410,39 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
 
 // ─── Sub-components ───────────────────────────────────────────────────────
 
-function StartNode({ label }: { label: string }) {
+function StartNode({ label, departureTime }: { label: string, departureTime?: Date }) {
     return (
         <div className="flex items-center gap-3 py-2">
             <div className="w-10 h-10 rounded-full bg-zinc-700 border-2 border-zinc-500 flex items-center justify-center text-lg shrink-0">
                 📍
             </div>
             <div>
-                <p className="text-xs text-zinc-500 uppercase tracking-widest">Starting from</p>
+                <p className="text-xs text-zinc-500 uppercase tracking-widest">
+                    {departureTime ? `Depart ${departureTime.toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}` : "Starting from"}
+                </p>
                 <p className="text-sm font-semibold text-zinc-200">{label}</p>
             </div>
         </div>
     );
 }
 
-function EndNode({ label }: { label: string }) {
+function EndNode({ label, arrivalTimeStr }: { label: string, arrivalTimeStr?: string }) {
     return (
         <div className="flex items-center gap-3 py-2">
             <div className="w-10 h-10 rounded-full bg-zinc-700 border-2 border-zinc-500 flex items-center justify-center text-lg shrink-0">
                 🏠
             </div>
             <div>
-                <p className="text-xs text-zinc-500 uppercase tracking-widest">Return to</p>
+                <p className="text-xs text-zinc-500 uppercase tracking-widest">
+                    {arrivalTimeStr ? `Arrive ${arrivalTimeStr}` : "Return to"}
+                </p>
                 <p className="text-sm font-semibold text-zinc-200">{label}</p>
             </div>
         </div>
     );
 }
 
-function DriveConnector({ miles, hours, isReturn }: { miles: number; hours: number; isReturn?: boolean }) {
+function DriveConnector({ miles, hours, isReturn, departureTime }: { miles: number; hours: number; isReturn?: boolean; departureTime?: Date }) {
     return (
         <div className="flex items-center gap-3 my-1">
             {/* Vertical line */}
@@ -408,10 +465,13 @@ function DriveConnector({ miles, hours, isReturn }: { miles: number; hours: numb
     );
 }
 
-function StopCard({ stop, index, onClick }: { stop: RecommendedStop; index: number; onClick: () => void }) {
+function formatTime(date: Date) {
+    return date.toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit" });
+}
+
+function StopCard({ stop, index, arrivalTime, departureTime, stayHours, onClick }: { stop: RecommendedStop; index: number; arrivalTime: Date; departureTime: Date; stayHours: number; onClick: () => void }) {
     const color = getOrgColor(stop.event.organization.name);
-    const date = new Date(stop.arrivalDate);
-    const dateStr = date.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+    const dateStr = new Date(stop.event.date).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
     return (
         <div
@@ -426,30 +486,53 @@ function StopCard({ stop, index, onClick }: { stop: RecommendedStop; index: numb
                 {index}
             </div>
 
-            {/* Card */}
-            <div className="flex-1 rounded-xl border border-zinc-800 bg-zinc-900 group-hover:border-zinc-600 group-hover:bg-zinc-800 transition-all p-4 mb-0">
-                <div className="flex items-start justify-between gap-2">
-                    <OrgBadge name={stop.event.organization.name} />
-                    <span className="text-[10px] text-zinc-600 shrink-0">{dateStr}</span>
+            {/* Card & Timeline Container */}
+            <div className="flex flex-col flex-1 mb-0">
+                {/* Main Card */}
+                <div className="rounded-xl border border-zinc-800 bg-zinc-900 group-hover:border-zinc-600 group-hover:bg-zinc-800 transition-all p-4 z-10 relative">
+                    <div className="flex items-start justify-between gap-2">
+                        <OrgBadge name={stop.event.organization.name} />
+                        <span className="text-[10px] text-zinc-600 shrink-0 uppercase tracking-widest font-semibold">{dateStr}</span>
+                    </div>
+                    <p className="text-sm font-semibold text-zinc-100 mt-1.5 leading-tight">{stop.event.name}</p>
+                    {stop.event.locationAddress && (
+                        <p className="text-xs text-zinc-500 mt-1 truncate">📍 {stop.event.locationAddress}</p>
+                    )}
+                    {stop.event.purseAmount && (
+                        <p className="text-xs text-emerald-400 font-bold mt-1">💰 ${stop.event.purseAmount.toLocaleString()} purse</p>
+                    )}
                 </div>
-                <p className="text-sm font-semibold text-zinc-100 mt-1.5 leading-tight">{stop.event.name}</p>
-                {stop.event.locationAddress && (
-                    <p className="text-xs text-zinc-500 mt-1 truncate">📍 {stop.event.locationAddress}</p>
-                )}
-                {stop.event.purseAmount && (
-                    <p className="text-xs text-emerald-400 font-bold mt-1">💰 ${stop.event.purseAmount.toLocaleString()} purse</p>
-                )}
-                {stop.event.detailsUrl && (
-                    <a
-                        href={stop.event.detailsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={e => e.stopPropagation()}
-                        className="mt-2 inline-block text-xs text-orange-400 hover:text-orange-300 transition-colors"
-                    >
-                        View details →
-                    </a>
-                )}
+
+                {/* Timeline attached right below card */}
+                <div className="flex flex-col pl-4 mt-2">
+                    <div className="flex items-start gap-3">
+                        {/* Timeline tree graphic */}
+                        <div className="flex flex-col items-center mt-1 w-2 border-l-2 border-dashed border-zinc-700 h-full relative ml-2">
+                            <div className="absolute -top-1 -left-[5px] w-2 h-2 rounded-full bg-emerald-500"></div>
+                            <div className="absolute -bottom-1 -left-[5px] w-2 h-2 rounded-full bg-orange-500"></div>
+                        </div>
+                        {/* Timeline Details */}
+                        <div className="py-1 pb-4">
+                            <div className="flex items-center gap-2">
+                                <span className="text-emerald-500 text-[10px] uppercase tracking-widest font-bold w-12 text-right">Arrive</span>
+                                <span className="text-xs text-zinc-300 font-medium">{formatTime(arrivalTime)}</span>
+                                <span className="text-[10px] text-zinc-600">· Set up camp & meat inspection</span>
+                            </div>
+
+                            <div className="flex items-center gap-2 mt-2">
+                                <span className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold w-12 text-right">Cook</span>
+                                <span className="text-xs text-zinc-400">Overnight cook ({stayHours}h stay)</span>
+                            </div>
+
+                            <div className="flex items-center gap-2 mt-2">
+                                <span className="text-orange-500 text-[10px] uppercase tracking-widest font-bold w-12 text-right">Depart</span>
+                                <span className="text-xs text-zinc-300 font-medium">{formatTime(departureTime)}</span>
+                                <span className="text-[10px] text-zinc-600">· Wrap up & head out</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
