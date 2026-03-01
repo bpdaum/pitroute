@@ -107,8 +107,10 @@ export default function Home() {
       {/* Sidebar */}
       <aside className="w-64 shrink-0 flex flex-col bg-zinc-900 border-r border-zinc-800 overflow-y-auto">
         <div className="px-5 pt-6 pb-4 border-b border-zinc-800">
-          <h1 className="font-bebas text-4xl tracking-widest text-white leading-none">PITROUTE.IO</h1>
-          <p className="text-[10px] text-zinc-600 mt-0.5 uppercase tracking-widest">BBQ Competition Finder</p>
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="PitRoute.io Logo" className="h-10 object-contain" />
+          </div>
+          <p className="text-[10px] text-zinc-600 mt-2 uppercase tracking-widest">BBQ Competition Finder</p>
         </div>
 
         <nav className="p-3 space-y-1">
