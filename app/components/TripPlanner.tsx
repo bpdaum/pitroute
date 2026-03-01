@@ -631,7 +631,7 @@ function StopCard({ stop, index, arrivalTime, departureTime, stayHours, onClick 
 
                             <div className="flex items-center gap-2 mt-2">
                                 <span className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold w-12 text-right">Cook</span>
-                                <span className="text-xs text-zinc-400">Overnight cook ({stayHours}h stay)</span>
+                                <span className="text-xs text-zinc-400">{stayHours >= 20 ? "Overnight cook" : "Day cook"} ({stayHours}h stay)</span>
                             </div>
 
                             <div className="flex items-center gap-2 mt-2">
