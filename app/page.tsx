@@ -231,9 +231,9 @@ export default function Home() {
           )}
         </div>
 
-        <div className="flex flex-col md:flex-row flex-1 overflow-hidden relative">
+        <div className="flex flex-col md:flex-row flex-1 overflow-y-auto md:overflow-hidden relative">
           {activeTab === "plan" && (
-            <div className="w-full md:w-[420px] h-[55%] md:h-full shrink-0 border-b md:border-b-0 md:border-r border-zinc-800 bg-zinc-950 flex flex-col z-10 shadow-2xl overflow-y-auto relative">
+            <div className="w-full md:w-[420px] md:h-full shrink-0 border-b md:border-b-0 md:border-r border-zinc-800 bg-zinc-950 flex flex-col z-10 shadow-2xl relative">
               <TripPlanner
                 onRouteGenerated={(stops, purse) => {
                   handleRouteGenerated(stops as RouteStop[], purse);
@@ -244,7 +244,7 @@ export default function Home() {
             </div>
           )}
 
-          <div className="flex-1 overflow-hidden bg-zinc-950 relative">
+          <div className="flex-1 overflow-hidden bg-zinc-950 relative min-h-[60vh] md:min-h-0">
             {(activeTab === "map" || activeTab === "plan") && (
               <div className="absolute inset-0">
                 <EventMap
