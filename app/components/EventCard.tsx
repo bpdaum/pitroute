@@ -23,6 +23,8 @@ export interface EventItem {
 interface Props {
     event: EventItem;
     onClick?: () => void;
+    onToggleSelect?: (eventId: string) => void;
+    isSelected?: boolean;
     compact?: boolean;
 }
 
@@ -42,19 +44,31 @@ export function getOrgColor(name: string) {
     return ORG_COLORS[name] ?? "#888";
 }
 
-export function EventCard({ event, onClick, compact }: Props) {
+export function EventCard({ event, onClick, onToggleSelect, isSelected, compact }: Props) {
     const date = new Date(event.date);
     const dateStr = date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 
     return (
         <div
-            onClick={onClick}
+            onClick={(e) => {
+                if (onToggleSelect) {
+                    onToggleSelect(event.id);
+                } else if (onClick) {
+                    onClick();
+                }
+            }}
             className={`
-        fade-in rounded-xl border border-zinc-800 bg-zinc-900 cursor-pointer
-        transition-all hover:border-zinc-600 hover:bg-zinc-800
+        fade-in rounded-xl border bg-zinc-900 cursor-pointer relative overflow-hidden
+        transition-all hover:bg-zinc-800
+        ${isSelected ? "border-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.15)] ring-1 ring-orange-500" : "border-zinc-800 hover:border-zinc-600"}
         ${compact ? "p-3" : "p-4"}
       `}
         >
+            {isSelected && (
+                <div className="absolute top-0 right-0 w-0 h-0 border-t-[32px] border-t-orange-500 border-l-[32px] border-l-transparent">
+                    <span className="absolute -top-[28px] -left-[14px] text-white text-[10px] font-bold">✓</span>
+                </div>
+            )}
             <div className="flex items-start justify-between gap-2 mb-1">
                 <OrgBadge name={event.organization.name} />
                 {event.purseAmount && (
@@ -82,9 +96,9 @@ export function EventCard({ event, onClick, compact }: Props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={e => e.stopPropagation()}
-                    className="mt-2 inline-block text-xs text-orange-400 hover:text-orange-300 transition-colors"
+                    className="mt-2 inline-block text-[11px] text-zinc-500 hover:text-orange-400 transition-colors"
                 >
-                    View details →
+                    View external details ↗
                 </a>
             )}
         </div>

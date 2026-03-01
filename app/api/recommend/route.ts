@@ -43,38 +43,49 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const lat = parseFloat(searchParams.get('lat') ?? '');
     const lng = parseFloat(searchParams.get('lng') ?? '');
-    const startDateParam = searchParams.get('startDate');
-    const endDateParam = searchParams.get('endDate');
+    const requiredEventIds = searchParams.getAll('requiredEventIds');
     const maxDistanceParam = searchParams.get('maxDistance');
 
-    if (isNaN(lat) || isNaN(lng) || !startDateParam || !endDateParam) {
-        return NextResponse.json({ error: 'lat, lng, startDate, and endDate are required' }, { status: 400 });
+    if (isNaN(lat) || isNaN(lng) || requiredEventIds.length === 0) {
+        return NextResponse.json({ error: 'lat, lng, and at least one requiredEventId are required' }, { status: 400 });
     }
 
-    const startWindow = new Date(startDateParam);
-    startWindow.setHours(0, 0, 0, 0);
+    const requiredEvents = await prisma.event.findMany({
+        where: { id: { in: requiredEventIds } },
+    });
+
+    if (requiredEvents.length !== requiredEventIds.length) {
+        return NextResponse.json({ error: 'One or more required events not found' }, { status: 404 });
+    }
+
+    const requiredDates = requiredEvents.map(e => new Date(e.date).getTime());
+    const minAnchorDate = new Date(Math.min(...requiredDates));
+    const maxAnchorDate = new Date(Math.max(...requiredDates));
+
+    minAnchorDate.setHours(0, 0, 0, 0);
+    maxAnchorDate.setHours(23, 59, 59, 999);
+
+    // Build the search window: up to 14 days before the earliest event, and 14 days after the latest
+    const startWindow = new Date(minAnchorDate.getTime() - 14 * 24 * 60 * 60 * 1000);
+    const endWindow = new Date(maxAnchorDate.getTime() + 14 * 24 * 60 * 60 * 1000);
 
     // Enforce "today" as the absolute minimum bound so historical routes can't be planned
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const windowStartBounded = new Date(Math.max(startWindow.getTime(), today.getTime()));
 
-    const endWindow = new Date(endDateParam);
-    endWindow.setHours(23, 59, 59, 999);
-
-    if (endWindow.getTime() < windowStartBounded.getTime()) {
-        return NextResponse.json({ error: 'endDate must be after startDate (or today)' }, { status: 400 });
-    }
-
     const tripDays = Math.max(1, Math.ceil((endWindow.getTime() - windowStartBounded.getTime()) / (1000 * 60 * 60 * 24)));
 
-    // Max one-way drive distance based on trip length
-    let maxOneWayMiles = tripDaysToOneWayHours(tripDays) * AVG_MPH;
+    // Ensure the user can at least reach the furthest required event
+    const maxDistToRequired = Math.max(...requiredEvents.map(e =>
+        haversine(lat, lng, e.latitude!, e.longitude!)
+    ));
+    let maxOneWayMiles = Math.max(720, maxDistToRequired + 100);
 
     if (maxDistanceParam) {
         const parsedMax = parseFloat(maxDistanceParam);
         if (!isNaN(parsedMax) && parsedMax > 0) {
-            maxOneWayMiles = parsedMax;
+            maxOneWayMiles = Math.max(parsedMax, maxDistToRequired + 50); // NEVER let the user's radius exclude a required event
         }
     }
 
@@ -112,10 +123,42 @@ export async function GET(req: NextRequest) {
 
     // Helper to evaluate a path
     function evaluatePath(path: RecommendedStop[], totalPurse: number) {
+        // Enforce Anchor Constraint: Path MUST visit ALL required events
+        const allRequiredVisited = requiredEventIds.every(reqId =>
+            path.some(stop => stop.event.id === reqId)
+        );
+        if (!allRequiredVisited) {
+            return;
+        }
+
         // Calculate total miles including return
         const lastStop = path[path.length - 1];
+        let pathMiles = 0;
+
+        for (let i = 0; i < path.length; i++) {
+            if (i === 0) {
+                // Initial drive from hub to first event
+                pathMiles += path[i].driveFromPrevMiles;
+            } else {
+                const prevDate = new Date(path[i - 1].event.date).getTime();
+                const currDate = new Date(path[i].event.date).getTime();
+                const daysBetween = (currDate - prevDate) / (24 * 60 * 60 * 1000);
+
+                if (daysBetween > 4) {
+                    // It's a new weekend trip. Drive home from prev, then drive from home to new.
+                    const returnHomeMiles = haversine(path[i - 1].event.latitude, path[i - 1].event.longitude, lat, lng);
+                    const driveFreshMiles = haversine(lat, lng, path[i].event.latitude, path[i].event.longitude);
+                    pathMiles += (returnHomeMiles + driveFreshMiles);
+                } else {
+                    // Standard chain hop
+                    pathMiles += path[i].driveFromPrevMiles;
+                }
+            }
+        }
+
+        // Final return trip home from the last event
         const returnMiles = haversine(lastStop.event.latitude, lastStop.event.longitude, lat, lng);
-        const pathMiles = path.reduce((sum, stop) => sum + stop.driveFromPrevMiles, 0) + returnMiles;
+        pathMiles += returnMiles;
 
         // Scoring rules:
         // 1. Higher total purse wins
@@ -167,20 +210,42 @@ export async function GET(req: NextRequest) {
                     continue; // Skip trying to cook two events simultaneously
                 }
 
-                // Optional constraint: limit daily drive time between events (e.g. max 8 hours)
-                if (distMiles / AVG_MPH <= MAX_DRIVE_HOURS_PER_DAY) {
+                // Optional constraint: limit daily drive time between events
+                const daysBetween = Math.max(1, (nextDate.getTime() - currentDate.getTime()) / (24 * 60 * 60 * 1000));
 
-                    // Realistic timeline check: Can we make it to the next event in time?
-                    // We assume Cook 1 ends at 5 PM. Cook 2 requires arrival by 8 AM day-of at the VERY latest.
-                    if (!isSameVenue) {
-                        const currentEnd = currentDate.getTime() + (17 * 60 * 60 * 1000); // 5 PM day of cook
-                        const driveMs = (distMiles / AVG_MPH) * 60 * 60 * 1000;
-                        const absoluteLatestArrivalMs = nextDate.getTime() + (8 * 60 * 60 * 1000); // 8 AM day of next cook
+                // If the gap is > 4 days, we assume the driver went home and rested. 
+                // They get a "fresh start" driving from the Hub to the new event, bypassing the chained constraint.
+                let isValidDriveHop = false;
 
-                        if (currentEnd + driveMs > absoluteLatestArrivalMs) {
-                            continue; // Impossible to arrive in time for meat inspection/setup
+                if (daysBetween > 4) {
+                    // Treat as a fresh round-trip leg
+                    isValidDriveHop = true;
+
+                    // We *could* validate if the Hub -> NextEvent drive is possible by itself, but since we already filtered 
+                    // `reachable` by `maxDistance` upfront, we know the user can reach it from their Hub.
+                } else {
+                    // Standard chained leg check
+                    if (distMiles / AVG_MPH <= daysBetween * MAX_DRIVE_HOURS_PER_DAY) {
+                        // Realistic timeline check
+                        if (!isSameVenue) {
+                            const currentEnd = currentDate.getTime() + (17 * 60 * 60 * 1000); // 5 PM day of cook
+                            const driveMs = (distMiles / AVG_MPH) * 60 * 60 * 1000;
+                            const absoluteLatestArrivalMs = nextDate.getTime() + (8 * 60 * 60 * 1000); // 8 AM day of next cook
+
+                            if (currentEnd + driveMs <= absoluteLatestArrivalMs) {
+                                isValidDriveHop = true;
+                            }
+                        } else {
+                            isValidDriveHop = true;
                         }
                     }
+                }
+
+                if (isValidDriveHop) {
+                    // If it was a round-trip reset (> 4 days), the 'driveFromPrevMiles' logic gets messy to display in UI.
+                    // For now, we still calculate the theoretical "chained" distance here for the UI node connecting line,
+                    // but `evaluatePath` handles the true mileage sum scoring correctly.
+
                     currentPath.push({
                         event: {
                             id: nextEvent.id,
