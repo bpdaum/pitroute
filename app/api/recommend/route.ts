@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
     const lng = parseFloat(searchParams.get('lng') ?? '');
     const startDateParam = searchParams.get('startDate');
     const endDateParam = searchParams.get('endDate');
+    const maxDistanceParam = searchParams.get('maxDistance');
 
     if (isNaN(lat) || isNaN(lng) || !startDateParam || !endDateParam) {
         return NextResponse.json({ error: 'lat, lng, startDate, and endDate are required' }, { status: 400 });
@@ -68,8 +69,14 @@ export async function GET(req: NextRequest) {
     const tripDays = Math.max(1, Math.ceil((endWindow.getTime() - windowStartBounded.getTime()) / (1000 * 60 * 60 * 24)));
 
     // Max one-way drive distance based on trip length
-    const maxOneWayHours = tripDaysToOneWayHours(tripDays);
-    const maxOneWayMiles = maxOneWayHours * AVG_MPH;
+    let maxOneWayMiles = tripDaysToOneWayHours(tripDays) * AVG_MPH;
+
+    if (maxDistanceParam) {
+        const parsedMax = parseFloat(maxDistanceParam);
+        if (!isNaN(parsedMax) && parsedMax > 0) {
+            maxOneWayMiles = parsedMax;
+        }
+    }
 
     // Fetch all upcoming geocoded events within exact window
     const allEvents = await prisma.event.findMany({
@@ -146,15 +153,34 @@ export async function GET(req: NextRequest) {
             const nextEvent = reachable[i];
             const nextDate = new Date(nextEvent.date);
 
+            const distMiles = haversine(
+                currentEvent.latitude, currentEvent.longitude,
+                nextEvent.latitude!, nextEvent.longitude!
+            );
+            const isSameVenue = distMiles < 5;
+
             // Constraint: Must be on or after current date 
             if (nextDate.getTime() >= currentDate.getTime()) {
-                const distMiles = haversine(
-                    currentEvent.latitude, currentEvent.longitude,
-                    nextEvent.latitude!, nextEvent.longitude!
-                );
+
+                // CRITICAL FIX: You cannot physically attend two events in different cities on the exact same day
+                if (!isSameVenue && nextDate.getTime() === currentDate.getTime()) {
+                    continue; // Skip trying to cook two events simultaneously
+                }
 
                 // Optional constraint: limit daily drive time between events (e.g. max 8 hours)
                 if (distMiles / AVG_MPH <= MAX_DRIVE_HOURS_PER_DAY) {
+
+                    // Realistic timeline check: Can we make it to the next event in time?
+                    // We assume Cook 1 ends at 5 PM. Cook 2 requires arrival by 8 AM day-of at the VERY latest.
+                    if (!isSameVenue) {
+                        const currentEnd = currentDate.getTime() + (17 * 60 * 60 * 1000); // 5 PM day of cook
+                        const driveMs = (distMiles / AVG_MPH) * 60 * 60 * 1000;
+                        const absoluteLatestArrivalMs = nextDate.getTime() + (8 * 60 * 60 * 1000); // 8 AM day of next cook
+
+                        if (currentEnd + driveMs > absoluteLatestArrivalMs) {
+                            continue; // Impossible to arrive in time for meat inspection/setup
+                        }
+                    }
                     currentPath.push({
                         event: {
                             id: nextEvent.id,

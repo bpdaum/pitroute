@@ -13,6 +13,7 @@ interface Props {
     onSelectEvent: (event: EventItem) => void;
     routeStops?: RouteStop[];
     userCoords?: { lat: number; lng: number } | null;
+    totalPurse?: number;
 }
 
 interface RouteMeta {
@@ -43,7 +44,7 @@ function Directions({ routeStops, userCoords, onRouteCalculated }: { routeStops?
 
     useEffect(() => {
         if (!directionsService || !directionsRenderer || !userCoords || !routeStops || routeStops.length === 0) {
-            if (directionsRenderer) directionsRenderer.setDirections(null);
+            if (directionsRenderer) directionsRenderer.setMap(null);
             return;
         }
 
@@ -59,6 +60,7 @@ function Directions({ routeStops, userCoords, onRouteCalculated }: { routeStops?
             travelMode: google.maps.TravelMode.DRIVING,
             optimizeWaypoints: false, // We've already optimized the order!
         }).then(response => {
+            directionsRenderer.setMap(map);
             directionsRenderer.setDirections(response);
 
             // Clear any previously painted polylines before drawing new ones
@@ -114,7 +116,7 @@ function Directions({ routeStops, userCoords, onRouteCalculated }: { routeStops?
     return null;
 }
 
-export function EventMap({ events, onSelectEvent, routeStops, userCoords }: Props) {
+export function EventMap({ events, onSelectEvent, routeStops, userCoords, totalPurse }: Props) {
     const [routeMeta, setRouteMeta] = useState<RouteMeta | null>(null);
     const rawMappable = events.filter(e => e.latitude && e.longitude);
 
@@ -191,6 +193,14 @@ export function EventMap({ events, onSelectEvent, routeStops, userCoords }: Prop
                                             {Math.floor(routeMeta.totalSeconds / 3600)}h {Math.round((routeMeta.totalSeconds % 3600) / 60)}m
                                         </span>
                                     </div>
+                                    {totalPurse !== undefined && totalPurse > 0 && (
+                                        <div className="flex justify-between items-center bg-zinc-950 p-2 rounded-lg border border-zinc-800/60 mt-2">
+                                            <span className="text-zinc-400">Total Purse</span>
+                                            <span className="text-emerald-400 font-bold">
+                                                ${totalPurse.toLocaleString()}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}

@@ -4,6 +4,7 @@ import { MBNScraper } from './lib/scrapers/mbn';
 import { KCBScraper } from './lib/scrapers/kcbs';
 import { FBAScraper } from './lib/scrapers/fba';
 import { IBCAScraper } from './lib/scrapers/ibca';
+import { CBAScraper } from './lib/scrapers/cba';
 
 async function main() {
     const runner = new ScraperRunner();
@@ -23,6 +24,9 @@ async function main() {
 
         console.log('--- Starting IBCA Scraper ---');
         await runner.runAndPersist('IBCA', new IBCAScraper());
+
+        console.log('--- Starting CBA Scraper ---');
+        await runner.runAndPersist('CBA', new CBAScraper());
 
         console.log('--- All Scraping Complete ---');
     } catch (error) {

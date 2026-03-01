@@ -1,11 +1,10 @@
 import { IBCAScraper } from './lib/scrapers/ibca';
 
-async function run() {
+async function main() {
     const scraper = new IBCAScraper();
-    console.log('Starting IBCA Scrape...');
     const events = await scraper.scrape();
-    console.log(`Scraped ${events.length} events:`);
-    console.log(JSON.stringify(events.slice(0, 5), null, 2));
+    console.log(JSON.stringify(events, null, 2));
+    console.log(`Total events: ${events.length}`);
 }
 
-run().catch(console.error);
+main().catch(console.error);

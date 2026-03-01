@@ -22,7 +22,7 @@ const ALL_TABS: { id: Tab; icon: string; label: string, requireAuth?: boolean }[
   { id: "saved", icon: "⭐", label: "Saved Trips", requireAuth: true },
 ];
 
-const ORGANIZATIONS = ["KCBS", "MBN", "SCA", "FBA", "IBCA"];
+const ORGANIZATIONS = ["KCBS", "MBN", "SCA", "FBA", "IBCA", "CBA"];
 const PURSE_TIERS = [
   { label: "Any Purse", value: 0 },
   { label: "$1,000+", value: 1000 },
@@ -40,6 +40,9 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>("plan");
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
   const [routeStops, setRouteStops] = useState<RouteStop[]>([]);
+  const [routePurse, setRoutePurse] = useState(0);
+  const [vehicleMpg, setVehicleMpg] = useState(15);
+  const [vehicleGasPrice, setVehicleGasPrice] = useState(3.50);
   const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   const { data: session } = useSession();
@@ -58,8 +61,9 @@ export default function Home() {
       .then(d => { setAllEvents(d.events); setLoading(false); });
   }, []);
 
-  function handleRouteGenerated(stops: RouteStop[]) {
+  function handleRouteGenerated(stops: RouteStop[], purse: number = 0) {
     setRouteStops(stops);
+    setRoutePurse(purse);
     // Don't switch tabs anymore, keep them on the planner to see the timeline!
   }
 
@@ -230,8 +234,8 @@ export default function Home() {
           {activeTab === "plan" && (
             <div className="w-[420px] shrink-0 border-r border-zinc-800 bg-zinc-950 flex flex-col h-full z-10 shadow-2xl overflow-hidden relative">
               <TripPlanner
-                onRouteGenerated={(stops) => {
-                  handleRouteGenerated(stops as RouteStop[]);
+                onRouteGenerated={(stops, purse) => {
+                  handleRouteGenerated(stops as RouteStop[], purse);
                 }}
                 onSelectEvent={e => { setSelectedEvent(e); }}
                 onUserCoordsChange={setUserCoords}
@@ -247,6 +251,7 @@ export default function Home() {
                   onSelectEvent={setSelectedEvent}
                   routeStops={routeStops}
                   userCoords={userCoords}
+                  totalPurse={routePurse}
                 />
               </div>
             )}
@@ -268,7 +273,7 @@ export default function Home() {
             )}
             {activeTab === "saved" && (
               <SavedTrips onLoadRoute={(routeData) => {
-                handleRouteGenerated(routeData.stops);
+                handleRouteGenerated(routeData.stops, routeData.totalPurse || 0);
                 if (routeData.stops?.length > 0) {
                   const firstStop = routeData.stops[0];
                   setUserCoords({ lat: firstStop.event.latitude, lng: firstStop.event.longitude });

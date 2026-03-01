@@ -35,7 +35,7 @@ function formatHours(h: number) {
 }
 
 interface Props {
-    onRouteGenerated: (stops: RecommendedStop[]) => void;
+    onRouteGenerated: (stops: RecommendedStop[], purse: number) => void;
     onSelectEvent: (e: EventItem) => void;
     onUserCoordsChange: (coords: { lat: number; lng: number } | null) => void;
 }
@@ -52,6 +52,7 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
         d.setDate(d.getDate() + 3);
         return d.toISOString().split("T")[0];
     });
+    const [maxDistance, setMaxDistance] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const [geoLoading, setGeoLoading] = useState(false);
     const [result, setResult] = useState<TripResult | null>(null);
@@ -102,11 +103,14 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
         setError("");
         setResult(null);
         try {
-            const url = `/api/recommend?lat=${coords.lat}&lng=${coords.lng}&startDate=${startDate}&endDate=${endDate}`;
+            let url = `/api/recommend?lat=${coords.lat}&lng=${coords.lng}&startDate=${startDate}&endDate=${endDate}`;
+            if (maxDistance) {
+                url += `&maxDistance=${maxDistance}`;
+            }
             const res = await fetch(url);
             const data: TripResult = await res.json();
             setResult(data);
-            onRouteGenerated(data.stops);
+            onRouteGenerated(data.stops, data.totalPurse);
         } catch {
             setError("Failed to generate route. Please try again.");
         }
@@ -196,6 +200,24 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                         </div>
                     </div>
 
+                    {/* Max Travel Distance */}
+                    <div>
+                        <label className="block text-[10px] uppercase tracking-widest text-zinc-600 mb-1.5 text-left">
+                            Max Travel Distance (One-Way)
+                        </label>
+                        <div className="flex bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 focus-within:border-orange-500 transition-colors items-center">
+                            <input
+                                type="number"
+                                value={maxDistance}
+                                onChange={e => setMaxDistance(e.target.value)}
+                                placeholder="Auto-caclulate"
+                                className="bg-transparent w-full text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none"
+                                min="1"
+                            />
+                            <span className="text-zinc-500 text-xs ml-2">Miles</span>
+                        </div>
+                    </div>
+
                     {error && <p className="text-red-400 text-xs text-left">{error}</p>}
 
                     {/* CTA */}
@@ -243,33 +265,48 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
     }
 
     // ─── ITINERARY TIMELINE CALCULATIONS ──────────────────────────────────────
-    const processedStops = stops.map((stop, i) => {
+    const processedStops = stops.reduce((acc, stop, i) => {
         const eventDate = new Date(stop.event.date);
 
-        // Assumption: Arrive at 3:00 PM the day BEFORE the event
-        const arrivalTime = new Date(eventDate);
-        arrivalTime.setDate(arrivalTime.getDate() - 1);
-        arrivalTime.setHours(15, 0, 0, 0);
+        const idealArrival = new Date(eventDate);
+        idealArrival.setDate(idealArrival.getDate() - 1);
+        idealArrival.setHours(15, 0, 0, 0);
 
-        // Assumption: Depart at 5:00 PM the day OF the event
         const departureTime = new Date(eventDate);
         departureTime.setHours(17, 0, 0, 0);
 
-        // Calculate drive start time to make it to the arrival time
         const driveTotalMs = stop.driveFromPrevHours * 60 * 60 * 1000;
-        const driveStartTime = new Date(arrivalTime.getTime() - driveTotalMs);
+        let absoluteArrival: Date;
+        let driveStartTime: Date;
 
-        // Calculate stay duration
-        const stayDurationHours = (departureTime.getTime() - arrivalTime.getTime()) / (1000 * 60 * 60);
+        if (i === 0) {
+            absoluteArrival = idealArrival;
+            driveStartTime = new Date(absoluteArrival.getTime() - driveTotalMs);
+        } else {
+            const prevDeparture = acc[i - 1].absoluteDeparture;
+            const earliestActualArrival = new Date(prevDeparture.getTime() + driveTotalMs);
 
-        return {
+            if (earliestActualArrival.getTime() > idealArrival.getTime()) {
+                absoluteArrival = earliestActualArrival;
+                driveStartTime = prevDeparture;
+            } else {
+                absoluteArrival = idealArrival;
+                driveStartTime = new Date(absoluteArrival.getTime() - driveTotalMs);
+            }
+        }
+
+        const stayDurationHours = (departureTime.getTime() - absoluteArrival.getTime()) / (1000 * 60 * 60);
+
+        acc.push({
             ...stop,
-            absoluteArrival: arrivalTime,
+            absoluteArrival,
             absoluteDeparture: departureTime,
-            driveStartTime: driveStartTime,
+            driveStartTime,
             stayDurationHours: Math.round(stayDurationHours)
-        };
-    });
+        });
+
+        return acc;
+    }, [] as (RecommendedStop & { absoluteArrival: Date; absoluteDeparture: Date; driveStartTime: Date; stayDurationHours: number; })[]);
 
     // Calculate final return timeline
     let finalReturnArrivalStr = "";
@@ -304,7 +341,7 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                             </button>
                         )}
                         <button
-                            onClick={() => { setResult(null); onRouteGenerated([]); onUserCoordsChange(null); }}
+                            onClick={() => { setResult(null); onRouteGenerated([], 0); onUserCoordsChange(null); }}
                             className="text-xs text-orange-400 hover:text-orange-300 transition-colors"
                         >
                             ← New trip
@@ -312,14 +349,18 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                     </div>
                 </div>
                 {stops.length > 0 ? (
-                    <div className="flex gap-4 flex-wrap">
+                    <div className="flex gap-4 flex-wrap mt-2">
                         {totalPurse > 0 && (
                             <>
                                 <div className="flex items-center gap-1.5">
-                                    <span className="text-xl font-bebas tracking-wider text-emerald-400">${totalPurse.toLocaleString()}</span>
-                                    <span className="text-[10px] text-zinc-600 uppercase tracking-wider">potential winnings</span>
+                                    <span className="text-xl font-bebas tracking-wider text-emerald-400">
+                                        ${totalPurse.toLocaleString()}
+                                    </span>
+                                    <span className="text-[10px] text-zinc-600 uppercase tracking-wider leading-tight">
+                                        potential<br />winnings
+                                    </span>
                                 </div>
-                                <div className="w-px bg-zinc-800" />
+                                <div className="w-px bg-zinc-800 lg:block hidden" />
                             </>
                         )}
                         <div className="flex items-center gap-1.5">
@@ -358,7 +399,7 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                         <p className="text-4xl mb-3">🏕️</p>
                         <p className="text-zinc-400 text-sm mb-4">No competitions found within this timeframe.</p>
                         <button
-                            onClick={() => { setResult(null); onRouteGenerated([]); }}
+                            onClick={() => { setResult(null); onRouteGenerated([], 0); }}
                             className="text-orange-400 text-sm hover:underline"
                         >
                             Try different dates →
@@ -404,7 +445,7 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }
 

@@ -6,6 +6,7 @@ const organizations = [
   { name: 'IBCA', url: 'https://ibcabbq.org' },
   { name: 'FBA', url: 'https://flbbq.org' },
   { name: 'SCA', url: 'https://steakcookoffs.com' },
+  { name: 'CBA', url: 'https://cbabbq.com' },
 ];
 
 async function seed() {
