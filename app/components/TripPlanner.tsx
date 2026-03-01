@@ -482,26 +482,42 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                             departureTime={processedStops.length > 0 ? processedStops[0].driveStartTime : undefined}
                         />
 
-                        {processedStops.map((stop, i) => (
-                            <div key={stop.event.id}>
-                                {/* Drive connector */}
-                                <DriveConnector
-                                    miles={stop.driveFromPrevMiles}
-                                    hours={stop.driveFromPrevHours}
-                                    departureTime={stop.driveStartTime}
-                                />
+                        {processedStops.map((stop, i) => {
+                            let layoverHours = 0;
+                            if (i > 0) {
+                                const prevDeparture = processedStops[i - 1].absoluteDeparture;
+                                layoverHours = (stop.driveStartTime.getTime() - prevDeparture.getTime()) / (1000 * 60 * 60);
+                            }
 
-                                {/* Event stop */}
-                                <StopCard
-                                    stop={stop}
-                                    index={i + 1}
-                                    arrivalTime={stop.absoluteArrival}
-                                    departureTime={stop.absoluteDeparture}
-                                    stayHours={stop.stayDurationHours}
-                                    onClick={() => onSelectEvent(stop.event as unknown as EventItem)}
-                                />
-                            </div>
-                        ))}
+                            return (
+                                <div key={stop.event.id}>
+                                    {/* Overnight Layover (if gap > 8 hours) */}
+                                    {layoverHours > 8 && (
+                                        <OvernightLayover
+                                            hours={Math.round(layoverHours)}
+                                            location={processedStops[i - 1].event.locationAddress?.split(',')[0] || processedStops[i - 1].event.name}
+                                        />
+                                    )}
+
+                                    {/* Drive connector */}
+                                    <DriveConnector
+                                        miles={stop.driveFromPrevMiles}
+                                        hours={stop.driveFromPrevHours}
+                                        departureTime={stop.driveStartTime}
+                                    />
+
+                                    {/* Event stop */}
+                                    <StopCard
+                                        stop={stop}
+                                        index={i + 1}
+                                        arrivalTime={stop.absoluteArrival}
+                                        departureTime={stop.absoluteDeparture}
+                                        stayHours={stop.stayDurationHours}
+                                        onClick={() => onSelectEvent(stop.event as unknown as EventItem)}
+                                    />
+                                </div>
+                            );
+                        })}
 
                         {/* Return home */}
                         <DriveConnector
@@ -577,6 +593,29 @@ function DriveConnector({ miles, hours, isReturn, departureTime }: { miles: numb
 
 function formatTime(date: Date) {
     return date.toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit" });
+}
+
+function OvernightLayover({ hours, location }: { hours: number, location: string }) {
+    return (
+        <div className="flex items-start gap-3 my-2 group">
+            {/* Index spacer */}
+            <div className="w-10 flex justify-center shrink-0">
+                <div className="w-8 h-8 rounded-full bg-indigo-900 border-2 border-indigo-500 flex items-center justify-center text-indigo-300 text-sm shadow-[0_0_10px_rgba(99,102,241,0.2)]">
+                    🌙
+                </div>
+            </div>
+            {/* Card */}
+            <div className="flex-1 bg-gradient-to-r from-indigo-950/50 to-transparent border border-indigo-900/50 rounded-xl p-3 flex items-center gap-3">
+                <div className="flex-1">
+                    <p className="text-xs text-indigo-300 font-semibold tracking-wide uppercase">Overnight Layover</p>
+                    <p className="text-sm text-zinc-300 mt-0.5">Rest in <span className="text-white font-medium">{location}</span></p>
+                </div>
+                <div className="text-right">
+                    <span className="text-xs font-bold text-indigo-400 bg-indigo-950 px-2 py-1 rounded-md">{hours}h stop</span>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 function StopCard({ stop, index, arrivalTime, departureTime, stayHours, onClick }: { stop: RecommendedStop; index: number; arrivalTime: Date; departureTime: Date; stayHours: number; onClick: () => void }) {
