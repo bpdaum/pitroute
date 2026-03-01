@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { getOrgColor, OrgBadge } from "./EventCard";
 import type { EventItem } from "./EventCard";
@@ -60,6 +60,43 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
     const { data: session } = useSession();
     const [isSaving, setIsSaving] = useState(false);
     const [saveSuccess, setSaveSuccess] = useState(false);
+
+    const [suggestions, setSuggestions] = useState<{ lat: number, lng: number, displayName: string }[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const suggestionRef = useRef<HTMLDivElement>(null);
+
+    // Debounce autocomplete fetch
+    useEffect(() => {
+        if (!locationQuery.trim() || locationQuery.length < 3) {
+            setSuggestions([]);
+            return;
+        }
+
+        const timeout = setTimeout(async () => {
+            try {
+                const res = await fetch(`/api/autocomplete?q=${encodeURIComponent(locationQuery)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setSuggestions(data.suggestions || []);
+                }
+            } catch (e) {
+                // ignore
+            }
+        }, 300);
+
+        return () => clearTimeout(timeout);
+    }, [locationQuery]);
+
+    // Close on click outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (suggestionRef.current && !suggestionRef.current.contains(event.target as Node)) {
+                setShowSuggestions(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     async function geocodeLocation(query: string) {
         const res = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
@@ -149,7 +186,7 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
 
                 <div className="w-full space-y-4">
                     {/* Location row */}
-                    <div>
+                    <div className="relative">
                         <label className="block text-[10px] uppercase tracking-widest text-zinc-600 mb-1.5 text-left">
                             Starting location
                         </label>
@@ -157,22 +194,48 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                             <input
                                 type="text"
                                 value={locationQuery}
-                                onChange={e => setLocationQuery(e.target.value)}
+                                onChange={e => {
+                                    setLocationQuery(e.target.value);
+                                    setShowSuggestions(true);
+                                }}
+                                onFocus={() => setShowSuggestions(true)}
                                 onKeyDown={e => e.key === "Enter" && handleSearchAndPlan()}
                                 placeholder="City, state, or zip code…"
-                                className="flex-1 bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-orange-500 transition-colors"
+                                className="flex-1 w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-orange-500 transition-colors"
                             />
                             <button
                                 onClick={handleGeolocate}
                                 disabled={geoLoading}
                                 title="Use my location"
-                                className="bg-zinc-800 border border-zinc-700 hover:border-orange-500 text-zinc-400 hover:text-orange-400 rounded-xl px-3.5 transition-all"
+                                className="bg-zinc-800 shrink-0 border border-zinc-700 hover:border-orange-500 text-zinc-400 hover:text-orange-400 rounded-xl px-3.5 transition-all"
                             >
                                 {geoLoading ? "…" : "📍"}
                             </button>
                         </div>
-                        {userCoords && (
-                            <p className="text-[11px] text-emerald-500 mt-1 text-left">✓ {userCoords.label}</p>
+
+                        {/* Autocomplete Dropdown */}
+                        {showSuggestions && suggestions.length > 0 && (
+                            <div ref={suggestionRef} className="absolute z-50 w-[calc(100%-54px)] mt-1.5 bg-zinc-800 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden left-0 text-left">
+                                {suggestions.map((s, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => {
+                                            setLocationQuery(s.displayName);
+                                            const coords = { lat: s.lat, lng: s.lng, label: s.displayName };
+                                            setUserCoords(coords);
+                                            onUserCoordsChange(coords);
+                                            setShowSuggestions(false);
+                                        }}
+                                        className="w-full text-left px-4 py-3 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors border-b border-zinc-700/50 last:border-0 truncate"
+                                    >
+                                        {s.displayName}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {userCoords && !showSuggestions && (
+                            <p className="text-[11px] text-emerald-500 mt-1 text-left line-clamp-1">✓ {userCoords.label}</p>
                         )}
                     </div>
 
