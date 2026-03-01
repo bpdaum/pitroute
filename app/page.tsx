@@ -104,9 +104,9 @@ export default function Home() {
   if (!mounted) return <div className="bg-zinc-950 min-h-screen" />;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-zinc-950">
-      {/* Sidebar */}
-      <aside className="w-64 shrink-0 flex flex-col bg-zinc-900 border-r border-zinc-800 overflow-y-auto">
+    <div className="flex flex-col md:flex-row h-[100dvh] overflow-hidden bg-zinc-950">
+      {/* Sidebar - Desktop Only */}
+      <aside className="hidden md:flex w-64 shrink-0 flex-col bg-zinc-900 border-r border-zinc-800 overflow-y-auto">
         <div className="px-5 pt-6 pb-4 border-b border-zinc-800">
           <Logo className="h-10" />
           <p className="text-[10px] text-zinc-600 mt-2 uppercase tracking-widest">BBQ Competition Finder</p>
@@ -231,9 +231,9 @@ export default function Home() {
           )}
         </div>
 
-        <div className="flex flex-1 overflow-hidden relative">
+        <div className="flex flex-col md:flex-row flex-1 overflow-hidden relative">
           {activeTab === "plan" && (
-            <div className="w-[420px] shrink-0 border-r border-zinc-800 bg-zinc-950 flex flex-col h-full z-10 shadow-2xl overflow-hidden relative">
+            <div className="w-full md:w-[420px] h-[55%] md:h-full shrink-0 border-b md:border-b-0 md:border-r border-zinc-800 bg-zinc-950 flex flex-col z-10 shadow-2xl overflow-hidden relative">
               <TripPlanner
                 onRouteGenerated={(stops, purse) => {
                   handleRouteGenerated(stops as RouteStop[], purse);
@@ -285,7 +285,7 @@ export default function Home() {
           </div>
 
           {selectedEvent && (
-            <div className="w-80 shrink-0 border-l border-zinc-800 bg-zinc-900 overflow-y-auto fade-in shadow-2xl relative z-20">
+            <div className="absolute inset-0 md:relative md:inset-auto md:w-80 shrink-0 border-t md:border-t-0 md:border-l border-zinc-800 bg-zinc-900 overflow-y-auto fade-in shadow-2xl z-30">
               <div className="sticky top-0 flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-900 z-10">
                 <span className="text-sm font-semibold text-zinc-300">Event Details</span>
                 <button
@@ -313,6 +313,26 @@ export default function Home() {
           )}
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="md:hidden flex items-center justify-around bg-zinc-900 border-t border-zinc-800 shrink-0 pb-safe">
+        {ALL_TABS.filter(tab => !tab.requireAuth || session?.user).map(tab => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex flex-col items-center justify-center flex-1 py-3 transition-colors ${isActive ? "text-orange-400" : "text-zinc-500 hover:text-zinc-300"
+                }`}
+            >
+              <span className="text-xl leading-none mb-1">{tab.icon}</span>
+              <span className="text-[10px] uppercase font-semibold tracking-wider">
+                {tab.id === 'plan' ? 'Plan' : tab.label}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 }
