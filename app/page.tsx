@@ -267,14 +267,79 @@ export default function Home() {
         <div className="flex-1 p-4 border-t border-zinc-800 space-y-5 fade-in">
           <h3 className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Refine List</h3>
 
+          {/* Location Search */}
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Starting Location</p>
+            <div className="relative">
+              <div className="flex gap-1.5">
+                <input
+                  type="text"
+                  value={locationQuery}
+                  onChange={e => {
+                    setLocationQuery(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  onKeyDown={e => e.key === "Enter" && handleLocationSearch()}
+                  placeholder="City, zip…"
+                  className="flex-1 min-w-0 bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+                />
+                <button
+                  onClick={handleGeolocate}
+                  disabled={geoLoading}
+                  className="bg-zinc-950 shrink-0 border border-zinc-800 hover:border-orange-500 text-zinc-500 hover:text-orange-400 rounded-lg px-2 text-xs transition-colors"
+                >
+                  {geoLoading ? "…" : "📍"}
+                </button>
+              </div>
+
+              {/* Autocomplete Dropdown - Sidebar Specific */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div ref={suggestionRef} className="absolute z-50 w-full mt-1 bg-zinc-800 border border-zinc-700 rounded-lg shadow-2xl overflow-hidden left-0 text-left">
+                  {suggestions.slice(0, 5).map((s, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setLocationQuery(s.displayName);
+                        setUserCoords({ lat: s.lat, lng: s.lng, label: s.displayName });
+                        setShowSuggestions(false);
+                      }}
+                      className="w-full text-left px-3 py-2 text-[11px] text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors border-b border-zinc-700/50 last:border-0 truncate"
+                    >
+                      {s.displayName}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Radius Slider */}
+          {userCoords && (
+            <div className="fade-in">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] uppercase tracking-widest text-zinc-600">Search Radius</p>
+                <span className="text-[10px] font-bold text-orange-500">{maxDistance} mi</span>
+              </div>
+              <input
+                type="range"
+                min="50" max="2500" step="50"
+                value={maxDistance}
+                onChange={(e) => setMaxDistance(parseInt(e.target.value))}
+                className="w-full accent-orange-500 h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
+          )}
+
           {/* Search */}
           <div>
+            <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Search Events</p>
             <input
               type="text"
-              placeholder="Search event names…"
+              placeholder="Event name…"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
             />
           </div>
 
@@ -288,8 +353,8 @@ export default function Home() {
                   <button
                     key={org}
                     onClick={() => toggleOrg(org)}
-                    className={`px-2.5 py-1 rounded-md text-[10px] font-semibold tracking-wider transition-colors ${isActive
-                      ? "bg-zinc-700 text-white"
+                    className={`px-2 py-0.5 rounded-md text-[9px] font-semibold tracking-wider transition-colors ${isActive
+                      ? "bg-orange-500/20 text-orange-400 border border-orange-500/30"
                       : "bg-zinc-950 border border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700"
                       }`}
                   >
@@ -356,121 +421,62 @@ export default function Home() {
             )}
             {activeTab === "list" && (
               <div className="h-full overflow-y-auto content-start pb-32 flex flex-col">
-                {/* Global Location Setter */}
-                <div className="p-6 border-b border-zinc-800 bg-zinc-900 shadow-xl shrink-0 z-20 relative">
-                  <div className="max-w-xl mx-auto w-full">
-                    <p className="text-xs uppercase tracking-widest text-zinc-400 font-bold mb-3 flex items-center gap-2">
-                      <span>📍</span> Where are you starting from?
-                    </p>
-                    <div className="relative">
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={locationQuery}
-                          onChange={e => {
-                            setLocationQuery(e.target.value);
-                            setShowSuggestions(true);
-                          }}
-                          onFocus={() => setShowSuggestions(true)}
-                          onKeyDown={e => e.key === "Enter" && handleLocationSearch()}
-                          placeholder="City, state, or zip…"
-                          className="flex-1 w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-orange-500 transition-colors shadow-inner"
-                        />
-                        <button
-                          onClick={handleGeolocate}
-                          disabled={geoLoading}
-                          title="Use my location"
-                          className="bg-zinc-950 shrink-0 border border-zinc-800 hover:border-orange-500 text-zinc-400 hover:text-orange-400 rounded-lg px-4 transition-all"
-                        >
-                          {geoLoading ? "…" : "📍"}
-                        </button>
-                      </div>
-
-                      {/* Autocomplete Dropdown */}
-                      {showSuggestions && suggestions.length > 0 && (
-                        <div ref={suggestionRef} className="absolute z-50 w-full mt-2 bg-zinc-800 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden left-0 text-left">
-                          {suggestions.map((s, i) => (
-                            <button
-                              key={i}
-                              onClick={() => {
-                                setLocationQuery(s.displayName);
-                                setUserCoords({ lat: s.lat, lng: s.lng, label: s.displayName });
-                                setShowSuggestions(false);
-                              }}
-                              className="w-full text-left px-5 py-3 text-sm text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors border-b border-zinc-700/50 last:border-0 truncate"
-                            >
-                              {s.displayName}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-4 mt-4 bg-zinc-950/40 p-3 rounded-lg border border-zinc-800/50">
-                      <label className="text-xs font-semibold text-zinc-500 shrink-0 uppercase tracking-widest">Search Radius</label>
-                      <input
-                        type="range"
-                        min="50" max="2500" step="50"
-                        value={maxDistance}
-                        onChange={(e) => setMaxDistance(parseInt(e.target.value))}
-                        className="flex-1 accent-orange-500"
-                      />
-                      <span className="text-sm font-bold text-orange-400 w-16 text-right">{maxDistance} mi</span>
-                    </div>
-
-                    {/* Date Filters Row */}
-                    <div className="flex flex-col sm:flex-row gap-4 mt-4 items-stretch">
-                      {/* Dates */}
-                      <div className="flex-1 w-full bg-zinc-950/40 p-4 rounded-lg border border-zinc-800/50 flex flex-col">
-                        <div className="flex items-center justify-between mb-3">
-                          <label className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">Date Range</label>
-                          {(startDate || endDate) && (
-                            <button
-                              onClick={() => { setStartDate(""); setEndDate(""); }}
-                              className="text-[10px] text-orange-400 hover:text-orange-300 font-bold uppercase tracking-wider"
-                            >
-                              CLEAR
-                            </button>
-                          )}
-                        </div>
-                        <div className="flex gap-2">
-                          <input
-                            type="date"
-                            value={startDate}
-                            onChange={e => setStartDate(e.target.value)}
-                            className="flex-1 bg-zinc-950 border border-zinc-800 rounded-md px-3 py-1.5 text-xs text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors color-scheme-dark shadow-inner"
-                            placeholder="Start"
-                          />
-                          <input
-                            type="date"
-                            value={endDate}
-                            onChange={e => setEndDate(e.target.value)}
-                            className="flex-1 bg-zinc-950 border border-zinc-800 rounded-md px-3 py-1.5 text-xs text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors color-scheme-dark shadow-inner"
-                            placeholder="End"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Blackout Dates */}
-                      <div className="flex-1 w-full bg-zinc-950/40 p-4 rounded-lg border border-zinc-800/50">
-                        <BlackoutDates
-                          blackoutDates={blackoutDates}
-                          setBlackoutDates={setBlackoutDates}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="p-4 flex-1">
+                  {/* Summary of active filters if any are set */}
+                  {(userCoords || startDate || endDate || blackoutDates.length > 0) && (
+                    <div className="mb-6 flex flex-wrap gap-4 items-center">
+                      {/* Date Filters Row */}
+                      <div className="flex flex-col sm:flex-row gap-4 items-stretch w-full max-w-4xl mx-auto">
+                        {/* Dates */}
+                        <div className="flex-1 w-full bg-zinc-900 shadow-lg p-4 rounded-xl border border-zinc-800 flex flex-col transition-all hover:border-zinc-700">
+                          <div className="flex items-center justify-between mb-3">
+                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-1.5">
+                              <span>📅</span> Date Range
+                            </label>
+                            {(startDate || endDate) && (
+                              <button
+                                onClick={() => { setStartDate(""); setEndDate(""); }}
+                                className="text-[10px] text-orange-400 hover:text-orange-300 font-bold uppercase tracking-wider"
+                              >
+                                CLEAR
+                              </button>
+                            )}
+                          </div>
+                          <div className="flex gap-2">
+                            <input
+                              type="date"
+                              value={startDate}
+                              onChange={e => setStartDate(e.target.value)}
+                              className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors color-scheme-dark shadow-inner"
+                            />
+                            <div className="flex items-center text-zinc-700">to</div>
+                            <input
+                              type="date"
+                              value={endDate}
+                              onChange={e => setEndDate(e.target.value)}
+                              className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors color-scheme-dark shadow-inner"
+                            />
+                          </div>
+                        </div>
 
-                  {userCoords && filteredEvents.length === 0 ? (
-                    <div className="col-span-full py-12 text-center text-sm text-zinc-500">
-                      No events match your selected filters. Try increasing your radius.
+                        {/* Blackout Dates */}
+                        <div className="flex-1 w-full bg-zinc-900 shadow-lg p-4 rounded-xl border border-zinc-800 transition-all hover:border-zinc-700">
+                          <BlackoutDates
+                            blackoutDates={blackoutDates}
+                            setBlackoutDates={setBlackoutDates}
+                          />
+                        </div>
+                      </div>
                     </div>
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                      {filteredEvents.map(e => (
+                  )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                    {filteredEvents.length === 0 ? (
+                      <div className="col-span-full py-12 text-center text-sm text-zinc-500">
+                        No events match your selected filters. Try adjusting your radius or dates.
+                      </div>
+                    ) : (
+                      filteredEvents.map(e => (
                         <EventCard
                           key={e.id}
                           event={e}
@@ -478,9 +484,9 @@ export default function Home() {
                           onToggleSelect={toggleEventSelection}
                           onClick={() => setSelectedEvent(e)}
                         />
-                      ))}
-                    </div>
-                  )}
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
             )}

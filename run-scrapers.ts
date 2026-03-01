@@ -1,26 +1,31 @@
 import { ScraperRunner } from './lib/scrapers/runner';
-import { SCAScraper } from './lib/scrapers/sca';
-import { MBNScraper } from './lib/scrapers/mbn';
+import { IBCAScraper } from './lib/scrapers/ibca';
 import { KCBScraper } from './lib/scrapers/kcbs';
 import { FBAScraper } from './lib/scrapers/fba';
-import { IBCAScraper } from './lib/scrapers/ibca';
+import { SCAScraper } from './lib/scrapers/sca';
+import { MBNScraper } from './lib/scrapers/mbn';
+import { LSBSScraper } from './lib/scrapers/lsbs';
+import { OutlawScraper } from './lib/scrapers/outlaw';
+import { CTBAScraper } from './lib/scrapers/ctba';
 import { CBAScraper } from './lib/scrapers/cba';
+import { BCAScraper } from './lib/scrapers/bca';
 
 async function main() {
     const runner = new ScraperRunner();
 
     try {
         console.log('--- Starting SCA Scraper ---');
+        await runner.runAndPersist('FBA', new FBAScraper());
         await runner.runAndPersist('SCA', new SCAScraper());
-
-        console.log('--- Starting MBN Scraper ---');
         await runner.runAndPersist('MBN', new MBNScraper());
+        await runner.runAndPersist('LSBS', new LSBSScraper());
+        await runner.runAndPersist('Outlaw BBQ', new OutlawScraper());
+        await runner.runAndPersist('CTBA', new CTBAScraper());
+        await runner.runAndPersist('BCA', new BCAScraper());
 
         console.log('--- Starting KCBS Scraper ---');
         await runner.runAndPersist('KCBS', new KCBScraper());
 
-        console.log('--- Starting FBA Scraper ---');
-        await runner.runAndPersist('FBA', new FBAScraper());
 
         console.log('--- Starting IBCA Scraper ---');
         await runner.runAndPersist('IBCA', new IBCAScraper());
