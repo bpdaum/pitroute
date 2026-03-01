@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { EventMap } from "./components/EventMap";
 
 import { TripPlanner } from "./components/TripPlanner";
+import { Logo } from "./components/Logo";
 
 type Tab = "plan" | "map" | "calendar" | "list" | "saved";
 
@@ -107,9 +108,7 @@ export default function Home() {
       {/* Sidebar */}
       <aside className="w-64 shrink-0 flex flex-col bg-zinc-900 border-r border-zinc-800 overflow-y-auto">
         <div className="px-5 pt-6 pb-4 border-b border-zinc-800">
-          <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="PitRoute.io Logo" className="h-10 object-contain" />
-          </div>
+          <Logo className="h-10" />
           <p className="text-[10px] text-zinc-600 mt-2 uppercase tracking-widest">BBQ Competition Finder</p>
         </div>
 

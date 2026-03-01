@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthWidget } from "./AuthWidget";
+import { Logo } from "./Logo";
 
 const ORGS = ["KCBS", "MBN", "SCA", "FBA", "IBCA"] as const;
 
@@ -39,9 +40,7 @@ export function FilterSidebar({ filters, onChange, eventCount }: Props) {
         <aside className="w-72 shrink-0 flex flex-col bg-zinc-900 border-r border-zinc-800 overflow-hidden">
             {/* Header */}
             <div className="px-5 pt-6 pb-4 border-b border-zinc-800">
-                <div className="flex items-center gap-2">
-                    <img src="/logo.png" alt="PitRoute.io Logo" className="h-10 object-contain" />
-                </div>
+                <Logo className="h-10" />
                 <p className="text-[10px] text-zinc-600 mt-2 uppercase tracking-widest">BBQ Competition Finder</p>
             </div>
 
