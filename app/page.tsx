@@ -233,7 +233,7 @@ export default function Home() {
 
         <div className="flex flex-col md:flex-row flex-1 overflow-hidden relative">
           {activeTab === "plan" && (
-            <div className="w-full md:w-[420px] h-[55%] md:h-full shrink-0 border-b md:border-b-0 md:border-r border-zinc-800 bg-zinc-950 flex flex-col z-10 shadow-2xl overflow-hidden relative">
+            <div className="w-full md:w-[420px] h-[55%] md:h-full shrink-0 border-b md:border-b-0 md:border-r border-zinc-800 bg-zinc-950 flex flex-col z-10 shadow-2xl overflow-y-auto relative">
               <TripPlanner
                 onRouteGenerated={(stops, purse) => {
                   handleRouteGenerated(stops as RouteStop[], purse);
