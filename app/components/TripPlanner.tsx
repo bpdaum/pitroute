@@ -332,8 +332,14 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
         const eventDate = new Date(stop.event.date);
 
         const idealArrival = new Date(eventDate);
-        idealArrival.setDate(idealArrival.getDate() - 1);
-        idealArrival.setHours(15, 0, 0, 0);
+        if (stop.driveFromPrevHours < 3) {
+            // Local event: arrive morning of, 8:00 AM
+            idealArrival.setHours(8, 0, 0, 0);
+        } else {
+            // Far event: arrive day before, 3:00 PM
+            idealArrival.setDate(idealArrival.getDate() - 1);
+            idealArrival.setHours(15, 0, 0, 0);
+        }
 
         const departureTime = new Date(eventDate);
         departureTime.setHours(17, 0, 0, 0);
