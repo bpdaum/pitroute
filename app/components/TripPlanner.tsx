@@ -210,7 +210,7 @@ export function TripPlanner({ onRouteGenerated, onSelectEvent, onUserCoordsChang
                                 type="number"
                                 value={maxDistance}
                                 onChange={e => setMaxDistance(e.target.value)}
-                                placeholder="Auto-caclulate"
+                                placeholder="Auto-calculate"
                                 className="bg-transparent w-full text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none"
                                 min="1"
                             />
