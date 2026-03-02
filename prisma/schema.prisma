@@ -30,6 +30,7 @@ model Event {
   longitude       Float?
   purseAmount     Float?
   detailsUrl      String? // Link to specific event page
+  cookPlans       CookPlan[]
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
@@ -48,6 +49,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   savedTrips    SavedTrip[]
+  cookPlans     CookPlan[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -99,4 +101,27 @@ model SavedTrip {
   updatedAt   DateTime @updatedAt
 
   @@index([userId])
+}
+
+model CookPlan {
+  id          String   @id @default(cuid())
+  userId      String
+  eventId     String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  meatType    String   // e.g. "Brisket", "Ribs", "Pork", "Chicken"
+  turnInTime  String?  // Time the meat is due to judges
+  ingredients String?  
+  recipe      String?  
+  
+  timeline    String?  // JSON string storing the AI generated schedule
+  
+  postNotes   String?  
+  aiFeedback  String?  // AI's expert advice
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([userId, eventId, meatType])
 }

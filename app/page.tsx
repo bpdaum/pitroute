@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { EventMap } from "./components/EventMap";
 import { Logo } from "./components/Logo";
 import { BlackoutDates } from "./components/BlackoutDates";
+import { CookPlannerDashboard } from "./components/CookPlannerDashboard";
 
 function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 3958.8;
@@ -24,14 +25,34 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-type Tab = "list" | "map" | "calendar" | "saved";
-
-const ALL_TABS: { id: Tab; icon: string; label: string, requireAuth?: boolean }[] = [
-  { id: "list", icon: "☰", label: "Discover Events" },
-  { id: "map", icon: "🗺", label: "Map" },
-  { id: "calendar", icon: "📅", label: "Calendar" },
-  { id: "saved", icon: "⭐", label: "Saved Trips", requireAuth: true },
-];
+// Fixed: Moving inner component outside to prevent focus loss
+interface FilterPanelProps {
+  locationQuery: string;
+  setLocationQuery: (v: string) => void;
+  setShowSuggestions: (v: boolean) => void;
+  handleLocationSearch: () => void;
+  handleGeolocate: () => void;
+  geoLoading: boolean;
+  showSuggestions: boolean;
+  suggestions: any[];
+  suggestionRef: React.RefObject<HTMLDivElement | null>;
+  setUserCoords: (v: { lat: number; lng: number, label?: string } | null) => void;
+  userCoords: { lat: number; lng: number, label?: string } | null;
+  maxDistance: number;
+  setMaxDistance: (v: number) => void;
+  searchQuery: string;
+  setSearchQuery: (v: string) => void;
+  startDate: string;
+  setStartDate: (v: string) => void;
+  endDate: string;
+  setEndDate: (v: string) => void;
+  blackoutDates: string[];
+  setBlackoutDates: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedOrgs: string[];
+  toggleOrg: (v: string) => void;
+  minPurse: number;
+  setMinPurse: (v: number) => void;
+}
 
 const ORGANIZATIONS = ["KCBS", "MBN", "SCA", "FBA", "IBCA", "CBA"];
 const PURSE_TIERS = [
@@ -39,6 +60,164 @@ const PURSE_TIERS = [
   { label: "$1,000+", value: 1000 },
   { label: "$5,000+", value: 5000 },
   { label: "$10,000+", value: 10000 },
+];
+
+function FilterPanelContents(props: FilterPanelProps) {
+  return (
+    <div className="space-y-5">
+      {/* Location Search */}
+      <div>
+        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Starting Location</p>
+        <div className="relative">
+          <div className="flex gap-1.5">
+            <input
+              type="text"
+              value={props.locationQuery}
+              onChange={e => {
+                props.setLocationQuery(e.target.value);
+                props.setShowSuggestions(true);
+              }}
+              onFocus={() => props.setShowSuggestions(true)}
+              onKeyDown={e => e.key === "Enter" && props.handleLocationSearch()}
+              placeholder="City, zip…"
+              className="flex-1 min-w-0 bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+            />
+            <button
+              onClick={props.handleGeolocate}
+              disabled={props.geoLoading}
+              className="bg-zinc-950 shrink-0 border border-zinc-800 hover:border-orange-500 text-zinc-500 hover:text-orange-400 rounded-lg px-2 text-xs transition-colors"
+            >
+              {props.geoLoading ? "…" : "📍"}
+            </button>
+          </div>
+
+          {props.showSuggestions && props.suggestions.length > 0 && (
+            <div ref={props.suggestionRef} className="absolute z-50 w-full mt-1 bg-zinc-800 border border-zinc-700 rounded-lg shadow-2xl overflow-hidden left-0 text-left">
+              {props.suggestions.slice(0, 5).map((s, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    props.setLocationQuery(s.displayName);
+                    props.setUserCoords({ lat: s.lat, lng: s.lng, label: s.displayName });
+                    props.setShowSuggestions(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-[11px] text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors border-b border-zinc-700/50 last:border-0 truncate"
+                >
+                  {s.displayName}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Radius Slider */}
+      {props.userCoords && (
+        <div className="fade-in">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[10px] uppercase tracking-widest text-zinc-600">Search Radius</p>
+            <span className="text-[10px] font-bold text-orange-500">{props.maxDistance} mi</span>
+          </div>
+          <input
+            type="range"
+            min="50" max="2500" step="50"
+            value={props.maxDistance}
+            onChange={(e) => props.setMaxDistance(parseInt(e.target.value))}
+            className="w-full accent-orange-500 h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+          />
+        </div>
+      )}
+
+      {/* Search */}
+      <div>
+        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Search Events</p>
+        <input
+          type="text"
+          placeholder="Event name…"
+          value={props.searchQuery}
+          onChange={e => props.setSearchQuery(e.target.value)}
+          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+        />
+      </div>
+
+      {/* Date Range */}
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[10px] uppercase tracking-widest text-zinc-600">Date Range</p>
+          {(props.startDate || props.endDate) && (
+            <button onClick={() => { props.setStartDate(""); props.setEndDate(""); }} className="text-[10px] text-orange-400 font-bold uppercase tracking-wider">
+              Clear
+            </button>
+          )}
+        </div>
+        <div className="flex gap-1.5 items-center">
+          <input
+            type="date"
+            value={props.startDate}
+            onChange={e => props.setStartDate(e.target.value)}
+            className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors color-scheme-dark"
+          />
+          <span className="text-zinc-600 text-xs">–</span>
+          <input
+            type="date"
+            value={props.endDate}
+            onChange={e => props.setEndDate(e.target.value)}
+            className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors color-scheme-dark"
+          />
+        </div>
+      </div>
+
+      {/* Blackout Dates */}
+      <div>
+        <BlackoutDates blackoutDates={props.blackoutDates} setBlackoutDates={props.setBlackoutDates} />
+      </div>
+
+      {/* Organizations */}
+      <div>
+        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Organizations</p>
+        <div className="flex flex-wrap gap-1.5">
+          {ORGANIZATIONS.map(org => {
+            const isActive = props.selectedOrgs.includes(org);
+            return (
+              <button
+                key={org}
+                onClick={() => props.toggleOrg(org)}
+                className={`px-2 py-0.5 rounded-md text-[9px] font-semibold tracking-wider transition-colors ${isActive
+                  ? "bg-orange-500/20 text-orange-400 border border-orange-500/30"
+                  : "bg-zinc-950 border border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700"
+                  }`}
+              >
+                {org}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Purse */}
+      <div>
+        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Minimum Prize</p>
+        <select
+          value={props.minPurse}
+          onChange={e => props.setMinPurse(Number(e.target.value))}
+          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-2 text-xs text-zinc-300 focus:outline-none focus:border-zinc-600"
+        >
+          {PURSE_TIERS.map(tier => (
+            <option key={tier.value} value={tier.value}>{tier.label}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+}
+
+type Tab = "list" | "map" | "calendar" | "saved";
+
+const ALL_TABS: { id: Tab; icon: string; label: string, requireAuth?: boolean }[] = [
+  { id: "list", icon: "☰", label: "Discover Events" },
+  { id: "map", icon: "🗺", label: "Map" },
+  { id: "calendar", icon: "📅", label: "Calendar" },
+  { id: "saved", icon: "⭐", label: "Saved Trips", requireAuth: true },
 ];
 
 interface RouteStop {
@@ -58,6 +237,8 @@ export default function Home() {
 
   const [routeStops, setRouteStops] = useState<RouteStop[]>([]);
   const [routePurse, setRoutePurse] = useState(0);
+  const [planningEvent, setPlanningEvent] = useState<EventItem | null>(null);
+
   const [isGeneratingPath, setIsGeneratingPath] = useState(false);
   const [routeError, setRouteError] = useState("");
 
@@ -144,9 +325,11 @@ export default function Home() {
     if (!locationQuery.trim()) return;
     setGeoLoading(true);
     try {
-      const geo = await geocodeLocation(locationQuery);
-      setUserCoords({ lat: geo.lat, lng: geo.lng, label: locationQuery });
-    } catch {
+      const data = await geocodeLocation(locationQuery);
+      setUserCoords({ lat: data.lat, lng: data.lng, label: data.displayName });
+      setLocationQuery(data.displayName);
+      setShowSuggestions(false);
+    } catch (e) {
       // Silently fail on UI for now
     }
     setGeoLoading(false);
@@ -237,152 +420,35 @@ export default function Home() {
 
   if (!mounted) return <div className="bg-zinc-950 min-h-screen" />;
 
-  // Reusable filter panel contents (used in both sidebar and mobile drawer)
-  const FilterPanelContents = () => (
-    <div className="space-y-5">
-      {/* Location Search */}
-      <div>
-        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Starting Location</p>
-        <div className="relative">
-          <div className="flex gap-1.5">
-            <input
-              type="text"
-              value={locationQuery}
-              onChange={e => {
-                setLocationQuery(e.target.value);
-                setShowSuggestions(true);
-              }}
-              onFocus={() => setShowSuggestions(true)}
-              onKeyDown={e => e.key === "Enter" && handleLocationSearch()}
-              placeholder="City, zip…"
-              className="flex-1 min-w-0 bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
-            />
-            <button
-              onClick={handleGeolocate}
-              disabled={geoLoading}
-              className="bg-zinc-950 shrink-0 border border-zinc-800 hover:border-orange-500 text-zinc-500 hover:text-orange-400 rounded-lg px-2 text-xs transition-colors"
-            >
-              {geoLoading ? "…" : "📍"}
-            </button>
-          </div>
-
-          {showSuggestions && suggestions.length > 0 && (
-            <div ref={suggestionRef} className="absolute z-50 w-full mt-1 bg-zinc-800 border border-zinc-700 rounded-lg shadow-2xl overflow-hidden left-0 text-left">
-              {suggestions.slice(0, 5).map((s, i) => (
-                <button
-                  key={i}
-                  onClick={() => {
-                    setLocationQuery(s.displayName);
-                    setUserCoords({ lat: s.lat, lng: s.lng, label: s.displayName });
-                    setShowSuggestions(false);
-                  }}
-                  className="w-full text-left px-3 py-2 text-[11px] text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors border-b border-zinc-700/50 last:border-0 truncate"
-                >
-                  {s.displayName}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Radius Slider */}
-      {userCoords && (
-        <div className="fade-in">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] uppercase tracking-widest text-zinc-600">Search Radius</p>
-            <span className="text-[10px] font-bold text-orange-500">{maxDistance} mi</span>
-          </div>
-          <input
-            type="range"
-            min="50" max="2500" step="50"
-            value={maxDistance}
-            onChange={(e) => setMaxDistance(parseInt(e.target.value))}
-            className="w-full accent-orange-500 h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
-          />
-        </div>
-      )}
-
-      {/* Search */}
-      <div>
-        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Search Events</p>
-        <input
-          type="text"
-          placeholder="Event name…"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
-        />
-      </div>
-
-      {/* Date Range */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-[10px] uppercase tracking-widest text-zinc-600">Date Range</p>
-          {(startDate || endDate) && (
-            <button onClick={() => { setStartDate(""); setEndDate(""); }} className="text-[10px] text-orange-400 font-bold uppercase tracking-wider">
-              Clear
-            </button>
-          )}
-        </div>
-        <div className="flex gap-1.5 items-center">
-          <input
-            type="date"
-            value={startDate}
-            onChange={e => setStartDate(e.target.value)}
-            className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors color-scheme-dark"
-          />
-          <span className="text-zinc-600 text-xs">–</span>
-          <input
-            type="date"
-            value={endDate}
-            onChange={e => setEndDate(e.target.value)}
-            className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors color-scheme-dark"
-          />
-        </div>
-      </div>
-
-      {/* Blackout Dates */}
-      <div>
-        <BlackoutDates blackoutDates={blackoutDates} setBlackoutDates={setBlackoutDates} />
-      </div>
-
-      {/* Organizations */}
-      <div>
-        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Organizations</p>
-        <div className="flex flex-wrap gap-1.5">
-          {ORGANIZATIONS.map(org => {
-            const isActive = selectedOrgs.includes(org);
-            return (
-              <button
-                key={org}
-                onClick={() => toggleOrg(org)}
-                className={`px-2 py-0.5 rounded-md text-[9px] font-semibold tracking-wider transition-colors ${isActive
-                  ? "bg-orange-500/20 text-orange-400 border border-orange-500/30"
-                  : "bg-zinc-950 border border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700"
-                  }`}
-              >
-                {org}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Purse */}
-      <div>
-        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Minimum Prize</p>
-        <select
-          value={minPurse}
-          onChange={e => setMinPurse(Number(e.target.value))}
-          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-2 text-xs text-zinc-300 focus:outline-none focus:border-zinc-600"
-        >
-          {PURSE_TIERS.map(tier => (
-            <option key={tier.value} value={tier.value}>{tier.label}</option>
-          ))}
-        </select>
-      </div>
-    </div>
+  // Filters UI component call
+  const renderFilters = () => (
+    <FilterPanelContents
+      locationQuery={locationQuery}
+      setLocationQuery={setLocationQuery}
+      setShowSuggestions={setShowSuggestions}
+      handleLocationSearch={handleLocationSearch}
+      handleGeolocate={handleGeolocate}
+      geoLoading={geoLoading}
+      showSuggestions={showSuggestions}
+      suggestions={suggestions}
+      suggestionRef={suggestionRef}
+      setUserCoords={setUserCoords}
+      userCoords={userCoords}
+      maxDistance={maxDistance}
+      setMaxDistance={setMaxDistance}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      startDate={startDate}
+      setStartDate={setStartDate}
+      endDate={endDate}
+      setEndDate={setEndDate}
+      blackoutDates={blackoutDates}
+      setBlackoutDates={setBlackoutDates}
+      selectedOrgs={selectedOrgs}
+      toggleOrg={toggleOrg}
+      minPurse={minPurse}
+      setMinPurse={setMinPurse}
+    />
   );
 
   return (
@@ -413,7 +479,7 @@ export default function Home() {
         {/* Global Filters Section */}
         <div className="flex-1 p-4 border-t border-zinc-800 fade-in">
           <h3 className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-5">Refine List</h3>
-          <FilterPanelContents />
+          {renderFilters()}
         </div>
 
         <div className="p-4 border-t border-zinc-800 shrink-0">
@@ -448,7 +514,7 @@ export default function Home() {
               </div>
             </div>
             <div className="p-4">
-              <FilterPanelContents />
+              {renderFilters()}
             </div>
           </div>
         </div>
@@ -535,16 +601,33 @@ export default function Home() {
                   className="text-zinc-500 hover:text-white w-7 h-7 flex items-center justify-center rounded-md hover:bg-zinc-800 transition-all text-lg"
                 >×</button>
               </div>
-              <div className="p-4">
+              <div className="p-4 space-y-4">
                 <EventCard
                   event={selectedEvent}
                   isSelected={selectedEventIds.includes(selectedEvent.id)}
                   onToggleSelect={toggleEventSelection}
                 />
+
+                {session?.user && (
+                  <button
+                    onClick={() => setPlanningEvent(selectedEvent)}
+                    className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-sm"
+                  >
+                    <span>📓</span>
+                    <span>Plan Cook</span>
+                  </button>
+                )}
               </div>
             </div>
           )}
         </div>
+
+        {/* Cook Planner Overlay */}
+        {planningEvent && (
+          <div className="absolute inset-0 z-50 bg-zinc-950 flex flex-col">
+            <CookPlannerDashboard event={planningEvent} onBack={() => setPlanningEvent(null)} />
+          </div>
+        )}
 
         {/* Floating Route Generator Bar */}
         {selectedEventIds.length > 0 && (
