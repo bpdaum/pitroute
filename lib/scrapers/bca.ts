@@ -5,7 +5,10 @@ export class BCAScraper implements Scraper {
     private url = 'https://bcabbq.org/';
 
     async scrape(): Promise<ScrapedEvent[]> {
-        const browser = await chromium.launch({ headless: true });
+        const browser = await chromium.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
         const page = await browser.newPage();
         const events: ScrapedEvent[] = [];
 

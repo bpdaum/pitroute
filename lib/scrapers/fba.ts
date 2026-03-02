@@ -5,7 +5,10 @@ export class FBAScraper implements Scraper {
     private url = 'https://fba39.wildapricot.org/page-18280';
 
     async scrape(): Promise<ScrapedEvent[]> {
-        const browser = await chromium.launch({ headless: true });
+        const browser = await chromium.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
         const page = await browser.newPage();
         const events: ScrapedEvent[] = [];
 

@@ -5,7 +5,10 @@ export class LSBSScraper implements Scraper {
     private baseUrl = 'https://lonestarbarbecue.com';
 
     async scrape(): Promise<ScrapedEvent[]> {
-        const browser = await chromium.launch({ headless: true });
+        const browser = await chromium.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
         const events: ScrapedEvent[] = [];
 
         try {
