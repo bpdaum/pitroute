@@ -348,7 +348,15 @@ export default function Home() {
   }
 
   async function generateRoute() {
-    if (!userCoords || selectedEventIds.length === 0) return;
+    if (!userCoords) {
+      setRouteError("Please set a Starting Location in the filters first.");
+      return;
+    }
+    if (selectedEventIds.length === 0) {
+      setRouteError("Please select at least one event.");
+      return;
+    }
+
     setIsGeneratingPath(true);
     setRouteError("");
     try {
@@ -365,6 +373,11 @@ export default function Home() {
       if (!res.ok) throw new Error("Could not route between selected events.");
 
       const data = await res.json();
+
+      if (!data.stops || data.stops.length === 0) {
+        throw new Error("No physically viable route found between these events given your constraints.");
+      }
+
       setRouteStops(data.stops);
       setRoutePurse(data.totalPurse);
       setActiveTab("map"); // Navigate to a view where we can render the timeline later
