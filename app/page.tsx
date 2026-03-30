@@ -54,7 +54,7 @@ interface FilterPanelProps {
   setMinPurse: (v: number) => void;
 }
 
-const ORGANIZATIONS = ["KCBS", "MBN", "SCA", "FBA", "IBCA", "CBA"];
+const ORGANIZATIONS = ["KCBS", "MBN", "SCA", "FBA", "IBCA", "CBA", "LSBS", "Outlaw BBQ", "CTBA", "BCA"];
 const PURSE_TIERS = [
   { label: "Any Prize", value: 0 },
   { label: "$1,000+", value: 1000 },

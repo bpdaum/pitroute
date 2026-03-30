@@ -3,7 +3,7 @@
 import { AuthWidget } from "./AuthWidget";
 import { Logo } from "./Logo";
 
-const ORGS = ["KCBS", "MBN", "SCA", "FBA", "IBCA"] as const;
+const ORGS = ["KCBS", "MBN", "SCA", "FBA", "IBCA", "CBA", "LSBS", "Outlaw BBQ", "CTBA", "BCA"] as const;
 
 const ORG_COLORS: Record<string, string> = {
     KCBS: "#3b82f6",
@@ -11,6 +11,11 @@ const ORG_COLORS: Record<string, string> = {
     SCA: "#f97316",
     FBA: "#22c55e",
     IBCA: "#a855f7",
+    CBA: "#6366f1",
+    LSBS: "#ec4899",
+    "Outlaw BBQ": "#eab308",
+    CTBA: "#0ea5e9",
+    BCA: "#14b8a6",
 };
 
 interface Filters {
