@@ -12,6 +12,7 @@ import { EventMap } from "./components/EventMap";
 import { Logo } from "./components/Logo";
 import { BlackoutDates } from "./components/BlackoutDates";
 import { CookPlannerDashboard } from "./components/CookPlannerDashboard";
+import Link from "next/link";
 
 function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 3958.8;
@@ -487,6 +488,15 @@ export default function Home() {
               <span>{tab.label}</span>
             </button>
           ))}
+          {session?.user && (
+            <Link
+              href="/packages"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left text-zinc-400 hover:text-white hover:bg-zinc-800"
+            >
+              <span className="text-base leading-none">📖</span>
+              <span>Recipe Book</span>
+            </Link>
+          )}
         </nav>
 
         {/* Global Filters Section */}
@@ -682,6 +692,15 @@ export default function Home() {
             </button>
           );
         })}
+        {session?.user && (
+            <Link
+              href="/packages"
+              className="flex flex-col items-center justify-center flex-1 py-3 transition-colors text-zinc-500 hover:text-zinc-300"
+            >
+              <span className="text-xl leading-none mb-1">📖</span>
+              <span className="text-[10px] uppercase font-semibold tracking-wider">Recipes</span>
+            </Link>
+        )}
       </nav>
     </div>
   );
