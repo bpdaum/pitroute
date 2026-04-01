@@ -4,18 +4,29 @@ import { useState } from "react";
 import { CookPlan } from "./CookPlannerDashboard";
 import { TimelineViewer } from "./TimelineViewer";
 import { AIFeedbackPanel } from "./AIFeedbackPanel";
+import { RecipePackage } from "../packages/page";
 
 interface CookPlanFormProps {
     plan: CookPlan;
     onSave: (plan: CookPlan) => void;
     saving: boolean;
+    packages: RecipePackage[];
 }
 
-export function CookPlanForm({ plan, onSave, saving }: CookPlanFormProps) {
+export function CookPlanForm({ plan, onSave, saving, packages }: CookPlanFormProps) {
     const [turnInTime, setTurnInTime] = useState(plan.turnInTime || "");
     const [ingredients, setIngredients] = useState(plan.ingredients || "");
     const [recipe, setRecipe] = useState(plan.recipe || "");
     const [postNotes, setPostNotes] = useState(plan.postNotes || "");
+    
+    // New States
+    const [injectionPackageId, setInjectionPackageId] = useState(plan.injectionPackageId || "");
+    const [brinePackageId, setBrinePackageId] = useState(plan.brinePackageId || "");
+    const [seasoningPackageId, setSeasoningPackageId] = useState(plan.seasoningPackageId || "");
+    const [saucePackageId, setSaucePackageId] = useState(plan.saucePackageId || "");
+    const [cookTimeNotes, setCookTimeNotes] = useState(plan.cookTimeNotes || "");
+    const [score, setScore] = useState(plan.score || "");
+    const [rank, setRank] = useState(plan.rank || "");
 
     const [aiLoading, setAiLoading] = useState(false);
     const [timelineStr, setTimelineStr] = useState(plan.timeline || "");
@@ -30,6 +41,13 @@ export function CookPlanForm({ plan, onSave, saving }: CookPlanFormProps) {
             timeline: timelineStr,
             postNotes,
             aiFeedback: feedback,
+            injectionPackageId,
+            brinePackageId,
+            seasoningPackageId,
+            saucePackageId,
+            cookTimeNotes,
+            score: score ? parseFloat(score.toString()) : undefined,
+            rank: rank ? parseInt(rank.toString()) : undefined,
         });
     };
 
@@ -129,14 +147,69 @@ export function CookPlanForm({ plan, onSave, saving }: CookPlanFormProps) {
                 </div>
 
                 <div>
-                    <label className="block text-xs uppercase text-zinc-500 mb-1">Ingredients (Rubs, Injections, Spritz)</label>
+                    <label className="block text-xs uppercase text-zinc-500 mb-2 font-bold tracking-widest">Library Packages Used</label>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <select
+                                value={injectionPackageId}
+                                onChange={(e) => setInjectionPackageId(e.target.value)}
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-xs focus:outline-none focus:border-zinc-700 transition-colors"
+                            >
+                                <option value="">No Injection Selected</option>
+                                {packages.filter(p => p.packageType === "INJECTION").map(p => (
+                                    <option key={p.id} value={p.id}>{p.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <select
+                                value={brinePackageId}
+                                onChange={(e) => setBrinePackageId(e.target.value)}
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-xs focus:outline-none focus:border-zinc-700 transition-colors"
+                            >
+                                <option value="">No Brine Selected</option>
+                                {packages.filter(p => p.packageType === "BRINE").map(p => (
+                                    <option key={p.id} value={p.id}>{p.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <select
+                                value={seasoningPackageId}
+                                onChange={(e) => setSeasoningPackageId(e.target.value)}
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-xs focus:outline-none focus:border-zinc-700 transition-colors"
+                            >
+                                <option value="">No Seasoning Selected</option>
+                                {packages.filter(p => p.packageType === "SEASONING").map(p => (
+                                    <option key={p.id} value={p.id}>{p.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <select
+                                value={saucePackageId}
+                                onChange={(e) => setSaucePackageId(e.target.value)}
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-xs focus:outline-none focus:border-zinc-700 transition-colors"
+                            >
+                                <option value="">No Sauce Selected</option>
+                                {packages.filter(p => p.packageType === "SAUCE").map(p => (
+                                    <option key={p.id} value={p.id}>{p.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label className="block text-xs uppercase text-zinc-500 mb-1">Custom Ingredients (Extras)</label>
                     <textarea
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm focus:outline-none focus:border-orange-500 transition-colors min-h-[80px]"
-                        placeholder="e.g., Kosmos Q Cow Cover, Butcher BBQ Brisket Injection..."
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm focus:outline-none focus:border-orange-500 transition-colors min-h-[60px]"
+                        placeholder="e.g., Kosmos Q Cow Cover, extra brown sugar..."
                         value={ingredients}
                         onChange={(e) => setIngredients(e.target.value)}
                     />
                 </div>
+
 
                 <div>
                     <label className="block text-xs uppercase text-zinc-500 mb-1">Recipe / Cook Method</label>
@@ -165,13 +238,47 @@ export function CookPlanForm({ plan, onSave, saving }: CookPlanFormProps) {
                 </div>
 
                 <TimelineViewer timelineStr={timelineStr} />
+                
+                <div className="pt-4 border-t border-zinc-800">
+                    <label className="block text-xs uppercase text-zinc-500 mb-1 font-bold">On-Site Cook Notes (Adjustments, Weather, Cook Times)</label>
+                    <textarea
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm focus:outline-none focus:border-orange-500 transition-colors min-h-[80px]"
+                        placeholder="e.g., Windy day, increased temps to 300F halfway. Wrapped 30m early."
+                        value={cookTimeNotes}
+                        onChange={(e) => setCookTimeNotes(e.target.value)}
+                    />
+                </div>
             </div>
 
             {/* POST-COOK FEEDBACK */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-4">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-300 border-b border-zinc-800 pb-2">
-                    3. Post-Cook Feedback
+                    3. Post-Cook Feedback & Results
                 </h3>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-xs uppercase text-zinc-500 mb-1 font-bold">Score (out of 180)</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm focus:outline-none focus:border-orange-500 transition-colors"
+                            placeholder="e.g., 176.5"
+                            value={score}
+                            onChange={(e) => setScore(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs uppercase text-zinc-500 mb-1 font-bold">Rank / Place</label>
+                        <input
+                            type="number"
+                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm focus:outline-none focus:border-orange-500 transition-colors"
+                            placeholder="e.g., 1"
+                            value={rank}
+                            onChange={(e) => setRank(e.target.value)}
+                        />
+                    </div>
+                </div>
 
                 <div>
                     <label className="block text-xs uppercase text-zinc-500 mb-1">How did it go?</label>

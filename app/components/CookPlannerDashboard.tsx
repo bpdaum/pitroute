@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { EventItem } from "./EventCard";
 import { CookPlanForm } from "./CookPlanForm";
+import { RecipePackage } from "../packages/page";
 
 const MEAT_TYPES = ["Brisket", "Ribs", "Pork", "Chicken"];
 
@@ -15,6 +16,13 @@ export interface CookPlan {
     timeline?: string; // JSON string
     postNotes?: string;
     aiFeedback?: string;
+    injectionPackageId?: string;
+    brinePackageId?: string;
+    seasoningPackageId?: string;
+    saucePackageId?: string;
+    cookTimeNotes?: string;
+    score?: number;
+    rank?: number;
 }
 
 export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBack: () => void }) {
@@ -22,6 +30,7 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
     const [plans, setPlans] = useState<Record<string, CookPlan>>({});
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [packages, setPackages] = useState<RecipePackage[]>([]);
 
     useEffect(() => {
         fetch(`/api/cook-plan?eventId=${event.id}`)
@@ -35,8 +44,22 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
                     setPlans(map);
                 }
             })
-            .catch(console.error)
-            .finally(() => setLoading(false));
+            .catch(console.error);
+            
+        fetch("/api/packages")
+            .then(r => r.json())
+            .then(data => {
+                if (data.packages) {
+                    setPackages(data.packages);
+                }
+            })
+            .catch(console.error);
+
+        Promise.all([
+            fetch(`/api/cook-plan?eventId=${event.id}`),
+            fetch("/api/packages")
+        ]).finally(() => setLoading(false));
+
     }, [event.id]);
 
     const handleSave = async (updatedPlan: CookPlan) => {
@@ -105,6 +128,7 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
                         plan={currentPlan}
                         onSave={handleSave}
                         saving={saving}
+                        packages={packages}
                     />
                 )}
             </div>

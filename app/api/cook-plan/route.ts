@@ -57,7 +57,10 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { eventId, meatType, turnInTime, ingredients, recipe, timeline, postNotes, aiFeedback } = body;
+        const { 
+            eventId, meatType, turnInTime, ingredients, recipe, timeline, postNotes, aiFeedback,
+            injectionPackageId, brinePackageId, seasoningPackageId, saucePackageId, cookTimeNotes, score, rank
+        } = body;
 
         if (!eventId || !meatType) {
             return NextResponse.json({ error: "eventId and meatType are required" }, { status: 400 });
@@ -78,6 +81,13 @@ export async function POST(request: Request) {
                 timeline: timeline !== undefined ? timeline : undefined,
                 postNotes: postNotes !== undefined ? postNotes : undefined,
                 aiFeedback: aiFeedback !== undefined ? aiFeedback : undefined,
+                injectionPackageId: injectionPackageId !== undefined ? injectionPackageId : undefined,
+                brinePackageId: brinePackageId !== undefined ? brinePackageId : undefined,
+                seasoningPackageId: seasoningPackageId !== undefined ? seasoningPackageId : undefined,
+                saucePackageId: saucePackageId !== undefined ? saucePackageId : undefined,
+                cookTimeNotes: cookTimeNotes !== undefined ? cookTimeNotes : undefined,
+                score: score !== undefined ? parseFloat(score) : undefined,
+                rank: rank !== undefined ? parseInt(rank) : undefined,
             },
             create: {
                 userId: user.id,
@@ -89,6 +99,13 @@ export async function POST(request: Request) {
                 timeline: timeline,
                 postNotes: postNotes,
                 aiFeedback: aiFeedback,
+                injectionPackageId: injectionPackageId,
+                brinePackageId: brinePackageId,
+                seasoningPackageId: seasoningPackageId,
+                saucePackageId: saucePackageId,
+                cookTimeNotes: cookTimeNotes,
+                score: score ? parseFloat(score) : undefined,
+                rank: rank ? parseInt(rank) : undefined,
             },
         });
 

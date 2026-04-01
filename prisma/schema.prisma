@@ -50,6 +50,7 @@ model User {
   sessions      Session[]
   savedTrips    SavedTrip[]
   cookPlans     CookPlan[]
+  packages      Package[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -120,8 +121,41 @@ model CookPlan {
   postNotes   String?  
   aiFeedback  String?  // AI's expert advice
   
+  injectionPackageId String?
+  injectionPackage   Package? @relation("InjectionPackage", fields: [injectionPackageId], references: [id], onDelete: SetNull)
+  brinePackageId     String?
+  brinePackage       Package? @relation("BrinePackage", fields: [brinePackageId], references: [id], onDelete: SetNull)
+  seasoningPackageId String?
+  seasoningPackage   Package? @relation("SeasoningPackage", fields: [seasoningPackageId], references: [id], onDelete: SetNull)
+  saucePackageId     String?
+  saucePackage       Package? @relation("SaucePackage", fields: [saucePackageId], references: [id], onDelete: SetNull)
+  
+  cookTimeNotes      String?  @db.Text
+  score              Float?
+  rank               Int?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
   @@unique([userId, eventId, meatType])
+}
+
+model Package {
+  id           String      @id @default(cuid())
+  userId       String
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  packageType  String      // "INJECTION", "SEASONING", "BRINE", "SAUCE", "OTHER"
+  ingredients  String?     @db.Text
+  instructions String?     @db.Text
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  // Relations to CookPlan
+  injections   CookPlan[]  @relation("InjectionPackage")
+  brines       CookPlan[]  @relation("BrinePackage")
+  seasonings   CookPlan[]  @relation("SeasoningPackage")
+  sauces       CookPlan[]  @relation("SaucePackage")
+
+  @@index([userId])
 }
