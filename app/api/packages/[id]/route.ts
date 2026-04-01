@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await context.params;
         const session = await auth();
         if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -21,7 +22,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         const { name, packageType, ingredients, instructions } = body;
 
         const pkg = await prisma.package.findUnique({
-            where: { id: params.id },
+            where: { id: id },
         });
 
         if (!pkg || pkg.userId !== user.id) {
@@ -29,7 +30,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         }
 
         const updatedPkg = await prisma.package.update({
-            where: { id: params.id },
+            where: { id: id },
             data: {
                 name: name !== undefined ? name : undefined,
                 packageType: packageType !== undefined ? packageType : undefined,
@@ -45,8 +46,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await context.params;
         const session = await auth();
         if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -61,7 +63,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         }
 
         const pkg = await prisma.package.findUnique({
-            where: { id: params.id },
+            where: { id: id },
         });
 
         if (!pkg || pkg.userId !== user.id) {
@@ -69,7 +71,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         }
 
         await prisma.package.delete({
-            where: { id: params.id },
+            where: { id: id },
         });
 
         return NextResponse.json({ success: true });
