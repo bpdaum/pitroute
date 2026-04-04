@@ -6,7 +6,7 @@ const UA = 'PitRouteBBQ/1.0 (dev@pitroute.io)';
 
 async function nominatimAutocomplete(q: string) {
     const res = await axios.get(NOMINATIM_URL, {
-        params: { q, format: 'json', limit: 5, addressdetails: 1 },
+        params: { q, format: 'json', limit: 5, addressdetails: 1, countrycodes: 'us' },
         headers: { 'User-Agent': UA }
     });
     return res.data;
