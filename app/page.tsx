@@ -574,6 +574,7 @@ export default function Home() {
                   routeStops={routeStops as any}
                   userCoords={userCoords}
                   totalPurse={routePurse}
+                  onPlanCook={setPlanningEvent}
                 />
               </div>
             )}

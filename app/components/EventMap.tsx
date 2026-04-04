@@ -5,7 +5,9 @@ import { APIProvider, Map, useMap, useMapsLibrary, AdvancedMarker, Pin } from "@
 import { EventItem, getOrgColor, OrgBadge } from "./EventCard";
 
 interface RouteStop {
-    event: { latitude: number; longitude: number; id: string };
+    event: EventItem & { latitude: number; longitude: number };
+    driveFromPrevMiles?: number;
+    driveFromPrevHours?: number;
 }
 
 interface Props {
@@ -14,6 +16,7 @@ interface Props {
     routeStops?: RouteStop[];
     userCoords?: { lat: number; lng: number } | null;
     totalPurse?: number;
+    onPlanCook?: (event: EventItem) => void;
 }
 
 interface RouteMeta {
@@ -116,7 +119,7 @@ function Directions({ routeStops, userCoords, onRouteCalculated }: { routeStops?
     return null;
 }
 
-export function EventMap({ events, onSelectEvent, routeStops, userCoords, totalPurse }: Props) {
+export function EventMap({ events, onSelectEvent, routeStops, userCoords, totalPurse, onPlanCook }: Props) {
     const [routeMeta, setRouteMeta] = useState<RouteMeta | null>(null);
     const rawMappable = events.filter(e => e.latitude && e.longitude);
 
@@ -201,6 +204,22 @@ export function EventMap({ events, onSelectEvent, routeStops, userCoords, totalP
                                             </span>
                                         </div>
                                     )}
+                                </div>
+                                <h3 className="uppercase tracking-widest text-[10px] text-zinc-500 font-bold mb-3 mt-4 border-t border-zinc-800 pt-3">Trip Stops</h3>
+                                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                                    {routeStops.map((stop, i) => (
+                                         <div key={stop.event.id} className="flex justify-between items-center p-2 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-zinc-700 cursor-pointer" onClick={() => onSelectEvent(stop.event)}>
+                                            <span className="text-white text-[11px] truncate max-w-[140px] pr-2" title={stop.event.name}>{stop.event.name}</span>
+                                            {onPlanCook && (
+                                                <button 
+                                                    onClick={(e) => { e.stopPropagation(); onPlanCook(stop.event); }}
+                                                    className="text-orange-400 text-[10px] uppercase tracking-widest hover:text-orange-300 font-bold px-2 py-1 bg-orange-500/10 rounded-md shrink-0"
+                                                >
+                                                    Plan
+                                                </button>
+                                            )}
+                                         </div>
+                                    ))}
                                 </div>
                             </div>
                         )}
