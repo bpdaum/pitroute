@@ -105,12 +105,14 @@ export function FilterSidebar({ filters, onChange, eventCount }: Props) {
                         <input
                             type="date"
                             value={filters.from}
+                            onClick={(e) => (e.target as HTMLInputElement).showPicker()}
                             onChange={e => onChange({ ...filters, from: e.target.value })}
                             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-300 focus:outline-none focus:border-orange-500 transition-colors"
                         />
                         <input
                             type="date"
                             value={filters.to}
+                            onClick={(e) => (e.target as HTMLInputElement).showPicker()}
                             onChange={e => onChange({ ...filters, to: e.target.value })}
                             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-300 focus:outline-none focus:border-orange-500 transition-colors"
                         />

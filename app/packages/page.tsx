@@ -74,6 +74,9 @@ export default function PackagesPage() {
       if (res.ok) {
         await fetchPackages();
         setEditingPkg(null);
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Failed to save recipe: ${errorData.error || res.statusText}`);
       }
     } catch (err) {
       console.error(err);

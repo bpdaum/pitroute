@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
             ...(from || to || !from
                 ? {
                     date: {
-                        ...(from ? { gte: new Date(from) } : { gte: new Date(new Date().setHours(0, 0, 0, 0)) }),
+                        ...(from ? { gte: new Date(from) } : { gte: new Date(new Date().setMonth(new Date().getMonth() - 2)) }),
                         ...(to ? { lte: new Date(to) } : {}),
                     },
                 }

@@ -51,7 +51,19 @@ export function getOrgColor(name: string) {
 
 export function EventCard({ event, onClick, onToggleSelect, isSelected, compact }: Props) {
     const date = new Date(event.date);
-    const dateStr = date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+    
+    // Most BBQ events are 2 days (Friday setup/meeting, Saturday cook/awards)
+    const startDate = new Date(date);
+    startDate.setDate(date.getDate() - 1);
+    
+    const startMonth = startDate.toLocaleDateString("en-US", { month: "short" });
+    const endMonth = date.toLocaleDateString("en-US", { month: "short" });
+    const startDay = startDate.getDate();
+    const endDay = date.getDate();
+    
+    const dateStr = startMonth === endMonth 
+        ? `${startMonth} ${startDay}-${endDay}` 
+        : `${startMonth} ${startDay} - ${endMonth} ${endDay}`;
 
     return (
         <div

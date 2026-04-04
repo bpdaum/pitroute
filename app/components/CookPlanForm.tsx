@@ -147,7 +147,8 @@ export function CookPlanForm({ plan, onSave, saving, packages }: CookPlanFormPro
                 </div>
 
                 <div>
-                    <label className="block text-xs uppercase text-zinc-500 mb-2 font-bold tracking-widest">Library Packages Used</label>
+                    <label className="block text-xs uppercase text-zinc-500 mb-1 font-bold tracking-widest">Library Packages Used</label>
+                    <p className="text-[10px] text-zinc-500 mb-3">Link your saved recipes here to track what was used for this cook.</p>
                     <div className="grid grid-cols-2 gap-4 mb-4">
                         <div>
                             <select
