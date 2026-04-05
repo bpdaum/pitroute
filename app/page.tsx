@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
-import { EventItem, EventCard } from "./components/EventCard";
+import { EventItem, EventCard, cleanAddress } from "./components/EventCard";
 import { EventCalendar } from "./components/EventCalendar";
 import { AuthWidget } from "./components/AuthWidget";
 import { SavedTrips } from "./components/SavedTrips";
@@ -617,12 +617,12 @@ export default function Home() {
 
           {selectedEvent && (
             <div className="fixed bottom-24 md:bottom-4 left-4 lg:left-72 right-4 z-[60] animate-in slide-in-from-bottom flex justify-center pointer-events-none">
-              <div className="bg-zinc-900 border border-zinc-800 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-2xl p-4 flex flex-col md:flex-row items-center gap-4 max-w-3xl w-full pointer-events-auto">
-                <div className="flex-1 w-full flex items-center justify-between md:justify-start gap-4">
-                  <div className="truncate pr-4">
-                    <h3 className="text-white font-bold tracking-wider text-sm truncate">{selectedEvent.name}</h3>
-                    <p className="text-zinc-400 text-xs mt-0.5 truncate">
-                      {new Date(selectedEvent.date).toLocaleDateString()} • {selectedEvent.locationAddress || 'Address TBA'}
+              <div className="bg-zinc-900 border border-zinc-800 shadow-[0_0_30px_rgba(0,0,0,0.8)] rounded-xl py-3 px-4 flex flex-col md:flex-row items-center gap-4 max-w-4xl w-full pointer-events-auto">
+                <div className="flex-1 w-full flex items-center justify-between md:justify-start gap-4 overflow-hidden">
+                  <div className="truncate flex-1">
+                    <h3 className="text-white font-bold text-sm md:text-base truncate">{selectedEvent.name}</h3>
+                    <p className="text-zinc-400 text-xs md:text-sm mt-0.5 truncate">
+                      {new Date(selectedEvent.date).toLocaleDateString()} • {cleanAddress(selectedEvent.locationAddress)}
                     </p>
                   </div>
                   <button
@@ -635,7 +635,7 @@ export default function Home() {
                     {session?.user ? (
                       <button
                         onClick={() => { setPlanningEvent(selectedEvent); setSelectedEvent(null); }}
-                        className="flex-1 md:flex-none bg-orange-600 hover:bg-orange-500 text-white px-5 py-3 rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2 text-sm whitespace-nowrap"
+                        className="flex-1 md:flex-none bg-orange-600 hover:bg-orange-500 text-white px-5 py-2.5 rounded-lg font-bold transition-all shadow-lg flex items-center justify-center gap-2 text-sm whitespace-nowrap"
                       >
                         <span>📓</span>
                         <span>Plan Cook</span>
@@ -647,7 +647,7 @@ export default function Home() {
                     )}
                     <button
                       onClick={() => toggleEventSelection(selectedEvent.id)}
-                      className={`flex-1 md:flex-none px-5 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm whitespace-nowrap border ${
+                      className={`flex-1 md:flex-none px-5 py-2.5 rounded-lg font-bold transition-all flex items-center justify-center gap-2 text-sm whitespace-nowrap border ${
                         selectedEventIds.includes(selectedEvent.id)
                           ? "bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20"
                           : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border-zinc-700"
@@ -660,7 +660,7 @@ export default function Home() {
                     
                     <button
                         onClick={() => setSelectedEvent(null)}
-                        className="hidden md:flex text-zinc-500 hover:text-white bg-zinc-950 border border-zinc-800 hover:border-zinc-700 w-12 h-12 items-center justify-center rounded-xl transition-all ml-1 shrink-0"
+                        className="hidden md:flex text-zinc-500 hover:text-white p-2 items-center justify-center rounded-lg hover:bg-zinc-800 transition-colors shrink-0 ml-1"
                     >✕</button>
                 </div>
               </div>

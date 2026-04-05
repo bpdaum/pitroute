@@ -121,3 +121,17 @@ export function EventCard({ event, onClick, onToggleSelect, isSelected, compact 
         </div>
     );
 }
+
+export function cleanAddress(addr: string | null) {
+  if (!addr) return 'Address TBA';
+  let clean = addr;
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}/.test(clean)) {
+    const parts = clean.split(',');
+    if (parts.length > 1) {
+      parts.shift();
+      clean = parts.join(',').trim();
+    }
+  }
+  clean = clean.replace(/,\s*$/, '').trim();
+  return clean || 'Address TBA';
+}
