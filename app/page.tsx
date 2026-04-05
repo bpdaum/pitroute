@@ -629,18 +629,35 @@ export default function Home() {
                 <EventCard
                   event={selectedEvent}
                   isSelected={selectedEventIds.includes(selectedEvent.id)}
-                  onToggleSelect={toggleEventSelection}
                 />
 
-                {session?.user && (
+                <div className="flex flex-col gap-3">
+                  {session?.user ? (
+                    <button
+                      onClick={() => setPlanningEvent(selectedEvent)}
+                      className="w-full bg-orange-600 hover:bg-orange-500 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-orange-900/20"
+                    >
+                      <span>📓</span>
+                      <span>Plan Cook</span>
+                    </button>
+                  ) : (
+                    <div className="w-full bg-zinc-800 border border-zinc-700 py-3 rounded-xl text-center text-xs text-zinc-400">
+                      Sign in to save Cook Plans
+                    </div>
+                  )}
+
                   <button
-                    onClick={() => setPlanningEvent(selectedEvent)}
-                    className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-sm"
+                    onClick={() => toggleEventSelection(selectedEvent.id)}
+                    className={`w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border ${
+                      selectedEventIds.includes(selectedEvent.id)
+                        ? "bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20"
+                        : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border-zinc-700"
+                    }`}
                   >
-                    <span>📓</span>
-                    <span>Plan Cook</span>
+                    <span>🗺</span>
+                    <span>{selectedEventIds.includes(selectedEvent.id) ? "Remove from Route" : "Add to Route"}</span>
                   </button>
-                )}
+                </div>
               </div>
             </div>
           )}
