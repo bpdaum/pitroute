@@ -552,7 +552,7 @@ export default function Home() {
           {/* Mobile filter button */}
           {(activeTab === "list" || activeTab === "calendar" || activeTab === "map") && (
             <button
-              onClick={() => setShowMobileFilters(true)}
+              onClick={() => { setShowMobileFilters(true); setSelectedEvent(null); }}
               className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-semibold hover:border-orange-500 hover:text-orange-400 transition-colors"
             >
               <span>⚙️</span>
@@ -616,7 +616,7 @@ export default function Home() {
           </div>
 
           {selectedEvent && (
-            <div className="fixed bottom-4 left-4 lg:left-72 right-4 z-50 animate-in slide-in-from-bottom flex justify-center pointer-events-none">
+            <div className="fixed bottom-24 md:bottom-4 left-4 lg:left-72 right-4 z-[60] animate-in slide-in-from-bottom flex justify-center pointer-events-none">
               <div className="bg-zinc-900 border border-zinc-800 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-2xl p-4 flex flex-col md:flex-row items-center gap-4 max-w-3xl w-full pointer-events-auto">
                 <div className="flex-1 w-full flex items-center justify-between md:justify-start gap-4">
                   <div className="truncate pr-4">
@@ -677,7 +677,7 @@ export default function Home() {
 
         {/* Floating Route Generator Bar */}
         {selectedEventIds.length > 0 && (
-          <div className="absolute bottom-16 md:bottom-6 left-1/2 -translate-x-1/2 z-40 fade-in w-11/12 max-w-md">
+          <div className="absolute bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-40 fade-in w-11/12 max-w-md">
             <div className="bg-zinc-900 border border-orange-500/50 shadow-2xl shadow-orange-900/20 rounded-2xl p-3 flex items-center justify-between backdrop-blur-md">
               <div className="pl-3">
                 <p className="text-white font-bold text-sm">Trip Builder active</p>
