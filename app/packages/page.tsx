@@ -15,6 +15,7 @@ export interface RecipePackage {
   packageType: PackageType;
   ingredients: string;
   instructions: string;
+  isPublic?: boolean;
 }
 
 export default function PackagesPage() {
@@ -173,11 +174,16 @@ export default function PackagesPage() {
                   filteredPackages.map(pkg => (
                     <div key={pkg.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 hover:border-zinc-700 transition-colors flex flex-col">
                        <div className="flex justify-between items-start mb-4">
-                         <h3 className="font-bold text-lg text-white">{pkg.name}</h3>
-                         <div className="flex gap-2">
-                           <button onClick={() => setEditingPkg(pkg)} className="text-xs text-zinc-500 hover:text-orange-400 transition-colors">Edit</button>
-                           <button onClick={() => handleDelete(pkg.id)} className="text-xs text-zinc-500 hover:text-red-400 transition-colors">Delete</button>
-                         </div>
+                         <h3 className="font-bold text-lg text-white flex items-center gap-2">
+                           {pkg.name}
+                           {pkg.isPublic && <span className="text-[9px] uppercase tracking-widest bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded shrink-0 leading-none h-fit">PRO</span>}
+                         </h3>
+                         {!pkg.isPublic && (
+                           <div className="flex gap-2 shrink-0 mt-1">
+                             <button onClick={() => setEditingPkg(pkg)} className="text-xs text-zinc-500 hover:text-orange-400 transition-colors">Edit</button>
+                             <button onClick={() => handleDelete(pkg.id)} className="text-xs text-zinc-500 hover:text-red-400 transition-colors">Delete</button>
+                           </div>
+                         )}
                        </div>
                        
                        {pkg.ingredients && (

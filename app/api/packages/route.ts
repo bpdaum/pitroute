@@ -20,7 +20,12 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const packageType = searchParams.get("packageType");
 
-        const whereClause: any = { userId: user.id };
+        const whereClause: any = {
+            OR: [
+                { userId: user.id },
+                { isPublic: true }
+            ]
+        };
         if (packageType) {
             whereClause.packageType = packageType;
         }

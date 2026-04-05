@@ -130,7 +130,8 @@ model CookPlan {
 
 model Package {
   id           String     @id @default(cuid())
-  userId       String
+  userId       String?
+  isPublic     Boolean    @default(false)
   name         String
   packageType  String
   ingredients  String?
@@ -141,7 +142,7 @@ model Package {
   injections   CookPlan[] @relation("InjectionPackage")
   sauces       CookPlan[] @relation("SaucePackage")
   seasonings   CookPlan[] @relation("SeasoningPackage")
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
