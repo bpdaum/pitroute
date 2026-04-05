@@ -76,7 +76,7 @@ async function geocode(address: string, eventName: string): Promise<{ lat: numbe
         try {
             const res = await axios.get('https://nominatim.openstreetmap.org/search', {
                 params: { q: query, format: 'json', limit: 1 },
-                headers: { 'User-Agent': 'PitRouteBBQ/1.0 (dev@pitroute.io)' }
+                headers: { 'User-Agent': 'PitPlanBBQ/1.0 (dev@pitplan.io)' }
             });
             if (res.data && res.data.length > 0) {
                 return { lat: parseFloat(res.data[0].lat), lng: parseFloat(res.data[0].lon) };

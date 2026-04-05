@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
 const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
-const UA = 'PitRouteBBQ/1.0 (dev@pitroute.io)';
+const UA = 'PitPlanBBQ/1.0 (dev@pitplan.io)';
 
 async function nominatimSearch(q: string, countrycodes?: string) {
     const res = await axios.get(NOMINATIM_URL, {

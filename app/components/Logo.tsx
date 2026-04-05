@@ -18,7 +18,7 @@ export function Logo({ className = "h-8" }: { className?: string }) {
                 </defs>
             </svg>
             <span className="font-bebas text-2xl tracking-widest text-white leading-none mt-1 shrink-0">
-                PITROUTE<span className="text-orange-500">.IO</span>
+                PITPLAN<span className="text-orange-500">.IO</span>
             </span>
         </div>
     );
