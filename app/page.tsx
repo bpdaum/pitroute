@@ -676,19 +676,19 @@ export default function Home() {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden flex items-center justify-around bg-zinc-900 border-t border-zinc-800 shrink-0 pb-safe z-50 relative">
+      <nav className="md:hidden flex items-center justify-around bg-zinc-900 border-t border-zinc-800 shrink-0 pb-[max(env(safe-area-inset-bottom),12px)] z-50 relative">
         {ALL_TABS.filter(tab => !tab.requireAuth || session?.user).map(tab => {
           const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center flex-1 py-3 transition-colors ${isActive ? "text-orange-400" : "text-zinc-500 hover:text-zinc-300"
+              className={`flex flex-col items-center justify-center flex-1 pt-3 pb-1 transition-colors ${isActive ? "text-orange-400" : "text-zinc-500 hover:text-zinc-300"
                 }`}
             >
               <span className="text-xl leading-none mb-1">{tab.icon}</span>
-              <span className="text-[10px] uppercase font-semibold tracking-wider">
-                {tab.label}
+              <span className="text-[9px] uppercase font-semibold tracking-wider text-center px-1">
+                {tab.id === 'list' ? 'Events' : tab.id === 'saved' ? 'Saved' : tab.label}
               </span>
             </button>
           );
@@ -696,10 +696,10 @@ export default function Home() {
         {session?.user && (
             <Link
               href="/packages"
-              className="flex flex-col items-center justify-center flex-1 py-3 transition-colors text-zinc-500 hover:text-zinc-300"
+              className="flex flex-col items-center justify-center flex-1 pt-3 pb-1 transition-colors text-zinc-500 hover:text-zinc-300"
             >
               <span className="text-xl leading-none mb-1">📖</span>
-              <span className="text-[10px] uppercase font-semibold tracking-wider">Recipes</span>
+              <span className="text-[9px] uppercase font-semibold tracking-wider text-center px-1">Recipes</span>
             </Link>
         )}
       </nav>

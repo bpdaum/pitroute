@@ -275,7 +275,7 @@ export default function PackagesPage() {
       </div>
 
       {/* Mobile Tab Bar */}
-      <nav className="md:hidden flex overflow-x-auto items-center bg-zinc-900 border-t border-zinc-800 shrink-0 pb-safe z-50 relative">
+      <nav className="md:hidden flex overflow-x-auto items-center bg-zinc-900 border-t border-zinc-800 shrink-0 pb-[max(env(safe-area-inset-bottom),12px)] z-50 relative">
         {PACKAGE_TYPES.map(type => {
           const isActive = activeTab === type;
           return (
