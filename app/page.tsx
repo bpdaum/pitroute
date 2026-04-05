@@ -595,7 +595,6 @@ export default function Home() {
                           key={e.id}
                           event={e}
                           isSelected={selectedEventIds.includes(e.id)}
-                          onToggleSelect={toggleEventSelection}
                           onClick={() => setSelectedEvent(e)}
                         />
                       ))
