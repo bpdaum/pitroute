@@ -6,6 +6,7 @@ interface TimelineNode {
     time: string;
     action: string;
     description: string;
+    offsetMinutes?: number;
 }
 
 export function TimelineViewer({ timelineStr }: { timelineStr: string }) {
@@ -22,6 +23,7 @@ export function TimelineViewer({ timelineStr }: { timelineStr: string }) {
     let nodes: TimelineNode[] = [];
     try {
         nodes = JSON.parse(timelineStr);
+        nodes.sort((a, b) => (a.offsetMinutes || 0) - (b.offsetMinutes || 0));
     } catch (e) {
         return <div className="text-red-400 text-xs">Error parsing timeline json.</div>;
     }
