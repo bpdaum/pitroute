@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { EventItem } from "./EventCard";
 import { CookPlanForm } from "./CookPlanForm";
 import { RecipePackage } from "../packages/page";
+import { MasterTimelineView } from "./MasterTimelineView";
 
 const MEAT_TYPES = ["Brisket", "Ribs", "Pork", "Chicken"];
 
@@ -116,12 +117,23 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
                         </button>
                     );
                 })}
+                <button
+                    onClick={() => setActiveTab("MASTER")}
+                    className={`px-4 py-3 text-xs font-bold uppercase tracking-widest transition-colors whitespace-nowrap ml-auto ${activeTab === "MASTER"
+                        ? "text-indigo-400 border-b-2 border-indigo-500"
+                        : "text-zinc-500 hover:text-indigo-300 border-b-2 border-transparent"
+                        }`}
+                >
+                    Master Timeline
+                </button>
             </div>
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-4 content-start">
                 {loading ? (
                     <div className="flex items-center justify-center p-12 text-zinc-500 text-sm animate-pulse">Loading previous plans...</div>
+                ) : activeTab === "MASTER" ? (
+                    <MasterTimelineView plans={plans} />
                 ) : (
                     <CookPlanForm
                         key={activeTab}

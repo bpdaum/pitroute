@@ -31,10 +31,11 @@ Parameters:
 
 Generate a chronologically ordered sequence of steps for this cook, working backward from the Turn-In Time. Include meat prep (trimming, injecting, seasoning), smoker start/management, cooking temps, wrapping/boating, resting, slicing, and building the turn-in box.
 
-Return the result as a strict JSON array of objects, with NO markdown formatting, NO code blocks, and NO backticks. The JSON array should just be the raw text string. Every object must have these exactly 3 keys:
+Return the result as a strict JSON array of objects, with NO markdown formatting, NO code blocks, and NO backticks. The JSON array should just be the raw text string. Every object must have these exactly 4 keys:
 "time" (string, e.g., "6:00 AM", or "Day Before 8:00 PM")
 "action" (string, short title of the step, e.g., "Trim & Inject Brisket")
 "description" (string, 1-2 sentences of detailed expert instructions)
+"offsetMinutes" (integer, representing exact minutes before or after the Target Turn-In Time. e.g., -600 for 10 hours before, 0 for Turn-In Time)
 
 Ensure the timeline guarantees the meat is rested and sliced/boxed precisely aligned with the Target Turn-In Time.
 `;
