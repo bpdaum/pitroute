@@ -616,46 +616,52 @@ export default function Home() {
           </div>
 
           {selectedEvent && (
-            <div className="absolute inset-0 md:relative md:inset-auto md:w-80 shrink-0 border-t md:border-t-0 md:border-l border-zinc-800 bg-zinc-900 overflow-y-auto fade-in shadow-2xl z-30">
-              <div className="sticky top-0 flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-900 z-10">
-                <span className="text-sm font-semibold text-zinc-300">Event Details</span>
-                <button
-                  onClick={() => setSelectedEvent(null)}
-                  className="text-zinc-500 hover:text-white w-7 h-7 flex items-center justify-center rounded-md hover:bg-zinc-800 transition-all text-lg"
-                >×</button>
-              </div>
-              <div className="p-4 space-y-4">
-                <EventCard
-                  event={selectedEvent}
-                  isSelected={selectedEventIds.includes(selectedEvent.id)}
-                />
-
-                <div className="flex flex-col gap-3">
-                  {session?.user ? (
-                    <button
-                      onClick={() => setPlanningEvent(selectedEvent)}
-                      className="w-full bg-orange-600 hover:bg-orange-500 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-orange-900/20"
-                    >
-                      <span>📓</span>
-                      <span>Plan Cook</span>
-                    </button>
-                  ) : (
-                    <div className="w-full bg-zinc-800 border border-zinc-700 py-3 rounded-xl text-center text-xs text-zinc-400">
-                      Sign in to save Cook Plans
-                    </div>
-                  )}
-
+            <div className="fixed bottom-4 left-4 lg:left-72 right-4 z-50 animate-in slide-in-from-bottom flex justify-center pointer-events-none">
+              <div className="bg-zinc-900 border border-zinc-800 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-2xl p-4 flex flex-col md:flex-row items-center gap-4 max-w-3xl w-full pointer-events-auto">
+                <div className="flex-1 w-full flex items-center justify-between md:justify-start gap-4">
+                  <div className="truncate pr-4">
+                    <h3 className="text-white font-bold tracking-wider text-sm truncate">{selectedEvent.name}</h3>
+                    <p className="text-zinc-400 text-xs mt-0.5 truncate">
+                      {new Date(selectedEvent.date).toLocaleDateString()} • {selectedEvent.locationAddress || 'Address TBA'}
+                    </p>
+                  </div>
                   <button
-                    onClick={() => toggleEventSelection(selectedEvent.id)}
-                    className={`w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border ${
-                      selectedEventIds.includes(selectedEvent.id)
-                        ? "bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20"
-                        : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border-zinc-700"
-                    }`}
-                  >
-                    <span>🗺</span>
-                    <span>{selectedEventIds.includes(selectedEvent.id) ? "Remove from Route" : "Add to Route"}</span>
-                  </button>
+                    onClick={() => setSelectedEvent(null)}
+                    className="md:hidden text-zinc-500 hover:text-white shrink-0 p-2"
+                  >✕</button>
+                </div>
+                
+                <div className="flex items-center gap-2 w-full md:w-auto shrink-0">
+                    {session?.user ? (
+                      <button
+                        onClick={() => { setPlanningEvent(selectedEvent); setSelectedEvent(null); }}
+                        className="flex-1 md:flex-none bg-orange-600 hover:bg-orange-500 text-white px-5 py-3 rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2 text-sm whitespace-nowrap"
+                      >
+                        <span>📓</span>
+                        <span>Plan Cook</span>
+                      </button>
+                    ) : (
+                      <div className="flex-1 md:flex-none bg-zinc-800 border border-zinc-700 px-4 py-3 rounded-xl text-center text-xs text-zinc-400">
+                        Sign in to Plan
+                      </div>
+                    )}
+                    <button
+                      onClick={() => toggleEventSelection(selectedEvent.id)}
+                      className={`flex-1 md:flex-none px-5 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm whitespace-nowrap border ${
+                        selectedEventIds.includes(selectedEvent.id)
+                          ? "bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20"
+                          : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border-zinc-700"
+                      }`}
+                    >
+                      <span>🗺</span>
+                      <span className="hidden md:inline">{selectedEventIds.includes(selectedEvent.id) ? "Remove Route" : "Add to Route"}</span>
+                      <span className="md:hidden">{selectedEventIds.includes(selectedEvent.id) ? "Remove" : "Add"}</span>
+                    </button>
+                    
+                    <button
+                        onClick={() => setSelectedEvent(null)}
+                        className="hidden md:flex text-zinc-500 hover:text-white bg-zinc-950 border border-zinc-800 hover:border-zinc-700 w-12 h-12 items-center justify-center rounded-xl transition-all ml-1 shrink-0"
+                    >✕</button>
                 </div>
               </div>
             </div>
