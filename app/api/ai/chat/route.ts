@@ -18,6 +18,11 @@ const tools = [{
             }
         },
         {
+            name: "find_recipe_packages",
+            description: "Retrieve a list of the user's recipe packages to find their IDs before assigning them to a cook plan.",
+            parameters: { type: Type.OBJECT, properties: {} }
+        },
+        {
             name: "create_recipe_package",
             description: "Create a reusable recipe package in the user's account.",
             parameters: {
@@ -42,13 +47,18 @@ const tools = [{
             parameters: {
                 type: Type.OBJECT,
                 properties: {
-                    eventId: { type: Type.STRING, description: "The ID of the event" },
+                    eventId: { type: Type.STRING, description: "The UUID of the event. MUST use find_events or get_user_events to get the ID first." },
                     meatType: { type: Type.STRING, description: "Brisket, Ribs, Pork, or Chicken" },
                     turnInTime: { type: Type.STRING, description: "Target turn in time, e.g., Sat 12:00 PM" },
                     recipe: { type: Type.STRING, description: "Cooking method/instructions" },
+                    ingredients: { type: Type.STRING, description: "Raw custom ingredients or extras" },
                     postNotes: { type: Type.STRING, description: "Debrief notes or results" },
                     score: { type: Type.NUMBER, description: "Competition score" },
-                    rank: { type: Type.NUMBER, description: "Competition rank" }
+                    rank: { type: Type.NUMBER, description: "Competition rank" },
+                    brinePackageId: { type: Type.STRING, description: "ID of Brine Recipe Package" },
+                    injectionPackageId: { type: Type.STRING, description: "ID of Injection Recipe Package" },
+                    seasoningPackageId: { type: Type.STRING, description: "ID of Seasoning Recipe Package" },
+                    saucePackageId: { type: Type.STRING, description: "ID of Sauce Recipe Package" }
                 },
                 required: ["eventId", "meatType"]
             }
@@ -123,10 +133,17 @@ export async function POST(request: Request) {
                         const kw = args?.keyword || "";
                         const evs = await prisma.event.findMany({
                             where: { name: { contains: kw as string, mode: "insensitive" } },
+                            include: { organization: true },
                             take: 5
                         });
                         resultData = { events: evs };
                     } 
+                    else if (name === "find_recipe_packages") {
+                        const pkgs = await prisma.package.findMany({
+                            where: { userId }
+                        });
+                        resultData = { packages: pkgs };
+                    }
                     else if (name === "create_recipe_package") {
                         const pkg = await prisma.package.create({
                             data: {
@@ -162,9 +179,14 @@ export async function POST(request: Request) {
                         const updateData: any = {};
                         if (args?.turnInTime) updateData.turnInTime = args.turnInTime;
                         if (args?.recipe) updateData.recipe = args.recipe;
+                        if (args?.ingredients) updateData.ingredients = args.ingredients;
                         if (args?.postNotes) updateData.postNotes = args.postNotes;
                         if (args?.score !== undefined) updateData.score = Number(args.score);
                         if (args?.rank !== undefined) updateData.rank = Number(args.rank);
+                        if (args?.brinePackageId) updateData.brinePackageId = args.brinePackageId;
+                        if (args?.injectionPackageId) updateData.injectionPackageId = args.injectionPackageId;
+                        if (args?.seasoningPackageId) updateData.seasoningPackageId = args.seasoningPackageId;
+                        if (args?.saucePackageId) updateData.saucePackageId = args.saucePackageId;
 
                         let finalPlan;
                         if (existing) {
