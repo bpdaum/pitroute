@@ -23,6 +23,17 @@ const tools = [{
             parameters: { type: Type.OBJECT, properties: {} }
         },
         {
+            name: "generate_event_timeline",
+            description: "Generate and save a robust Master Timeline for all meats scheduled for an event. Triggers AI to do chronological charting. Returns the timeline layout data to be rendered natively in chat.",
+            parameters: {
+                type: Type.OBJECT,
+                properties: {
+                    eventId: { type: Type.STRING, description: "The UUID of the event. MUST pass a valid UUID." }
+                },
+                required: ["eventId"]
+            }
+        },
+        {
             name: "create_recipe_package",
             description: "Create a reusable recipe package in the user's account.",
             parameters: {
@@ -143,6 +154,60 @@ export async function POST(request: Request) {
                             where: { userId }
                         });
                         resultData = { packages: pkgs };
+                    }
+                    else if (name === "generate_event_timeline") {
+                        const eventIdParam = args?.eventId as string;
+                        const cookPlans = await prisma.cookPlan.findMany({ where: { userId, eventId: eventIdParam } });
+                        if (cookPlans.length === 0) {
+                            resultData = { error: "No cook plans exist for this event yet." };
+                        } else {
+                            const generatedPlans: Record<string, any> = {};
+                            await Promise.all(cookPlans.map(async (p: any) => {
+                                if (!p.turnInTime) return;
+                                const prompt = `
+You are a Championship BBQ Pitmaster Expert. 
+A competitor needs a detailed cooking timeline/schedule for their upcoming competition cook.
+
+Parameters:
+- Meat Type: ${p.meatType}
+- Target Turn-In Time: ${p.turnInTime}
+- Ingredients: ${p.ingredients || "Not specified, use standard practices"}
+- Recipe/Notes: ${p.recipe || "Not specified, use a standard hot/fast or low/slow method"}
+
+Generate a chronologically ordered sequence of steps for this cook, working backward from the Turn-In Time. Include meat prep (trimming, injecting, seasoning), smoker start/management, cooking temps, wrapping/boating, resting, slicing, and building the turn-in box.
+
+Return the result as a strict JSON array of objects, with NO markdown formatting. The JSON array should just be the raw text string. Every object must have these exactly 4 keys:
+"time" (string, e.g., "6:00 AM", or "Day Before 8:00 PM")
+"action" (string, short title of the step, e.g., "Trim & Inject Brisket")
+"description" (string, 1-2 sentences of detailed expert instructions)
+"offsetMinutes" (integer, representing exact minutes before or after the Target Turn-In Time. e.g., -600 for 10 hours before, 0 for Turn-In Time)
+
+Ensure the timeline guarantees the meat is rested and sliced/boxed precisely aligned with the Target Turn-In Time.`;
+
+                                try {
+                                    const genRes = await ai.models.generateContent({
+                                        model: 'gemini-2.5-flash',
+                                        contents: prompt,
+                                        config: { temperature: 0.2 }
+                                    });
+                                    let cleanText = (genRes.text || "[]").trim();
+                                    if (cleanText.startsWith('```json')) cleanText = cleanText.replace(/```json\n/, '');
+                                    if (cleanText.startsWith('```')) cleanText = cleanText.replace(/```\n/, '');
+                                    if (cleanText.endsWith('```')) cleanText = cleanText.replace(/```$/, '');
+                                    cleanText = cleanText.trim();
+                                    const timelineNodes = JSON.parse(cleanText);
+
+                                    const updated = await prisma.cookPlan.update({
+                                        where: { id: p.id },
+                                        data: { timeline: JSON.stringify(timelineNodes) }
+                                    });
+                                    generatedPlans[updated.meatType] = updated;
+                                } catch (err) {
+                                    console.error("Timeline Generation Error:", err);
+                                }
+                            }));
+                            resultData = { success: true, plans: generatedPlans };
+                        }
                     }
                     else if (name === "create_recipe_package") {
                         const pkg = await prisma.package.create({

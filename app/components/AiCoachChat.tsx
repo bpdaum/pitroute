@@ -2,11 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from 'react-markdown';
+import { MasterTimelineView } from "./MasterTimelineView";
 
 interface ChatMessage {
     role: 'user' | 'model';
     content: string;
     attachments?: string[]; // base64 strings
+    actionsTaken?: any[];
 }
 
 export function AiCoachChat() {
@@ -66,8 +68,8 @@ export function AiCoachChat() {
             });
             const data = await res.json();
             
-            if (data.text) {
-                setHistory(prev => [...prev, { role: 'model', content: data.text }]);
+            if (data.text || data.actionsTaken) {
+                setHistory(prev => [...prev, { role: 'model', content: data.text || "", actionsTaken: data.actionsTaken }]);
             } else if (data.error) {
                 setHistory(prev => [...prev, { role: 'model', content: `Error: ${data.error}` }]);
             }
@@ -98,6 +100,17 @@ export function AiCoachChat() {
                                     ))}
                                 </div>
                             )}
+                            {msg.actionsTaken && msg.actionsTaken.map((action, k) => {
+                                if (action.tool === 'generate_event_timeline' && action.returned?.plans) {
+                                    return (
+                                        <div key={k} className="mt-4 border-t border-zinc-800 pt-4 w-full min-w-[500px]">
+                                            <p className="text-[10px] uppercase text-orange-400 font-bold mb-2 tracking-widest">Master Timeline Generated</p>
+                                            <MasterTimelineView plans={action.returned.plans} />
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })}
                         </div>
                     </div>
                 ))}
@@ -147,10 +160,9 @@ export function AiCoachChat() {
                         type="text" 
                         value={input}
                         onChange={e => setInput(e.target.value)}
-                        onKeyDown={e => e.key === 'Enter' && handleSend()}
+                        onKeyDown={e => { if (e.key === 'Enter' && !loading && (input.trim() || images.length > 0)) handleSend(); }}
                         placeholder="Ask the Pitmaster agent to create a recipe or find an event..."
                         className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-colors"
-                        disabled={loading}
                     />
                     <button 
                         onClick={handleSend}
