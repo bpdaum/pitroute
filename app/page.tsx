@@ -53,6 +53,8 @@ interface FilterPanelProps {
   toggleOrg: (v: string) => void;
   minPurse: number;
   setMinPurse: (v: number) => void;
+  showPastEvents: boolean;
+  setShowPastEvents: (v: boolean) => void;
 }
 
 const ORGANIZATIONS = ["KCBS", "MBN", "SCA", "FBA", "IBCA", "CBA", "LSBS", "Outlaw BBQ", "CTBA", "BCA"];
@@ -166,6 +168,17 @@ function FilterPanelContents(props: FilterPanelProps) {
             className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-zinc-100 focus:outline-none focus:border-orange-500 transition-colors color-scheme-dark"
           />
         </div>
+        
+        <div className="flex items-center gap-2 mt-4">
+          <input 
+            type="checkbox" 
+            id="showPast" 
+            checked={props.showPastEvents} 
+            onChange={(e) => props.setShowPastEvents(e.target.checked)}
+            className="accent-orange-500 w-4 h-4 rounded bg-zinc-950 border-zinc-800"
+          />
+          <label htmlFor="showPast" className="text-[10px] uppercase tracking-widest text-zinc-600 cursor-pointer font-bold">Show events before today</label>
+        </div>
       </div>
 
       {/* Blackout Dates */}
@@ -263,6 +276,7 @@ export default function Home() {
   const [blackoutDates, setBlackoutDates] = useState<string[]>([]);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const [showPastEvents, setShowPastEvents] = useState<boolean>(false);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -390,6 +404,17 @@ export default function Home() {
   // Apply filters
   const filteredEvents = useMemo(() => {
     return allEvents.filter(event => {
+      const eventDateStr = event.date.split("T")[0]; // YYYY-MM-DD
+      
+      // 0. Past Events Filter (Unless checked)
+      if (!showPastEvents) {
+          const today = new Date();
+          today.setHours(0,0,0,0);
+          const [year, month, day] = eventDateStr.split("-").map(Number);
+          const eDate = new Date(year, month - 1, day);
+          if (eDate < today) return false;
+      }
+
       // 1. Distance Match
       if (userCoords && event.latitude && event.longitude) {
         const dist = haversine(userCoords.lat, userCoords.lng, event.latitude, event.longitude);
@@ -417,7 +442,6 @@ export default function Home() {
       }
 
       // 5. Blackout Dates
-      const eventDateStr = event.date.split("T")[0]; // YYYY-MM-DD
       if (blackoutDates.includes(eventDateStr)) {
         return false;
       }
@@ -429,7 +453,7 @@ export default function Home() {
 
       return true;
     });
-  }, [allEvents, searchQuery, selectedOrgs, minPurse, userCoords, maxDistance, blackoutDates, startDate, endDate]);
+  }, [allEvents, searchQuery, selectedOrgs, minPurse, userCoords, maxDistance, blackoutDates, startDate, endDate, showPastEvents]);
 
   if (!mounted) return <div className="bg-zinc-950 min-h-screen" />;
 
@@ -461,6 +485,8 @@ export default function Home() {
       toggleOrg={toggleOrg}
       minPurse={minPurse}
       setMinPurse={setMinPurse}
+      showPastEvents={showPastEvents}
+      setShowPastEvents={setShowPastEvents}
     />
   );
 
@@ -615,6 +641,7 @@ export default function Home() {
                     userCoords={userCoords}
                     totalPurse={routePurse}
                     onPlanCook={setPlanningEvent}
+                    selectedEvent={selectedEvent}
                   />
                 </div>
               </div>

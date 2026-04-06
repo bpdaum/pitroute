@@ -17,6 +17,7 @@ interface Props {
     userCoords?: { lat: number; lng: number } | null;
     totalPurse?: number;
     onPlanCook?: (event: EventItem) => void;
+    selectedEvent?: EventItem | null;
 }
 
 interface RouteMeta {
@@ -119,7 +120,17 @@ function Directions({ routeStops, userCoords, onRouteCalculated }: { routeStops?
     return null;
 }
 
-export function EventMap({ events, onSelectEvent, routeStops, userCoords, totalPurse, onPlanCook }: Props) {
+function MapController({ selectedEvent }: { selectedEvent?: EventItem | null }) {
+    const map = useMap();
+    useEffect(() => {
+        if (!map || !selectedEvent || !selectedEvent.latitude || !selectedEvent.longitude) return;
+        map.panTo({ lat: selectedEvent.latitude, lng: selectedEvent.longitude });
+        map.setZoom(9); // ~50 miles zoom level
+    }, [map, selectedEvent]);
+    return null;
+}
+
+export function EventMap({ events, onSelectEvent, routeStops, userCoords, totalPurse, onPlanCook, selectedEvent }: Props) {
     const [routeMeta, setRouteMeta] = useState<RouteMeta | null>(null);
     const rawMappable = events.filter(e => e.latitude && e.longitude);
 
@@ -175,6 +186,7 @@ export function EventMap({ events, onSelectEvent, routeStops, userCoords, totalP
                         disableDefaultUI={true}
                         zoomControl={true}
                     >
+                        <MapController selectedEvent={selectedEvent} />
                         <Directions routeStops={routeStops} userCoords={userCoords} onRouteCalculated={setRouteMeta} />
 
                         {/* Floating overlay for route data */}
