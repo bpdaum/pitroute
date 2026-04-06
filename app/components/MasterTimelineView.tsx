@@ -67,7 +67,16 @@ export function MasterTimelineView({ plans }: { plans: Record<string, CookPlan> 
                             if (e.action) {
                                 const offset = typeof e.offsetMinutes === "number" ? e.offsetMinutes : 9999;
                                 if (!groups[offset]) {
-                                    groups[offset] = { offsetMinutes: offset, timeStr: e.time || "", events: {} };
+                                    let cleanTime = e.time || "";
+                                    const timeMatch = cleanTime.match(/(1[0-2]|0?[1-9]):[0-5][0-9]\s*(AM|PM|am|pm)/i);
+                                    if (timeMatch) {
+                                        if (offset <= -720 || /(Fri|Before|Prev|Eve)/i.test(cleanTime)) {
+                                            cleanTime = `Day Before ${timeMatch[0].toUpperCase()}`;
+                                        } else {
+                                            cleanTime = `Day Of ${timeMatch[0].toUpperCase()}`;
+                                        }
+                                    }
+                                    groups[offset] = { offsetMinutes: offset, timeStr: cleanTime, events: {} };
                                 }
                                 if (!groups[offset].events[meatType]) {
                                     groups[offset].events[meatType] = [];
