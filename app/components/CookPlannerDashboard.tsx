@@ -6,13 +6,19 @@ import { RecipePackage } from "../packages/page";
 import { MasterTimelineView } from "./MasterTimelineView";
 import { AIFeedbackPanel } from "./AIFeedbackPanel";
 
-const MEAT_TYPES = ["Brisket", "Ribs", "Pork", "Chicken"];
+const DEFAULT_MEATS = ["Brisket", "Ribs", "Pork", "Chicken"];
+const getMeatTypes = (orgName?: string) => {
+    if (orgName === 'IBCA' || orgName === 'CTBA') return ["Chicken", "Ribs", "Brisket"];
+    if (orgName === 'SCA') return ["Steak"];
+    return DEFAULT_MEATS;
+};
 
 const meatColors: Record<string, string> = {
     Brisket: "text-red-500",
     Pork: "text-pink-500",
     Ribs: "text-orange-500",
     Chicken: "text-yellow-500",
+    Steak: "text-amber-600",
 };
 
 const meatBorders: Record<string, string> = {
@@ -20,6 +26,7 @@ const meatBorders: Record<string, string> = {
     Pork: "border-pink-500/20",
     Ribs: "border-orange-500/20",
     Chicken: "border-yellow-500/20",
+    Steak: "border-amber-600/20",
 };
 
 export interface CookPlan {
@@ -78,7 +85,8 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
     const handleSaveAll = async (currentPlans = plans) => {
         setSaving(true);
         try {
-            const mapped = MEAT_TYPES.map(async (meat) => {
+            const meatTypes = getMeatTypes(event?.organization?.name);
+            const mapped = meatTypes.map(async (meat) => {
                 const p = currentPlans[meat];
                 if (!p) return null;
                 const res = await fetch("/api/cook-plan", {
@@ -115,7 +123,8 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
         const nextPlans = { ...plans };
         
         try {
-            await Promise.all(MEAT_TYPES.map(async (meat) => {
+            const meatTypes = getMeatTypes(event?.organization?.name);
+            await Promise.all(meatTypes.map(async (meat) => {
                 const p = plans[meat];
                 if (!p || !p.turnInTime) return; // Must have turn in time
                 
@@ -143,7 +152,8 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
         const nextPlans = { ...plans };
         
         try {
-            const meatsToReview = MEAT_TYPES.filter(m => {
+            const meatTypes = getMeatTypes(event?.organization?.name);
+            const meatsToReview = meatTypes.filter(m => {
                 const p = plans[m];
                 return p && (p.postNotes || p.recipe || p.timeline || p.ingredients);
             });
@@ -262,7 +272,7 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
                             <h3 className="text-xl font-bebas tracking-widest text-zinc-100 border-b border-zinc-800 pb-3">Phase 1: Concurrent Pre-Cook Prep</h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                {MEAT_TYPES.map(meat => (
+                                {getMeatTypes(event?.organization?.name).map(meat => (
                                     <div key={meat} className={`bg-zinc-900/50 border ${meatBorders[meat]} rounded-xl p-4 flex flex-col`}>
                                         <h4 className={`text-center font-bebas text-lg tracking-widest mb-4 border-b border-zinc-800/50 pb-2 ${meatColors[meat]}`}>{meat} Strategy</h4>
                                         
@@ -303,7 +313,7 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
                             </div>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                                {MEAT_TYPES.map(meat => (
+                                {getMeatTypes(event?.organization?.name).map(meat => (
                                     <div key={meat} className="bg-zinc-900 border border-zinc-800 p-3 rounded-lg">
                                          {renderInput(meat, `${meat} On-Site Adjustments`, "cookTimeNotes", "textarea", "Weather notes or live cook changes...")}
                                     </div>
@@ -330,7 +340,7 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                {MEAT_TYPES.map(meat => (
+                                {getMeatTypes(event?.organization?.name).map(meat => (
                                     <div key={meat} className={`bg-zinc-900/50 border ${meatBorders[meat]} rounded-xl p-4 flex flex-col gap-2`}>
                                         <h4 className={`font-bebas text-lg tracking-widest mb-1 ${meatColors[meat]}`}>{meat} Results</h4>
                                         <div className="flex gap-2">

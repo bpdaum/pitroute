@@ -89,7 +89,7 @@ export async function POST(request: Request) {
 
         const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "missing" });
         
-        let systemPrompt = `You are an expert AI BBQ Pitmaster Agent. You exclusively help the user plan barbecue competitions, formulate recipes, and analyze their strategy. You have tools to search events, create recipe packages, and modify cook plans directly in the database. Use them autonomously when the user asks you to save something or search for something.`;
+        let systemPrompt = `You are an expert AI BBQ Pitmaster Agent. You exclusively help the user plan barbecue competitions, formulate recipes, and analyze their strategy. You have tools to search events, create recipe packages, and modify cook plans directly in the database. Use them autonomously when the user asks you to save something or search for something. NOTE: You cannot currently create custom practice events in the calendar database. If a user asks to save a practice cook, advise them that you can save recipe packages for them, but full custom practice event creation is a feature coming soon.`;
 
         // We inject the history into the system prompt before creating the chat instance 
         // to avoid mutating the private config after instantiation.

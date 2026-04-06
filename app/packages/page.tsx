@@ -178,12 +178,16 @@ export default function PackagesPage() {
                            {pkg.name}
                            {pkg.isPublic && <span className="text-[9px] uppercase tracking-widest bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded shrink-0 leading-none h-fit">PRO</span>}
                          </h3>
-                         {!pkg.isPublic && (
-                           <div className="flex gap-2 shrink-0 mt-1">
-                             <button onClick={() => setEditingPkg(pkg)} className="text-xs text-zinc-500 hover:text-orange-400 transition-colors">Edit</button>
-                             <button onClick={() => handleDelete(pkg.id)} className="text-xs text-zinc-500 hover:text-red-400 transition-colors">Delete</button>
-                           </div>
-                         )}
+                         <div className="flex gap-2 shrink-0 mt-1">
+                           {pkg.isPublic ? (
+                             <button onClick={() => setEditingPkg(pkg)} className="text-xs text-zinc-500 hover:text-orange-400 transition-colors">View</button>
+                           ) : (
+                             <>
+                               <button onClick={() => setEditingPkg(pkg)} className="text-xs text-zinc-500 hover:text-orange-400 transition-colors">Edit</button>
+                               <button onClick={() => handleDelete(pkg.id)} className="text-xs text-zinc-500 hover:text-red-400 transition-colors">Delete</button>
+                             </>
+                           )}
+                         </div>
                        </div>
                        
                        {pkg.ingredients && (
@@ -219,7 +223,8 @@ export default function PackagesPage() {
                      value={editingPkg.name || ""}
                      onChange={e => setEditingPkg({ ...editingPkg, name: e.target.value })}
                      placeholder="e.g. Texas Sweet Dust"
-                     className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-colors"
+                     disabled={editingPkg.isPublic}
+                     className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-colors disabled:opacity-75"
                    />
                  </div>
 
@@ -229,7 +234,8 @@ export default function PackagesPage() {
                         <select
                           value={editingPkg.packageType || "INJECTION"}
                           onChange={e => setEditingPkg({ ...editingPkg, packageType: e.target.value as PackageType })}
-                          className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-zinc-700 transition-colors"
+                          disabled={editingPkg.isPublic}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-zinc-700 transition-colors disabled:opacity-75"
                         >
                           {PACKAGE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                         </select>
@@ -243,7 +249,8 @@ export default function PackagesPage() {
                      value={editingPkg.ingredients || ""}
                      onChange={e => setEditingPkg({ ...editingPkg, ingredients: e.target.value })}
                      placeholder="1/2 cup brown sugar\n1/4 cup paprika..."
-                     className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-colors resize-y"
+                     disabled={editingPkg.isPublic}
+                     className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-colors resize-y disabled:opacity-75"
                    />
                  </div>
 
@@ -254,7 +261,8 @@ export default function PackagesPage() {
                      value={editingPkg.instructions || ""}
                      onChange={e => setEditingPkg({ ...editingPkg, instructions: e.target.value })}
                      placeholder="Mix well and apply generously..."
-                     className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-colors resize-y"
+                     disabled={editingPkg.isPublic}
+                     className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-colors resize-y disabled:opacity-75"
                    />
                  </div>
 
@@ -264,15 +272,17 @@ export default function PackagesPage() {
                      onClick={() => setEditingPkg(null)}
                      className="px-5 py-2.5 rounded-xl text-sm font-bold text-zinc-400 hover:text-white"
                    >
-                     Cancel
+                     {editingPkg.isPublic ? "Close" : "Cancel"}
                    </button>
-                   <button
-                     type="submit"
-                     disabled={isSaving || !editingPkg.name}
-                     className="px-6 py-2.5 bg-orange-600 hover:bg-orange-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-orange-900/20 disabled:opacity-50 transition-all"
-                   >
-                     {isSaving ? "Saving..." : "Save Recipe"}
-                   </button>
+                   {!editingPkg.isPublic && (
+                     <button
+                       type="submit"
+                       disabled={isSaving || !editingPkg.name}
+                       className="px-6 py-2.5 bg-orange-600 hover:bg-orange-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-orange-900/20 disabled:opacity-50 transition-all"
+                     >
+                       {isSaving ? "Saving..." : "Save Recipe"}
+                     </button>
+                   )}
                  </div>
                </form>
              </div>

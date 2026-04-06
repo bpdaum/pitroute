@@ -52,19 +52,11 @@ interface FilterPanelProps {
   setBlackoutDates: React.Dispatch<React.SetStateAction<string[]>>;
   selectedOrgs: string[];
   toggleOrg: (v: string) => void;
-  minPurse: number;
-  setMinPurse: (v: number) => void;
   showPastEvents: boolean;
   setShowPastEvents: (v: boolean) => void;
 }
 
 const ORGANIZATIONS = ["KCBS", "MBN", "SCA", "FBA", "IBCA", "CBA", "LSBS", "Outlaw BBQ", "CTBA", "BCA"];
-const PURSE_TIERS = [
-  { label: "Any Prize", value: 0 },
-  { label: "$1,000+", value: 1000 },
-  { label: "$5,000+", value: 5000 },
-  { label: "$10,000+", value: 10000 },
-];
 
 function FilterPanelContents(props: FilterPanelProps) {
   return (
@@ -208,20 +200,6 @@ function FilterPanelContents(props: FilterPanelProps) {
           })}
         </div>
       </div>
-
-      {/* Purse */}
-      <div>
-        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Minimum Prize</p>
-        <select
-          value={props.minPurse}
-          onChange={e => props.setMinPurse(Number(e.target.value))}
-          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-2 text-xs text-zinc-300 focus:outline-none focus:border-zinc-600"
-        >
-          {PURSE_TIERS.map(tier => (
-            <option key={tier.value} value={tier.value}>{tier.label}</option>
-          ))}
-        </select>
-      </div>
     </div>
   );
 }
@@ -274,7 +252,6 @@ export default function Home() {
   // Filtering State
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedOrgs, setSelectedOrgs] = useState<string[]>([]);
-  const [minPurse, setMinPurse] = useState<number>(0);
   const [blackoutDates, setBlackoutDates] = useState<string[]>([]);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -436,26 +413,19 @@ export default function Home() {
         return false;
       }
 
-      // 4. Minimum Prize Match
-      if (minPurse > 0) {
-        if (!event.purseAmount || event.purseAmount < minPurse) {
-          return false;
-        }
-      }
-
-      // 5. Blackout Dates
+      // 4. Blackout Dates
       if (blackoutDates.includes(eventDateStr)) {
         return false;
       }
 
-      // 6. Explicit Date Filtering
+      // 5. Explicit Date Filtering
       const eTime = new Date(eventDateStr).getTime();
       if (startDate && eTime < new Date(startDate).getTime()) return false;
       if (endDate && eTime > new Date(endDate).getTime()) return false;
 
       return true;
     });
-  }, [allEvents, searchQuery, selectedOrgs, minPurse, userCoords, maxDistance, blackoutDates, startDate, endDate, showPastEvents]);
+  }, [allEvents, searchQuery, selectedOrgs, userCoords, maxDistance, blackoutDates, startDate, endDate, showPastEvents]);
 
   if (!mounted) return <div className="bg-zinc-950 min-h-screen" />;
 
@@ -485,8 +455,6 @@ export default function Home() {
       setBlackoutDates={setBlackoutDates}
       selectedOrgs={selectedOrgs}
       toggleOrg={toggleOrg}
-      minPurse={minPurse}
-      setMinPurse={setMinPurse}
       showPastEvents={showPastEvents}
       setShowPastEvents={setShowPastEvents}
     />
@@ -505,7 +473,7 @@ export default function Home() {
           {ALL_TABS.filter(tab => !tab.requireAuth || session?.user).map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => { setActiveTab(tab.id); setPlanningEvent(null); }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${activeTab === tab.id
                 ? "bg-orange-500 text-white"
                 : "text-zinc-400 hover:text-white hover:bg-zinc-800"
@@ -750,7 +718,7 @@ export default function Home() {
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => { setActiveTab(tab.id); setPlanningEvent(null); }}
               className={`flex flex-col items-center justify-center flex-1 pt-3 pb-1 transition-colors ${isActive ? "text-orange-400" : "text-zinc-500 hover:text-zinc-300"
                 }`}
             >

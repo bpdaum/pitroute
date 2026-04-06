@@ -16,13 +16,21 @@ interface Props {
 export function EventCalendar({ events, onSelectEvent }: Props) {
     const calEvents = useMemo(
         () =>
-            events.map(e => ({
-                id: e.id,
-                title: e.name,
-                start: new Date(e.date),
-                end: new Date(new Date(e.date).getTime() + 24 * 60 * 60 * 1000),
-                resource: e,
-            })),
+            events.map(e => {
+                const mainDate = new Date(e.date);
+                // BBQ Comps start Friday (setup) and end Saturday (turn in)
+                const start = new Date(mainDate.getTime() - 24 * 60 * 60 * 1000);
+                // react-big-calendar end date is exclusive. To cover Saturday, end on Sunday.
+                const end = new Date(mainDate.getTime() + 24 * 60 * 60 * 1000);
+
+                return {
+                    id: e.id,
+                    title: e.name,
+                    start,
+                    end,
+                    resource: e,
+                };
+            }),
         [events]
     );
 

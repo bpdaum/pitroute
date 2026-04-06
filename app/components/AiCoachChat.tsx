@@ -19,15 +19,33 @@ export function AiCoachChat() {
     const endRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const [isMounted, setIsMounted] = useState(false);
+
     // Initial greeting
     useEffect(() => {
-        if (history.length === 0) {
-            setHistory([{
-                role: 'model',
-                content: "Howdy! I'm your autonomous AI Pitmaster agent. I can search the tournament DB for events, build entire multi-meat execution timelines for you, translate photos of handwritten recipes into digital packages automatically, and document your cook outcomes. What's on the smoker today?"
-            }]);
+        setIsMounted(true);
+        const saved = localStorage.getItem("pitplan_ai_chat_history");
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                if (parsed && parsed.length > 0) {
+                    setHistory(parsed);
+                    return;
+                }
+            } catch (e) { }
         }
-    }, [history]);
+        
+        setHistory([{
+            role: 'model',
+            content: "Howdy! I'm your autonomous AI Pitmaster agent. I can search the tournament DB for events, build entire multi-meat execution timelines for you, translate photos of handwritten recipes into digital packages automatically, and document your cook outcomes. What's on the smoker today?"
+        }]);
+    }, []);
+
+    useEffect(() => {
+        if (isMounted && history.length > 0) {
+            localStorage.setItem("pitplan_ai_chat_history", JSON.stringify(history));
+        }
+    }, [history, isMounted]);
 
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -79,6 +97,8 @@ export function AiCoachChat() {
         }
         setLoading(false);
     }
+
+    if (!isMounted) return <div className="flex-1 bg-zinc-950 p-6 flex items-center justify-center text-zinc-500 text-sm animate-pulse">Waking up Pitmaster...</div>;
 
     return (
         <div className="flex flex-col h-full bg-zinc-950 text-white relative">
