@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { CookPlan } from "./CookPlannerDashboard";
 
 interface TimelineEvent {
@@ -9,6 +9,12 @@ interface TimelineEvent {
     action: string;
     description: string;
     offsetMinutes: number;
+}
+
+interface GroupedEvent {
+    offsetMinutes: number;
+    timeStr: string;
+    events: Record<string, TimelineEvent[]>;
 }
 
 const colorMapText: Record<string, string> = {
@@ -46,11 +52,11 @@ const borderGlowMap: Record<string, string> = {
     Chicken: "border-yellow-500/30",
 };
 
-export function MasterTimelineView({ plans }: { plans: Record<string, CookPlan> }) {
-    const [activeIndex, setActiveIndex] = useState(0);
+const MEAT_COLUMNS = ["Brisket", "Ribs", "Pork", "Chicken"];
 
-    const sortedEvents = useMemo(() => {
-        const allEvents: TimelineEvent[] = [];
+export function MasterTimelineView({ plans }: { plans: Record<string, CookPlan> }) {
+    const groupedEvents = useMemo(() => {
+        const groups: Record<number, GroupedEvent> = {};
 
         Object.entries(plans).forEach(([meatType, plan]) => {
             if (plan.timeline) {
@@ -59,12 +65,19 @@ export function MasterTimelineView({ plans }: { plans: Record<string, CookPlan> 
                     if (Array.isArray(parsed)) {
                         parsed.forEach(e => {
                             if (e.action) {
-                                allEvents.push({
+                                const offset = typeof e.offsetMinutes === "number" ? e.offsetMinutes : 9999;
+                                if (!groups[offset]) {
+                                    groups[offset] = { offsetMinutes: offset, timeStr: e.time || "", events: {} };
+                                }
+                                if (!groups[offset].events[meatType]) {
+                                    groups[offset].events[meatType] = [];
+                                }
+                                groups[offset].events[meatType].push({
                                     meatType,
                                     time: e.time || "",
                                     action: e.action || "",
                                     description: e.description || "",
-                                    offsetMinutes: typeof e.offsetMinutes === "number" ? e.offsetMinutes : 9999
+                                    offsetMinutes: offset
                                 });
                             }
                         });
@@ -75,10 +88,10 @@ export function MasterTimelineView({ plans }: { plans: Record<string, CookPlan> 
             }
         });
 
-        return allEvents.sort((a, b) => a.offsetMinutes - b.offsetMinutes);
+        return Object.values(groups).sort((a, b) => a.offsetMinutes - b.offsetMinutes);
     }, [plans]);
 
-    if (sortedEvents.length === 0) {
+    if (groupedEvents.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center p-12 text-zinc-500 text-sm">
                 <p>No timelines generated yet.</p>
@@ -87,91 +100,68 @@ export function MasterTimelineView({ plans }: { plans: Record<string, CookPlan> 
         );
     }
 
-    const activeNode = sortedEvents[activeIndex] || sortedEvents[0];
-    const borderGlow = borderGlowMap[activeNode.meatType] || "border-zinc-800";
-    const bgGlow = bgGlowMap[activeNode.meatType] || "bg-zinc-800/10";
-    const activeText = colorMapText[activeNode.meatType] || "text-zinc-400";
-
     return (
-        <div className="w-full max-w-4xl mx-auto py-2">
-            <h2 className="text-xl font-bebas tracking-widest text-indigo-400 mb-6 border-b border-zinc-800 pb-4">
+        <div className="w-full max-w-6xl mx-auto py-2 h-full flex flex-col">
+            <h2 className="text-xl font-bebas tracking-widest text-indigo-400 mb-4 border-b border-zinc-800 pb-3 shrink-0">
                 Master Execution Timeline
             </h2>
             
-            {/* Horizontal Axis Wrapper */}
-            <div className="relative py-6 mb-6 overflow-hidden max-w-full">
-                {/* Background Line */}
-                <div className="absolute bottom-[8px] left-0 right-0 h-0.5 bg-zinc-800 z-0"></div>
-                
-                {/* Scrolling Container */}
-                <div className="flex overflow-x-auto no-scrollbar relative z-10 snap-x snap-mandatory pb-4">
-                    {/* Add leading/trailing spacer for better centering on ends */}
-                    <div className="shrink-0 w-8 md:w-20"></div>
-                    
-                    {sortedEvents.map((node, i) => {
-                        const isActive = i === activeIndex;
-                        const dotColor = dotColorMap[node.meatType] || "bg-zinc-500";
-                        const activeGlow = glowMap[node.meatType] || "";
-                        
-                        return (
-                            <div 
-                                key={i} 
-                                onClick={() => setActiveIndex(i)}
-                                className="flex flex-col items-center justify-end shrink-0 w-[100px] md:w-[120px] snap-center cursor-pointer group"
-                            >
-                                <div className="flex flex-col items-center mb-3">
-                                    <span className={`text-[9px] uppercase tracking-widest font-bold mb-1 transition-colors ${isActive ? colorMapText[node.meatType] : 'text-zinc-600 group-hover:text-zinc-500'}`}>
-                                        {node.meatType}
-                                    </span>
-                                    <span className={`text-[10px] font-bold transition-colors text-center px-1 ${isActive ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
-                                        {node.time}
-                                    </span>
-                                </div>
-                                <div className={`w-4 h-4 rounded-full border-4 transition-all duration-300 ${
-                                    isActive 
-                                    ? `${dotColor} border-zinc-900 scale-125 ${activeGlow}` 
-                                    : `${dotColor} border-zinc-900 opacity-40 group-hover:opacity-80`
-                                }`}></div>
+            <div className="flex-1 overflow-auto rounded-xl border border-zinc-800 bg-zinc-950/50 shadow-2xl relative">
+                <div className="min-w-[800px] md:min-w-[1000px]">
+                    {/* Header */}
+                    <div className="grid grid-cols-[100px_1fr_1fr_1fr_1fr] bg-zinc-900 border-b border-zinc-800 sticky top-0 z-20 shadow-md">
+                        <div className="p-4 text-xs font-bold uppercase tracking-widest text-zinc-500 border-r border-zinc-800 text-center">
+                            Time
+                        </div>
+                        {MEAT_COLUMNS.map(col => (
+                            <div key={col} className={`p-4 text-xs font-bold uppercase tracking-widest border-r border-zinc-800 last:border-r-0 ${colorMapText[col] || 'text-zinc-300'}`}>
+                                {col}
                             </div>
-                        );
-                    })}
-                    
-                    <div className="shrink-0 w-8 md:w-20"></div>
-                </div>
-            </div>
-
-            {/* Premium Focus Card */}
-            <div className={`bg-zinc-950 border ${borderGlow} rounded-2xl p-5 md:p-6 shadow-2xl relative overflow-hidden fade-in min-h-[160px] transition-colors duration-500`}>
-                {/* Subtle background glow */}
-                <div className={`absolute -top-20 -right-20 w-40 h-40 ${bgGlow} blur-3xl rounded-full pointer-events-none transition-colors duration-500`}></div>
-                
-                <div className="relative z-10 flex flex-col h-full justify-center pb-8 md:pb-0 pr-0 md:pr-20">
-                    <div className="flex flex-wrap gap-2 items-center mb-3">
-                        <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-sm border ${borderGlow} ${activeText} ${bgGlow}`}>
-                            {activeNode.meatType}
-                        </span>
-                        <span className="text-sm font-bold text-white tracking-widest bg-zinc-900 px-2.5 py-1 rounded">{activeNode.time}</span>
+                        ))}
                     </div>
-                    <h3 className="text-lg md:text-xl font-bold text-white leading-tight mb-2">{activeNode.action}</h3>
-                    <p className="text-zinc-400 text-sm leading-relaxed max-w-2xl">{activeNode.description}</p>
-                </div>
-                
-                {/* Navigation helpers */}
-                <div className="absolute bottom-4 right-4 flex gap-2">
-                    <button 
-                        onClick={() => setActiveIndex(Math.max(0, activeIndex - 1))}
-                        disabled={activeIndex === 0}
-                        className="w-8 h-8 rounded-full flex items-center justify-center bg-zinc-900 border border-zinc-800 text-zinc-400 disabled:opacity-30 hover:text-white transition-colors"
-                    >
-                        ←
-                    </button>
-                    <button 
-                        onClick={() => setActiveIndex(Math.min(sortedEvents.length - 1, activeIndex + 1))}
-                        disabled={activeIndex === sortedEvents.length - 1}
-                        className="w-8 h-8 rounded-full flex items-center justify-center bg-zinc-900 border border-zinc-800 text-zinc-400 disabled:opacity-30 hover:text-white transition-colors"
-                    >
-                        →
-                    </button>
+
+                    {/* Body */}
+                    <div className="divide-y divide-zinc-800/50 pb-8">
+                        {groupedEvents.map((group, i) => (
+                            <div key={i} className="grid grid-cols-[100px_1fr_1fr_1fr_1fr] hover:bg-zinc-900/40 transition-colors group min-h-[80px]">
+                                {/* Time Column */}
+                                <div className="p-4 flex flex-col justify-start items-center border-r border-zinc-800/50 bg-zinc-950/80 relative">
+                                    {/* Timeline subtle connecting line */}
+                                    <div className="absolute top-0 bottom-0 left-1/2 w-px bg-zinc-800/40 -z-10 group-hover:bg-zinc-700/60 transition-colors"></div>
+                                    
+                                    <span className="text-xs font-bold text-white text-center bg-zinc-900 px-2 py-1 rounded border border-zinc-800 z-10">{group.timeStr}</span>
+                                    {group.offsetMinutes !== 9999 && (
+                                        <span className="text-[10px] text-zinc-500 font-mono mt-2 bg-zinc-950 px-1 z-10">
+                                            {group.offsetMinutes < 0 ? `T${group.offsetMinutes}` : group.offsetMinutes === 0 ? "Turn-in" : `T+${group.offsetMinutes}`}
+                                        </span>
+                                    )}
+                                </div>
+                                
+                                {/* Meat Columns */}
+                                {MEAT_COLUMNS.map(meat => {
+                                    const meatEvents = group.events[meat];
+                                    
+                                    if (!meatEvents || meatEvents.length === 0) {
+                                        return <div key={meat} className="p-4 border-r border-zinc-900/50 last:border-r-0"></div>;
+                                    }
+                                    
+                                    return (
+                                        <div key={meat} className="p-3 border-r border-zinc-900/50 last:border-r-0 flex flex-col gap-3">
+                                            {meatEvents.map((ev, idx) => (
+                                                <div key={idx} className={`relative p-3 rounded-xl border ${borderGlowMap[meat]} ${bgGlowMap[meat]} shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5`}>
+                                                    <div className="flex items-start gap-2 mb-2">
+                                                        <div className={`w-2 h-2 mt-1 shrink-0 rounded-full ${dotColorMap[meat]} ${glowMap[meat]}`}></div>
+                                                        <span className="text-xs font-bold text-white leading-tight">{ev.action}</span>
+                                                    </div>
+                                                    <p className="text-[10px] text-zinc-400 leading-relaxed">{ev.description}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

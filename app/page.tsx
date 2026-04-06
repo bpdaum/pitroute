@@ -212,13 +212,12 @@ function FilterPanelContents(props: FilterPanelProps) {
   );
 }
 
-type Tab = "list" | "map" | "calendar" | "saved";
+type Tab = "discover" | "calendar" | "cooks";
 
 const ALL_TABS: { id: Tab; icon: string; label: string, requireAuth?: boolean }[] = [
-  { id: "list", icon: "☰", label: "Discover Events" },
-  { id: "map", icon: "🗺", label: "Map" },
+  { id: "discover", icon: "🗺", label: "Discover Events" },
   { id: "calendar", icon: "📅", label: "Calendar" },
-  { id: "saved", icon: "⭐", label: "Saved Trips", requireAuth: true },
+  { id: "cooks", icon: "🔥", label: "Cooks", requireAuth: true },
 ];
 
 interface RouteStop {
@@ -231,7 +230,7 @@ interface RouteStop {
 export default function Home() {
   const [allEvents, setAllEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<Tab>("list");
+  const [activeTab, setActiveTab] = useState<Tab>("discover");
   const [selectedEventIds, setSelectedEventIds] = useState<string[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -381,7 +380,7 @@ export default function Home() {
 
       setRouteStops(data.stops);
       setRoutePurse(data.totalPurse);
-      setActiveTab("map"); // Navigate to a view where we can render the timeline later
+      setActiveTab("discover"); // Navigate to a view where we can render the timeline later
     } catch (e: any) {
       setRouteError(e.message || "Failed to generate route.");
     }
@@ -550,7 +549,7 @@ export default function Home() {
             {ALL_TABS.find(t => t.id === activeTab)?.label}
           </h2>
           {/* Mobile filter button */}
-          {(activeTab === "list" || activeTab === "calendar" || activeTab === "map") && (
+          {(activeTab === "discover" || activeTab === "calendar") && (
             <button
               onClick={() => { setShowMobileFilters(true); setSelectedEvent(null); }}
               className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-semibold hover:border-orange-500 hover:text-orange-400 transition-colors"
@@ -566,27 +565,13 @@ export default function Home() {
 
         <div className="flex flex-col md:flex-row flex-1 overflow-y-auto md:overflow-hidden relative">
           <div className="flex-1 overflow-hidden bg-zinc-950 relative min-h-[60vh] md:min-h-0">
-            {activeTab === "map" && (
-              <div className="absolute inset-0">
-                <EventMap
-                  events={filteredEvents}
-                  onSelectEvent={setSelectedEvent}
-                  routeStops={routeStops as any}
-                  userCoords={userCoords}
-                  totalPurse={routePurse}
-                  onPlanCook={setPlanningEvent}
-                />
-              </div>
-            )}
-            {activeTab === "calendar" && (
-              <EventCalendar events={filteredEvents} onSelectEvent={setSelectedEvent} />
-            )}
-            {activeTab === "list" && (
-              <div className="h-full overflow-y-auto content-start pb-32">
-                <div className="p-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+            {activeTab === "discover" && (
+              <div className="flex w-full h-full relative">
+                {/* Sidebar List - Desktop: always visible. Mobile: visible only if no event is selected */}
+                <div className={`w-full md:w-[350px] lg:w-[400px] shrink-0 h-full overflow-y-auto bg-zinc-950 border-r border-zinc-800 ${selectedEvent ? 'hidden md:block' : 'block'}`}>
+                  <div className="p-4 flex flex-col gap-3 pb-32">
                     {filteredEvents.length === 0 ? (
-                      <div className="col-span-full py-12 text-center text-sm text-zinc-500">
+                      <div className="py-12 text-center text-sm text-zinc-500">
                         No events match your selected filters. Try adjusting your radius or dates.
                       </div>
                     ) : (
@@ -594,16 +579,31 @@ export default function Home() {
                         <EventCard
                           key={e.id}
                           event={e}
-                          isSelected={selectedEventIds.includes(e.id)}
+                          isSelected={selectedEventIds.includes(e.id) || selectedEvent?.id === e.id}
                           onClick={() => setSelectedEvent(e)}
                         />
                       ))
                     )}
                   </div>
                 </div>
+
+                {/* Map Pane - Desktop: always visible. Mobile: visible only if an event is selected */}
+                <div className={`flex-1 relative ${selectedEvent ? 'block w-full h-full' : 'hidden md:block'}`}>
+                  <EventMap
+                    events={filteredEvents}
+                    onSelectEvent={setSelectedEvent}
+                    routeStops={routeStops as any}
+                    userCoords={userCoords}
+                    totalPurse={routePurse}
+                    onPlanCook={setPlanningEvent}
+                  />
+                </div>
               </div>
             )}
-            {activeTab === "saved" && (
+            {activeTab === "calendar" && (
+              <EventCalendar events={filteredEvents} onSelectEvent={setSelectedEvent} />
+            )}
+            {activeTab === "cooks" && (
               <SavedTrips onLoadRoute={(routeData) => {
                 setRouteStops(routeData.stops);
                 setRoutePurse(routeData.totalPurse || 0);
@@ -710,7 +710,7 @@ export default function Home() {
             >
               <span className="text-xl leading-none mb-1">{tab.icon}</span>
               <span className="text-[9px] uppercase font-semibold tracking-wider text-center px-1">
-                {tab.id === 'list' ? 'Events' : tab.id === 'saved' ? 'Saved' : tab.label}
+                {tab.id === 'discover' ? 'Events' : tab.label}
               </span>
             </button>
           );
