@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { EventItem, EventCard, cleanAddress } from "./components/EventCard";
 import { EventCalendar } from "./components/EventCalendar";
 import { AuthWidget } from "./components/AuthWidget";
-import { SavedTrips } from "./components/SavedTrips";
+import { SavedCooks } from "./components/SavedCooks";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 import { EventMap } from "./components/EventMap";
@@ -652,13 +652,8 @@ export default function Home() {
               <EventCalendar events={filteredEvents} onSelectEvent={setSelectedEvent} />
             )}
             {activeTab === "cooks" && (
-              <SavedTrips onLoadRoute={(routeData) => {
-                setRouteStops(routeData.stops);
-                setRoutePurse(routeData.totalPurse || 0);
-                if (routeData.stops?.length > 0) {
-                  const firstStop = routeData.stops[0];
-                  setUserCoords({ lat: firstStop.event.latitude, lng: firstStop.event.longitude });
-                }
+              <SavedCooks onOpenCook={(event) => {
+                setPlanningEvent(event);
               }} />
             )}
             {activeTab === "coach" && (
