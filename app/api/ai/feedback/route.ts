@@ -12,9 +12,9 @@ export async function POST(request: Request) {
 
         const { meatType, ingredients, recipe, timeline, postNotes } = await request.json();
 
-        if (!meatType || !postNotes) {
+        if (!meatType) {
             return NextResponse.json(
-                { error: "meatType and postNotes are required for feedback" },
+                { error: "meatType is required for feedback" },
                 { status: 400 }
             );
         }
@@ -30,7 +30,7 @@ Competitor's Cook Profile:
 - AI Generated Timeline Used: ${timeline ? JSON.stringify(timeline) : "None used"}
 
 Competitor's Post-Cook Notes/Results:
-"${postNotes}"
+"${postNotes || "No specific debrief notes provided. Please review their strategy and timeline above for potential flaws, bottlenecks, or competitive improvements."}"
 
 Format your response in beautiful Markdown. Use nice headers like "### 🏆 What Worked", "### 🔍 Areas for Improvement", and "### 💡 Next Time". Be encouraging but brutally honest like a real competition judge. Provide specific technical temperature, wrapping, resting, or flavor profile adjustments they should make next time based on their notes.
 `;

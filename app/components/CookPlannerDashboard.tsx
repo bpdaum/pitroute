@@ -143,9 +143,19 @@ export function CookPlannerDashboard({ event, onBack }: { event: EventItem; onBa
         const nextPlans = { ...plans };
         
         try {
-            await Promise.all(MEAT_TYPES.map(async (meat) => {
+            const meatsToReview = MEAT_TYPES.filter(m => {
+                const p = plans[m];
+                return p && (p.postNotes || p.recipe || p.timeline || p.ingredients);
+            });
+            
+            if (meatsToReview.length === 0) {
+                alert("Please add some execution notes, strategies, or generate a timeline first before asking for feedback!");
+                setGeneratingFeedback(false);
+                return;
+            }
+
+            await Promise.all(meatsToReview.map(async (meat) => {
                 const p = plans[meat];
-                if (!p || !p.postNotes) return; // Must have post notes
                 
                 let currentTimeline = [];
                 if (p.timeline) {
