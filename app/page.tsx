@@ -12,6 +12,7 @@ import { EventMap } from "./components/EventMap";
 import { Logo } from "./components/Logo";
 import { BlackoutDates } from "./components/BlackoutDates";
 import { CookPlannerDashboard } from "./components/CookPlannerDashboard";
+import { AiCoachChat } from "./components/AiCoachChat";
 import Link from "next/link";
 
 function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -225,12 +226,13 @@ function FilterPanelContents(props: FilterPanelProps) {
   );
 }
 
-type Tab = "discover" | "calendar" | "cooks";
+type Tab = "discover" | "calendar" | "cooks" | "coach";
 
 const ALL_TABS: { id: Tab; icon: string; label: string, requireAuth?: boolean }[] = [
   { id: "discover", icon: "🗺", label: "Discover Events" },
   { id: "calendar", icon: "📅", label: "Calendar" },
   { id: "cooks", icon: "🔥", label: "Cooks", requireAuth: true },
+  { id: "coach", icon: "🤖", label: "AI Pitmaster", requireAuth: true },
 ];
 
 interface RouteStop {
@@ -658,6 +660,9 @@ export default function Home() {
                   setUserCoords({ lat: firstStop.event.latitude, lng: firstStop.event.longitude });
                 }
               }} />
+            )}
+            {activeTab === "coach" && (
+              <AiCoachChat />
             )}
           </div>
 
