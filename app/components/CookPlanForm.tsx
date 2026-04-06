@@ -131,8 +131,8 @@ export function CookPlanForm({ plan, onSave, saving, packages }: CookPlanFormPro
 
             {/* PRE-COOK PLANNING */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-300 border-b border-zinc-800 pb-2">
-                    1. Pre-Cook Prep
+                <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-300 border-b border-zinc-800 pb-2 flex items-center gap-2">
+                    <span className="text-orange-500 font-black">1.</span> {plan.meatType} Pre-Cook Prep
                 </h3>
 
                 <div>
@@ -226,8 +226,8 @@ export function CookPlanForm({ plan, onSave, saving, packages }: CookPlanFormPro
             {/* AI TIMELINE GENERATOR */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-4">
                 <div className="flex justify-between items-end border-b border-zinc-800 pb-2 mb-2">
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-300">
-                        2. Cook Timeline
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-300 flex items-center gap-2">
+                        <span className="text-orange-500 font-black">2.</span> {plan.meatType} Timeline
                     </h3>
                     <button
                         onClick={handleGenerateTimeline}
@@ -253,8 +253,8 @@ export function CookPlanForm({ plan, onSave, saving, packages }: CookPlanFormPro
 
             {/* POST-COOK FEEDBACK */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-300 border-b border-zinc-800 pb-2">
-                    3. Post-Cook Feedback & Results
+                <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-300 border-b border-zinc-800 pb-2 flex items-center gap-2">
+                    <span className="text-orange-500 font-black">3.</span> {plan.meatType} Feedback & Results
                 </h3>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -311,7 +311,7 @@ export function CookPlanForm({ plan, onSave, saving, packages }: CookPlanFormPro
                     disabled={saving}
                     className="bg-zinc-100 hover:bg-white text-zinc-900 font-bold px-6 py-3 rounded-lg flex items-center gap-2 transition-colors disabled:opacity-50 text-sm"
                 >
-                    {saving ? "Saving..." : "Save Cook Plan"}
+                    {saving ? "Saving..." : `Save ${plan.meatType} Plan`}
                 </button>
             </div>
 
