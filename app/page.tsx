@@ -6,7 +6,7 @@ import { EventItem, EventCard, cleanAddress } from "./components/EventCard";
 import { EventCalendar } from "./components/EventCalendar";
 import { AuthWidget } from "./components/AuthWidget";
 import { SavedTrips } from "./components/SavedTrips";
-import { useSession } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 import { EventMap } from "./components/EventMap";
 import { Logo } from "./components/Logo";
@@ -548,19 +548,38 @@ export default function Home() {
           <h2 className="text-sm font-semibold text-zinc-300">
             {ALL_TABS.find(t => t.id === activeTab)?.label}
           </h2>
-          {/* Mobile filter button */}
-          {(activeTab === "discover" || activeTab === "calendar") && (
-            <button
-              onClick={() => { setShowMobileFilters(true); setSelectedEvent(null); }}
-              className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-semibold hover:border-orange-500 hover:text-orange-400 transition-colors"
-            >
-              <span>⚙️</span>
-              <span>Filters</span>
-              {(selectedOrgs.length > 0 || searchQuery || startDate || endDate || blackoutDates.length > 0 || userCoords) && (
-                <span className="w-2 h-2 rounded-full bg-orange-500 inline-block" />
+          <div className="flex items-center gap-3">
+            {/* Mobile Auth Minimal Info/Button */}
+            <div className="md:hidden">
+              {session?.user ? (
+                <button onClick={() => signOut()} className="block" title="Sign Out">
+                  {session.user.image ? (
+                    <img src={session.user.image} className="w-7 h-7 rounded-full border border-zinc-700" alt="Sign Out" />
+                  ) : (
+                    <div className="w-7 h-7 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-400 text-[10px] font-bold">
+                        {session.user.name?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                  )}
+                </button>
+              ) : (
+                <button onClick={() => signIn("google")} className="text-[10px] font-bold text-orange-400 uppercase tracking-widest px-2.5 py-1.5 border border-orange-500/30 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 whitespace-nowrap">Sign In</button>
               )}
-            </button>
-          )}
+            </div>
+
+            {/* Mobile filter button */}
+            {(activeTab === "discover" || activeTab === "calendar") && (
+              <button
+                onClick={() => { setShowMobileFilters(true); setSelectedEvent(null); }}
+                className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-semibold hover:border-orange-500 hover:text-orange-400 transition-colors"
+              >
+                <span>⚙️</span>
+                <span>Filters</span>
+                {(selectedOrgs.length > 0 || searchQuery || startDate || endDate || blackoutDates.length > 0 || userCoords) && (
+                  <span className="w-2 h-2 rounded-full bg-orange-500 inline-block" />
+                )}
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-col md:flex-row flex-1 overflow-y-auto md:overflow-hidden relative">
