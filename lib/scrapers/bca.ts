@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import { Scraper, ScrapedEvent } from './types';
 
 export class BCAScraper implements Scraper {
-    private url = 'https://bcabbq.org/';
+    private url = 'https://www.bcabbq.org/events_display.php';
 
     async scrape(): Promise<ScrapedEvent[]> {
         const browser = await chromium.launch({
