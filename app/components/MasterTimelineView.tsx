@@ -70,7 +70,9 @@ export function MasterTimelineView({ plans }: { plans: Record<string, CookPlan> 
                                     let cleanTime = e.time || "";
                                     const timeMatch = cleanTime.match(/(1[0-2]|0?[1-9]):[0-5][0-9]\s*(AM|PM|am|pm)/i);
                                     if (timeMatch) {
-                                        if (offset <= -720 || /(Fri|Before|Prev|Eve)/i.test(cleanTime)) {
+                                        if (offset <= -2160) {
+                                            cleanTime = `2 Days Before ${timeMatch[0].toUpperCase()}`;
+                                        } else if (offset <= -720 || /(Fri|Before|Prev|Eve)/i.test(cleanTime)) {
                                             cleanTime = `Day Before ${timeMatch[0].toUpperCase()}`;
                                         } else {
                                             cleanTime = `Day Of ${timeMatch[0].toUpperCase()}`;
