@@ -1,0 +1,1563 @@
+Certified Barbeque Judging Class - Ruidoso, NM
+6/4/2026 - 6/4/2026
+Ruidoso, NM 88345
+UNITED STATES
+Reps: KELLY MCINTOSH
+===
+Original SD BBQ Championships
+6/5/2026 - 6/6/2026
+Huron, SD 57350
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BUNNY TUTTLE, RICH TUTTLE
+Results Not In
+===
+Original SD BBQ Championships (ONE MEAT RIBS)
+6/5/2026 - 6/5/2026
+Huron, SD 57350
+UNITED STATES
+Reps: BUNNY TUTTLE, RICH TUTTLE
+Results Not In
+===
+Smoke in the Park (BACKYARD & KIDS QUE)
+6/5/2026 - 6/6/2026
+Glencoe, AL 35905
+UNITED STATES
+Reps: CAROL BIGLER, RANDY G BIGLER
+Results Not In
+===
+McLouth BBQ Blowout 35th Annual
+6/5/2026 - 6/6/2026
+McLouth, KS 66054
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVID DYCHE, JO DYCHE
+Prize Money: $5,400.00
+Results Not In
+===
+Polish Open Grill and BBQ Championships
+6/5/2026 - 6/6/2026
+Mazowieckie, 05-090
+POLAND
+Reps: DEBRA GAGE, WILLIAM GAGE, MARIA LOHMAN, WAYNE LOHMAN
+Results Not In
+===
+Loudoun Rotary BBQ Classic (BACKYARD ONLY)
+6/5/2026 - 6/6/2026
+Leesburg, VA 20175
+UNITED STATES
+Reps: ROBERT MCKEE, REGINA BODNAR
+Results Not In
+===
+Big Blue BBQ Championship
+6/5/2026 - 6/6/2026
+Marysville, KS 66508
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+All American BBQ Cook-Off (Day 1)
+6/5/2026 - 6/6/2026
+Ruidoso Downs, NM 88346
+UNITED STATES
+Reps: MICHAEL SANTIAGO, RHONDA SANTIAGO, DEBBIE SPRAY, SCOTT SPRAY
+Prize Money: $35,000.00
+Results Not In
+===
+All American BBQ Cook-Off (Day 2)
+6/6/2026 - 6/7/2026
+Ruidoso Downs, NM 88346
+UNITED STATES
+Reps: DEBBIE SPRAY, SCOTT SPRAY, MICHAEL SANTIAGO, RHONDA SANTIAGO
+Prize Money: $40,000.00
+Results Not In
+===
+Certified Barbeque Judging Class - Egg Harbor, WI
+6/6/2026 - 6/6/2026
+Egg Harbor, WI 54209
+UNITED STATES
+Reps: CHARLIE BRINZA
+===
+Throttled Up BBQ Throwdown
+6/6/2026 - 6/7/2026
+Upper Onslow, NS B6L 0E2
+CANADA
+Reps: CRAIG MAIDENS, HEATHER MAIDENS
+Results Not In
+===
+Bring'n Home the Bacon Day 1 (MASTER & BACKYARD)
+6/12/2026 - 6/13/2026
+West Salem, WI 54669
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: JEANNE TITUS, CHARLIE BRINZA, DAVID BURSTEIN
+Prize Money: $8,725.00
+Results Not In
+===
+Bring'n Home the Bacon Day 1 (ONE MEAT RIBS)
+6/12/2026 - 6/12/2026
+West Salem, WI 54669
+UNITED STATES
+Reps: JEANNE TITUS, CHARLIE BRINZA, DAVID BURSTEIN
+Prize Money: $1,200.00
+Results Not In
+===
+York County BBQ Festival (Day 1)
+6/12/2026 - 6/13/2026
+Delta, PA 17314
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BILL JONES, ROBERT MCKEE
+Results Not In
+===
+Smoke on the Plains BBQ & Music Fest
+6/12/2026 - 6/13/2026
+Derby, KS 67037
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: LARRY VOTH, LYNDA VOTH
+Results Not In
+===
+Robertson County Fair Assoc. Barbeque Throwdown (COMPETITOR SERIES)
+6/12/2026 - 6/13/2026
+Springfield , TN 37172
+UNITED STATES
+Reps: ROBERT VANDERIPE, LYGIA (LEX) VANEGAS
+Prize Money: $3,350.00
+Results Not In
+===
+Montana BBQ Cookoff
+6/12/2026 - 6/13/2026
+Absarokee, MT 59001
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DEL ANDERSON, FORREST BRUCE
+Results Not In
+===
+York County BBQ Festival (Registration)
+6/12/2026 - 6/14/2026
+Delta, PA 17314
+UNITED STATES
+Results Not In
+===
+Reelin N Smokin Backyard BBQ Competition (BACKYARD ONLY)
+6/12/2026 - 6/13/2026
+Huntsville, AL 35815
+UNITED STATES
+Reps: CAROL BIGLER, RANDY G BIGLER
+Results Not In
+===
+Bring'n Home the Bacon Day 2 (MASTER & BACKYARD)
+6/13/2026 - 6/14/2026
+West Salem, WI 54669
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CHARLIE BRINZA, DAVID BURSTEIN, JEANNE TITUS
+Prize Money: $8,725.00
+Results Not In
+===
+York County BBQ Festival (Day 2)
+6/13/2026 - 6/14/2026
+Delta, PA 17314
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BILL JONES, ROBERT MCKEE
+Results Not In
+===
+Bristol BBQ Bash - CAMPGROUND BBQ SERIES
+6/13/2026 - 6/14/2026
+Bristol, CT 06010
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: ABIGAIL NICHOLS, JAKE NICHOLS
+Results Not In
+===
+Bristol BBQ Bash - CAMPGROUND BBQ SERIES (ONE MEAT RIBS)
+6/13/2026 - 6/13/2026
+Bristol, CT 06010
+UNITED STATES
+Reps: ABIGAIL NICHOLS, JAKE NICHOLS
+Results Not In
+===
+Bristol BBQ Bash - CAMPGROUND BBQ SERIES (ONE MEAT CHICKEN)
+6/13/2026 - 6/13/2026
+Bristol, CT 06010
+UNITED STATES
+Reps: ABIGAIL NICHOLS, JAKE NICHOLS
+Results Not In
+===
+Mee(a)t and Fire BBQ Festival Innsbruck
+6/13/2026 - 6/14/2026
+Innsbruck, 6020
+AUSTRIA
+Reps: HAYMO GUTWENIGER, ROBERTO SIROK
+Results Not In
+===
+Mee(a)t and Fire BBQ Festival Innsbruck (ONE MEAT RIBS)
+6/13/2026 - 6/13/2026
+Innsbruck, 6020
+AUSTRIA
+Reps: HAYMO GUTWENIGER, ROBERTO SIROK
+Results Not In
+===
+Almost Heaven BBQ Bash (OPEN FORMAT)
+6/19/2026 - 6/20/2026
+Buckhannon, WV 26201
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BILL JONES, ALEX JR BROWN
+Results Not In
+===
+New Lowell True North BBQ Bash
+6/19/2026 - 6/21/2026
+New Lowell, ON L0M1N0
+CANADA
+Reps: CRAIG MAIDENS, HEATHER MAIDENS
+Results Not In
+===
+Riverland Smokers BBQ Contest 2026 (Day 1)
+6/19/2026 - 6/20/2026
+Dodewaard, 6669 BZ
+NETHERLANDS
+Reps: MARIANNE VAN GALEN, MAYCO VAN GALEN
+Results Not In
+===
+Rose Festival's 25th Annual KCBS BBQ Competition
+6/19/2026 - 6/20/2026
+State Center, IA 50247
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CLARA WILLIAMS, JONATHAN B WILLIAMS
+Results Not In
+===
+12th Annual K of C BBQ Smoke Off 4-Life
+6/19/2026 - 6/20/2026
+Kansas City, KS 66106
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: FORREST BRUCE, LARRY HADLEY
+Results Not In
+===
+Rhythm & BBQ Festival (BACKYARD ONLY)
+6/19/2026 - 6/20/2026
+Morris, IL 60450
+UNITED STATES
+Reps: CHARLIE BRINZA, JEANNE TITUS
+Prize Money: $2,550.00
+Results Not In
+===
+Smokey Skies BBQ Competition
+6/19/2026 - 6/20/2026
+Kipling, SK S0G2S0
+CANADA
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+BBQ for Bravery
+6/19/2026 - 6/20/2026
+Alcoa, TN 37701
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CONNIE AMIDEI, JONATHAN AMIDEI
+Results Not In
+===
+Certified Barbeque Judging & Table Captain Class - Italy
+6/19/2026 - 6/19/2026
+Peschiera del Garda, 37019
+ITALY
+Reps: HAYMO GUTWENIGER
+===
+Riverland Smokers BBQ Contest 2026 (Day 2)
+6/20/2026 - 6/21/2026
+Dodewaard, 6669 BZ
+NETHERLANDS
+Reps: MARIANNE VAN GALEN, MAYCO VAN GALEN
+Results Not In
+===
+The War of Barbeque
+6/20/2026 - 6/21/2026
+Peschiera del Garda, 37019
+ITALY
+Reps: ROBERTO SIROK, LUCA FAMIGLI
+Results Not In
+===
+The War of Barbeque (ONE MEAT CHICKEN)
+6/20/2026 - 6/20/2026
+Peschiera del Garda, 37019
+ITALY
+Reps: ROBERTO SIROK, LUCA FAMIGLI
+Results Not In
+===
+The War of Barbeque (ONE MEAT RIBS)
+6/20/2026 - 6/20/2026
+Peschiera del Garda, 37019
+ITALY
+Reps: ROBERTO SIROK, LUCA FAMIGLI
+Results Not In
+===
+Father's Day BBQ Bash
+6/20/2026 - 6/21/2026
+Biglerville, PA 17307
+UNITED STATES
+Reps: PHIL AARONSON, JEFF CHAMBERS
+Prize Money: $6,500.00
+Results Not In
+===
+Giant National Capital Barbecue Battle
+6/26/2026 - 6/28/2026
+Washington , DC 20006
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BILL JONES, ALEX JR BROWN
+Results Not In
+===
+Grizzly BBQ Brawl
+6/26/2026 - 6/27/2026
+Wellington, OH 44090
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVE DRUETZLER, CHARLIE BRINZA
+Results Not In
+===
+Smoke-N-Wings
+6/26/2026 - 6/27/2026
+Blackfoot, ID 83221
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: STEVEN FLEWALLEN, DEL ANDERSON
+Results Not In
+===
+The Great Lenexa BBQ Battle - Kansas State Championship
+6/26/2026 - 6/27/2026
+Lenexa, KS 66215
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: FORREST BRUCE, LARRY VOTH, LYNDA VOTH, LARRY HADLEY, DAVE ROGERS, PEG ROGERS
+Results Not In
+===
+Old Town Smokeout
+6/26/2026 - 6/27/2026
+Van Buren, AR 72956
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+Old Town Smokeout (ONE MEAT RIBS)
+6/26/2026 - 6/26/2026
+Van Buren, AR 72956
+UNITED STATES
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+Rib Fest (BACKYARD ONLY)
+6/26/2026 - 6/27/2026
+Sioux City, IA 51101
+UNITED STATES
+Reps: CINDY JUHL, TOM JUHL
+Results Not In
+===
+Pz al Carbon, Festival BBQ 2026
+6/26/2026 - 6/27/2026
+Perez Zeldon, SJ 11901
+COSTA RICA
+Reps: NATASHA LOEW, ERNESTO URIBE
+Results Not In
+===
+AG Hall of Fame Backyard BBQ Contest (BACKYARD ONLY) (POSTPONED)
+6/27/2026 - 6/27/2026
+Bonner Springs, KS 66012
+UNITED STATES
+Reps: DAVID DYCHE, JO DYCHE
+Results Not In
+===
+Blue Bombers BBQ Pitmaster Showdown
+6/30/2026 - 7/1/2026
+Winnipeg, MB R3T 1Z2
+CANADA
+Reps: CRAIG MAIDENS, HEATHER MAIDENS
+Results Not In
+===
+Dillon Days Blowin' Smoke BBQ Cook Off
+7/3/2026 - 7/4/2026
+Dillon, MT 59725
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BRIAN MOORE, STEVEN FLEWALLEN
+Results Not In
+===
+Alberta BBQ Festival
+7/3/2026 - 7/4/2026
+Millet, AB TOCf 1Z0
+CANADA
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+South Carolina Festival of Discovery
+7/9/2026 - 7/11/2026
+Greenwood, SC 29648
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DOUG REID, CAROLYN WELLS, ALAN ROTHROCK
+Prize Money: $20,210.00
+Results Not In
+===
+Cameron Elks BBQ Cook-Off (MASTERS and BACKYARD 1)
+7/10/2026 - 7/11/2026
+Cameron, MO 64429
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+Cameron Elks BBQ Cook-Off (ONE MEAT RIBS)
+7/10/2026 - 7/10/2026
+Cameron, MO 64429
+UNITED STATES
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+No Smoke, No Glory
+7/10/2026 - 7/12/2026
+Zagreb, 10000
+CROATIA
+Reps: ANGELA FISHLOCK, MARK FISHLOCK
+Results Not In
+===
+Goose's Annual Pitmaster Showdown
+7/10/2026 - 7/11/2026
+Papillion, NE 68046
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BUNNY TUTTLE, RICH TUTTLE
+Results Not In
+===
+Cameron Elks BBQ Cook-Off (BACKYARD 2)
+7/10/2026 - 7/11/2026
+Cameron, MO 64429
+UNITED STATES
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+KTD Smokn' Gobbler
+7/10/2026 - 7/11/2026
+Worthington, MN 56187
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: LAURIE TWETEN, PATRICK DILLER
+Prize Money: $8,800.00
+Results Not In
+===
+KTD Smokn' Gobbler (ONE MEAT RIBS)
+7/10/2026 - 7/10/2026
+Worthington, MN 56187
+UNITED STATES
+Reps: LAURIE TWETEN, PATRICK DILLER
+Prize Money: $950.00
+Results Not In
+===
+K.S. Que (BACKYARD ONLY)
+7/11/2026 - 7/11/2026
+Kennett Square, PA 19348
+UNITED STATES
+Reps: ROBERT MCKEE
+Results Not In
+===
+No Smoke, No Glory (ONE MEAT RIBS)
+7/11/2026 - 7/11/2026
+Zagreb, 10000
+CROATIA
+Reps: ANGELA FISHLOCK, MARK FISHLOCK
+Results Not In
+===
+No Smoke, No Glory (ONE MEAT BRISKET)
+7/11/2026 - 7/11/2026
+Zagreb, 10000
+CROATIA
+Reps: ANGELA FISHLOCK, MARK FISHLOCK
+Results Not In
+===
+New Jersey State Barbecue Championship
+7/11/2026 - 7/12/2026
+North Wildwood, NJ 08260
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: JEFF CHAMBERS, PHIL AARONSON, REGINA BODNAR
+Results Not In
+===
+Chillin & Grillin in the Glades
+7/17/2026 - 7/18/2026
+Wise, VA 24293
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BILL JONES, ALEX JR BROWN
+Results Not In
+===
+Great River Threshers BBQ Contest (BACKYARD ONLY) (Day 1)
+7/17/2026 - 7/18/2026
+Miles, IA 52064
+UNITED STATES
+Reps: PATRICK DILLER
+Prize Money: $2,450.00
+Results Not In
+===
+Smokin on the Osage BBQ Contest (Day 1)
+7/17/2026 - 7/18/2026
+Osceola, MO 64776
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVE ROGERS, PEG ROGERS
+Results Not In
+===
+European Invitational Championship (COMPETITOR SERIES)
+7/17/2026 - 7/18/2026
+Wilhering, 4073
+AUSTRIA
+Reps: HAYMO GUTWENIGER, ROBERTO SIROK
+Results Not In
+===
+Buckeye BBQ Classic
+7/17/2026 - 7/18/2026
+Hillsboro, OH 45133
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BECKY DRUETZLER, DAVE DRUETZLER
+Prize Money: $4,500.00
+Results Not In
+===
+Shenandoah ShenDig
+7/17/2026 - 7/18/2026
+Shenandoah, IA 51601
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+Shenandoah ShenDig (ONE MEAT CHICKEN)
+7/17/2026 - 7/17/2026
+Shenandoah, IA 51601
+UNITED STATES
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+IBEW So Cal BBQ & Chili Cook-Off (COMPETITOR SERIES)
+7/17/2026 - 7/18/2026
+Santa Ana, CA 92705
+UNITED STATES
+Reps: KATHLEEN MCINTOSH, KELLY MCINTOSH
+Results Not In
+===
+Great River Threshers BBQ Contest (BACKYARD ONLY) (Day 2)
+7/18/2026 - 7/19/2026
+Miles, IA 52064
+UNITED STATES
+Reps: PATRICK DILLER
+Prize Money: $2,550.00
+Results Not In
+===
+Smokin on the Osage BBQ Contest (Day 2)
+7/18/2026 - 7/19/2026
+Osceola, MO 64776
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVE ROGERS, PEG ROGERS
+Results Not In
+===
+Connecticut Barbecue Challenge (OPEN FORMAT)
+7/18/2026 - 7/19/2026
+Somers, CT 06071
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BILL WRIGHT, KIM WRIGHT
+Results Not In
+===
+Open Barbecue Championship
+7/18/2026 - 7/19/2026
+Wilhering, 4073
+AUSTRIA
+Reps: HAYMO GUTWENIGER, ROBERTO SIROK
+Results Not In
+===
+Sutherlin Throwdown
+7/18/2026 - 7/19/2026
+Sutherlin, OR 97479
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: JULIE POE, IAN SCHMIDT
+Results Not In
+===
+Smoke on the Rail BBQ Festival (Day 1)
+7/24/2026 - 7/25/2026
+New Freedom, PA 17349
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: ROBERT MCKEE, BILL JONES
+Results Not In
+===
+The Didsbury Double (Didsbury Lions BBQ) (Day 1)
+7/24/2026 - 7/25/2026
+Didsbury, AB T0M 0W0
+CANADA
+Reps: ANGELA FISHLOCK, MARK FISHLOCK
+Results Not In
+===
+10th Annual E'burg BBQ Contest
+7/24/2026 - 7/25/2026
+Emmetsburg, IA 50536
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CINDY JUHL, TOM JUHL
+Results Not In
+===
+Albany County Fair Smokin' BBQ Cook-Off
+7/24/2026 - 7/25/2026
+Laramie, WY 82070
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DEL ANDERSON, MICHAEL WINTER
+Results Not In
+===
+Dodge City Days Smokin' Saddles BBQ Comp (OPEN FORMAT)
+7/24/2026 - 7/25/2026
+Dodge City, KS 67801
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+2nd Annual Curley Que Classic
+7/24/2026 - 7/25/2026
+Kailua, HI 96734
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: JULIE POE, IAN SCHMIDT
+Results Not In
+===
+Masters at the Midway: Johnson County Fair BBQ Championship
+7/24/2026 - 7/25/2026
+Gardner, KS 66030
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: FORREST BRUCE, LARRY HADLEY
+Results Not In
+===
+Fire on the Mountain BBQ
+7/24/2026 - 7/25/2026
+Leburn, KY 41831
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: ROBERT VANDERIPE, LYGIA (LEX) VANEGAS
+Results Not In
+===
+Smoke on the Rail BBQ Festival (Day 2)
+7/25/2026 - 7/26/2026
+New Freedom, PA 17349
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: ROBERT MCKEE, BILL JONES
+Results Not In
+===
+The Didsbury Double (Didsbury Lions BBQ) (Day 2)
+7/25/2026 - 7/26/26
+Didsbury, AB T0M 0W0
+CANADA
+Reps: ANGELA FISHLOCK, MARK FISHLOCK
+Results Not In
+===
+Waiting for W.E.S.T. (ONE MEAT CHICKEN)
+7/25/2026 - 7/25/26
+Sand in Taufers / Campo Tures , 39032
+ITALY
+Reps: ROBERTO SIROK, HAYMO GUTWENIGER
+Results Not In
+===
+Waiting for W.E.S.T. (ONE MEAT RIBS)
+7/25/2026 - 7/25/26
+Sand in Taufers / Campo Tures , 39032
+ITALY
+Reps: HAYMO GUTWENIGER, ROBERTO SIROK
+Results Not In
+===
+CTO Smoke & Iron
+7/31/2026 - 8/1/2026
+Bentonville, AR 72712
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+All American BBQ Throwdown
+7/31/2026 - 8/1/2026
+Westland, MI 48185
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BECKY DRUETZLER, DAVE DRUETZLER
+Results Not In
+===
+All American BBQ Throwdown (ONE MEAT RIBS)
+7/31/2026 - 7/31/2026
+Westland, MI 48185
+UNITED STATES
+Reps: BECKY DRUETZLER, DAVE DRUETZLER
+Results Not In
+===
+California State Fair BBQ Competition (ONE MEAT RIBS)
+7/31/2026 - 8/1/2026
+Sacramento, CA 95815
+UNITED STATES
+Reps: IAN SCHMIDT, JULIE POE
+Prize Money: $825.00
+Results Not In
+===
+Cruisin' and BBQin'
+7/31/2026 - 8/1/2026
+Hampton, IA 50441
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CINDY JUHL, TOM JUHL
+Results Not In
+===
+Camper's Corner BBQ Cookoff
+8/1/2026 - 8/2/2026
+London, ON N6M 1H6
+CANADA
+Reps: CRAIG MAIDENS, HEATHER MAIDENS
+Results Not In
+===
+Camper's Corner BBQ Cookoff (ONE MEAT RIBS)
+8/1/2026 - 8/1/2026
+London, ON N6M 1H6
+CANADA
+Reps: CRAIG MAIDENS, HEATHER MAIDENS
+Results Not In
+===
+Smoke on the Bricks
+8/7/2026 - 8/8/2026
+Baldwin City, KS 66006
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: FORREST BRUCE, LARRY HADLEY, DAVE ROGERS
+Prize Money: $10,000.00
+Results Not In
+===
+Battle of the Blue Ridge
+8/7/2026 - 8/8/2026
+Swannanoa, NC 28778
+UNITED STATES
+Reps: ALAN ROTHROCK, DOUG REID
+Results Not In
+===
+Wild West Fest on Fire 2026 (ONE MEAT CHICKEN)
+8/7/2026 - 8/8/2026
+Medvode, 1215
+SLOVENIA
+Reps: HAYMO GUTWENIGER, LUCA FAMIGLI
+Results Not In
+===
+Wild West Fest on Fire 2026 (ONE MEAT RIBS)
+8/7/2026 - 8/8/2026
+Medvode, 1215
+SLOVENIA
+Reps: HAYMO GUTWENIGER, LUCA FAMIGLI
+Results Not In
+===
+Smokin Downtown (BACKYARD ONLY)
+8/8/2026 - 8/8/2026
+Warsaw, IN 46580
+UNITED STATES
+Reps: JEANNE TITUS
+Results Not In
+===
+Wild West Fest on Fire 2026
+8/8/2026 - 8/9/2026
+Medvode, 1215
+SLOVENIA
+Reps: LUCA FAMIGLI, HAYMO GUTWENIGER
+Results Not In
+===
+Pepsi Wyoming State BBQ Championships & Bluegrass Festival
+8/14/2026 - 8/15/2026
+Worland, WY 82401
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DEL ANDERSON, BRIAN MOORE
+Results Not In
+===
+BBQ & Fly-In on the River
+8/14/2026 - 8/15/2026
+Excelsior Springs, MO 64024
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: LARRY HADLEY, FORREST BRUCE, DAVE ROGERS
+Results Not In
+===
+Smoke N for the Kids (Day 1)
+8/14/2026 - 8/15/2026
+Troy, IL 62294
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CHARLIE BRINZA, DAVID BURSTEIN
+Results Not In
+===
+Cars & BBQ Festival 2026
+8/14/2026 - 8/15/2026
+Tallinn, 15026
+ESTONIA
+Reps: MANUELA SELIGER, STEPHAN SELIGER
+Results Not In
+===
+Big Smoke Bonnyville
+8/14/2026 - 8/15/2026
+Bonnyville, AB T9N2L1
+CANADA
+Reps: CRAIG MAIDENS, HEATHER MAIDENS
+Results Not In
+===
+Boomer Backyard BBQ Cookoff (BACKYARD ONLY)
+8/15/2026 - 8/15/2026
+Canton, MN 55922
+UNITED STATES
+Reps: LAURIE TWETEN
+Prize Money: $3,250.00
+Results Not In
+===
+Smoke N for the Kids (Day 2)
+8/15/2026 - 8/16/2026
+Troy, IL 62294
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CHARLIE BRINZA, DAVID BURSTEIN
+Results Not In
+===
+Kora Kares for Kids
+8/15/2026 - 8/16/2026
+Hiram, ME 04240
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CAROL BIGLER, RANDY G BIGLER
+Prize Money: $7,300.00
+Results Not In
+===
+Kora Kares for Kids (ONE MEAT RIBS)
+8/15/2026 - 8/15/2026
+Hiram, ME 04240
+UNITED STATES
+Reps: CAROL BIGLER, RANDY G BIGLER
+Prize Money: $625.00
+Results Not In
+===
+Sandhills Smoke Show BBQ
+8/15/2026 - 8/16/2026
+North Platte, NE 69101
+UNITED STATES
+Reps: LARRY VOTH, LYNDA VOTH
+Results Not In
+===
+Certified Barbeque Judging & Table Captain Class - Bel Air, MD
+8/15/2026 - 8/15/2026
+Bel Air, MD 21014
+UNITED STATES
+Reps: BILL JONES
+===
+Stoney Creek BBQ Cookoff
+8/21/2026 - 8/22/2026
+Edinburg, VA 22824
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BILL JONES, ALEX JR BROWN
+Results Not In
+===
+Smoke in the North (Day 1)
+8/21/2026 - 8/22/2026
+Boras, 50113
+SWEDEN
+Reps: MANUELA SELIGER, STEPHAN SELIGER
+Results Not In
+===
+City of Madison BBQ Party (formerly Madison Ribberfest)
+8/21/2026 - 8/22/2026
+Madison, IN 47250
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BECKY DRUETZLER, DAVE DRUETZLER
+Results Not In
+===
+Raider Red Meats BBQ & Ribeye Championship
+8/21/2026 - 8/22/2026
+Lubbock, TX 79409
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: LARRY VOTH, LYNDA VOTH
+Results Not In
+===
+Made for KC BBQ Championship 2026 (COMPETITORS SERIES)
+8/21/2026 - 8/22/2026
+Weston, MO 64098
+UNITED STATES
+Reps: DAVE ROGERS, PEG ROGERS
+Prize Money: $33,500.00
+Results Not In
+===
+9th Annual DuPont BBQ Competition
+8/22/2026 - 8/23/2026
+DuPont, WA 98327
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: JULIE POE, IAN SCHMIDT
+Results Not In
+===
+Smoke in the North (Day 2)
+8/22/2026 - 8/23/2026
+Boras, 50113
+SWEDEN
+Reps: MANUELA SELIGER, STEPHAN SELIGER
+Results Not In
+===
+Smoke on the Midway (BACKYARD ONLY)
+8/22/2026 - 8/22/2026
+Fairbury, IL 61739
+UNITED STATES
+Reps: JEANNE TITUS, CHARLIE BRINZA
+Results Not In
+===
+Up in Smoke on the Square (BACKYARD ONLY)
+8/28/2026 - 8/29/2026
+Lincoln , IL 62656
+UNITED STATES
+Reps: DAVID BURSTEIN
+Prize Money: $5,000.00
+Results Not In
+===
+East Central State BBQ Cookoff - Paola Roots Festival
+8/28/2026 - 8/29/2026
+Paola, KS 66071
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: FORREST BRUCE, LARRY HADLEY
+Results Not In
+===
+Montana Pitmaster Classic
+8/28/2026 - 8/29/2026
+Bozeman, MT 59715
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: STEVEN FLEWALLEN, BRIAN MOORE
+Results Not In
+===
+Smokin Ribs for the Kids (BACKYARD ONLY) (Contest 1)
+8/28/2026 - 8/29/2026
+Cherry Valley, IL 61016
+UNITED STATES
+Reps: CHARLIE BRINZA, JEANNE TITUS
+Results Not In
+===
+Smokin Ribs for the Kids (ONE MEAT RIBS)
+8/28/2026 - 8/28/2026
+Cherry Valley, IL 61016
+UNITED STATES
+Reps: CHARLIE BRINZA, JEANNE TITUS
+Results Not In
+===
+Smokin Ribs for the Kids (BACKYARD ONLY) (Contest 2)
+8/28/2026 - 8/29/2026
+Cherry Valley, IL 61016
+UNITED STATES
+Reps: JEANNE TITUS, CHARLIE BRINZA
+Results Not In
+===
+MN Masters BBQ
+8/28/2026 - 8/29/2026
+Pierz, MN 56364
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: JOHN SCHARFFBILLIG, LAURIE TWETEN
+Results Not In
+===
+Saxonburg BBQ Smokeout
+8/28/2026 - 8/29/2026
+Saxonburg, PA 16056
+UNITED STATES
+Reps: REGINA BODNAR, ROBERT MCKEE
+Results Not In
+===
+Capital Kosher BBQ Competition (COMPETITOR SERIES)
+8/29/2026 - 8/30/2026
+Waynesboro, PA 17268
+UNITED STATES
+Reps: ROBERT MCKEE
+Results Not In
+===
+Certified Barbeque Judging Class - Overland Park, KS
+8/30/2026 - 8/30/2026
+Overland Park, KS 66204
+UNITED STATES
+Reps: FORREST BRUCE
+===
+SD BBQ Shootout @ Huset's Speedway
+9/4/2026 - 9/5/2026
+Brandon, SD 57005
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVE ROGERS, PEG ROGERS
+Results Not In
+===
+Smoke on the River (Day 1)
+9/4/2026 - 9/5/2026
+Burlington, KS 66839
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: LARRY VOTH, LYNDA VOTH
+Results Not In
+===
+Barbeque on the Bow Festival
+9/4/2026 - 9/6/2026
+Calgary, AB
+CANADA
+Reps: CRAIG MAIDENS, HEATHER MAIDENS
+Results Not In
+===
+Meat & Tater BBQ Fest
+9/4/2026 - 9/5/2026
+Boise, ID 83704
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: JULIE POE, IAN SCHMIDT
+Results Not In
+===
+Smoke on the River (Day 2)
+9/5/2026 - 9/6/2026
+Burlington, KS 66839
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: LARRY VOTH, LYNDA VOTH
+Results Not In
+===
+Smoke on the Ohio
+9/11/2026 - 9/12/2026
+Mt. Vernon, IN 47620
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DEBRA GAGE, WILLIAM GAGE
+Results Not In
+===
+Bands & BBQ at the Point
+9/11/2026 - 9/12/2026
+Carrollton, KY 41008
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: KENT SCHUETZ, RACHEL SCHUETZ
+Results Not In
+===
+September Fest
+9/11/2026 - 9/12/2026
+Coldwater, MI 49036
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BECKY DRUETZLER, DAVE DRUETZLER
+Results Not In
+===
+September Fest (ONE MEAT RIBS)
+9/11/2026 - 9/11/2026
+Coldwater, MI 49036
+UNITED STATES
+Reps: BECKY DRUETZLER, DAVE DRUETZLER
+Results Not In
+===
+Meat Inferno
+9/11/2026 - 9/12/2026
+Edgerton, KS 66021
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVE ROGERS, PEG ROGERS
+Results Not In
+===
+Meat Inferno (ONE MEAT RIBS)
+9/11/2026 - 9/11/2026
+Edgerton, KS 66021
+UNITED STATES
+Reps: DAVE ROGERS, PEG ROGERS
+Results Not In
+===
+Puckaway Pigfest
+9/11/2026 - 9/12/2026
+Montello, WI 53949
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: LAURIE TWETEN, PATRICK DILLER
+Results Not In
+===
+Summer Grillin' BBQ Festival
+9/11/2026 - 9/13/2026
+Leduc, AB T9E 4W7
+CANADA
+Reps: BUNNY TUTTLE, RICH TUTTLE
+Results Not In
+===
+Vaartse Hoeve BBQ Contest (Day 1)
+9/11/2026 - 9/12/2026
+Dongen, 5106NC
+NETHERLANDS
+Reps: MARK FISHLOCK, ANGELA FISHLOCK
+Results Not In
+===
+Woodland Ribs & Rods Rib Cook Off & Car Show (ONE MEAT RIBS)
+9/12/2026 - 9/12/2026
+Woodland, CA 95695
+UNITED STATES
+Reps: JULIE POE, IAN SCHMIDT
+Results Not In
+===
+Smoke on the Water Guntersville (BACKYARD ONLY)
+9/12/2026 - 9/13/2026
+Guntersville, AL 35976
+UNITED STATES
+Reps: CAROL BIGLER, RANDY G BIGLER
+Results Not In
+===
+Vaartse Hoeve BBQ Contest (Day 2)
+9/12/2026 - 9/13/2026
+Dongen, 5106NC
+NETHERLANDS
+Reps: ANGELA FISHLOCK, MARK FISHLOCK
+Results Not In
+===
+Kings BBQ Competition Class
+9/12/2026 - 9/13/2026
+Jacksonville, FL
+UNITED STATES
+===
+Pigmaster's BBQ Challenge
+9/18/2026 - 9/19/2026
+Rutherford College, NC 28671
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DOUG REID, ALAN ROTHROCK
+Results Not In
+===
+Rollin Smoke at Rustic Timbers BBQ Bash (Day 1)
+9/18/2026 - 9/19/2026
+Egg Harbor, WI 54209
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: LAURIE TWETEN, PATRICK DILLER
+Results Not In
+===
+Rollin Smoke at Rustic Timbers BBQ Bash (ONE MEAT RIBS)
+9/18/2026 - 9/18/2026
+Egg Harbor, WI 54209
+UNITED STATES
+Reps: PATRICK DILLER, LAURIE TWETEN
+Results Not In
+===
+22nd Annual Burnt Offerings BBQ Contest
+9/18/2026 - 9/19/2026
+Riverside, CA 92504
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: KATHLEEN MCINTOSH, KELLY MCINTOSH
+Results Not In
+===
+Cherokee Strip BBQ & Chili Cookoff
+9/18/2026 - 9/19/2026
+Ponca City, OK 74604
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: LARRY VOTH, LYNDA VOTH
+Results Not In
+===
+Cherokee Strip BBQ & Chili Cookoff (ONE MEAT RIBS)
+9/18/2026 - 9/18/2026
+Ponca City, OK 74604
+UNITED STATES
+Reps: LARRY VOTH, LYNDA VOTH
+Results Not In
+===
+Tri City BBQ Fest
+9/18/2026 - 9/19/2026
+Denison, IA 51442
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVE ROGERS, PEG ROGERS
+Results Not In
+===
+Boost & BBQ
+9/18/2026 - 9/19/2026
+Odessa, MO 64076
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BUNNY TUTTLE, RICH TUTTLE
+Results Not In
+===
+38th Annual Jesse James Barbeque Cook Out
+9/18/2026 - 9/19/2026
+Kearney, MO 64060
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVID DYCHE, JO DYCHE
+Results Not In
+===
+Mike Gannon BBQ Cookoff (MASTERS)
+9/18/2026 - 9/19/2026
+Columbiana, AL 35051
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CAROL BIGLER, RANDY G BIGLER
+Results Not In
+===
+Smoke on the Waters - The Return! 2026
+9/19/2026 - 9/20/2026
+Devon, EX37 9HZ
+UNITED KINGDOM
+Reps: ANGELA FISHLOCK, MARK FISHLOCK
+Results Not In
+===
+Green Mountain BBQ Championship - CAMPGROUND BBQ SERIES
+9/19/2026 - 10/20/2026
+Braintree, VT 05060
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BILL WRIGHT, KIM WRIGHT
+Results Not In
+===
+Green Mountain BBQ Championship - CAMPGROUND BBQ SERIES (ONE MEAT CHICKEN)
+9/19/2026 - 9/19/2026
+Braintree, VT 05060
+UNITED STATES
+Reps: BILL WRIGHT, KIM WRIGHT
+Results Not In
+===
+Green Mountain BBQ Championship - CAMPGROUND BBQ SERIES (ONE MEAT RIBS)
+9/19/2026 - 9/19/2026
+Braintree, VT 05060
+UNITED STATES
+Reps: BILL WRIGHT, KIM WRIGHT
+Results Not In
+===
+Rollin Smoke at Rustic Timbers BBQ Bash (Day 2)
+9/19/2026 - 9/20/2026
+Egg Harbor, WI 54209
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: LAURIE TWETEN, PATRICK DILLER
+Results Not In
+===
+Fo.G & Smoke 2026
+9/19/2026 - 9/20/2026
+Spilamberto, I-41057
+ITALY
+Reps: HAYMO GUTWENIGER, LUCA FAMIGLI
+Results Not In
+===
+Trekking for CDH
+9/19/2026 - 9/20/2026
+Pierron, IL 62273
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: JEANNE TITUS, CHARLIE BRINZA
+Results Not In
+===
+Paxton Swine n Dine (BACKYARD ONLY)
+9/19/2026 - 9/20/2026
+Paxton, IL 60957
+UNITED STATES
+Reps: BECKY DRUETZLER, DAVE DRUETZLER
+Results Not In
+===
+Big BBQ Bash
+9/25/2026 - 9/26/2026
+Townsend, TN 37882
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CONNIE AMIDEI, JONATHAN AMIDEI
+Results Not In
+===
+Smoke on the Sound
+9/25/2026 - 9/27/2026
+Redmond, WA 98052
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: JULIE POE, IAN SCHMIDT
+Results Not In
+===
+Murphysboro BBQ Cook-off/Praise the Lard
+9/25/2026 - 9/26/26
+Murphysboro, IL 62966
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DEBRA GAGE, WILLIAM GAGE, CAROLYN WELLS
+Results Not In
+===
+Smoke Ring
+9/25/2026 - 9/27/2026
+Spencerville, K0E 1X0
+CANADA
+Reps: CRAIG MAIDENS, HEATHER MAIDENS
+Results Not In
+===
+Downtown Jonesboro BBQ Festival (CANCELLED)
+9/25/2026 - 9/26/2026
+Jonesboro, AR 72401
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: MARIA LOHMAN, WAYNE LOHMAN
+Results Not In
+===
+Shawnee Great Grillers
+9/25/2026 - 9/26/2026
+Shawnee, KS 66203
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVE ROGERS, PEG ROGERS, FORREST BRUCE, LARRY HADLEY
+Results Not In
+===
+Smoke Ring (ONE MEAT RIBS)
+9/26/2026 - 9/26/2026
+Spencerville, K0E 1X0
+CANADA
+Reps: CRAIG MAIDENS, HEATHER MAIDENS
+Results Not In
+===
+Smokin Barrel Fest 2026
+9/26/2026 - 9/27/2026
+Nanson, WA, 6532
+AUSTRALIA
+Reps: ROB STEVENS, PAUL WOODHAMS
+Results Not In
+===
+Carnivore Carnival
+9/26/2026 - 9/27/2026
+Kansas City, MO 64127
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVID DYCHE, JO DYCHE
+Results Not In
+===
+6. I Love Smoky Exhibition and BBQ Competition
+9/26/2026 - 9/27/2026
+Szerencs, 3900
+HUNGARY
+Reps: ANDREAS SCHNOELL, EVA SCHNOELL
+Results Not In
+===
+6. I Love Smoky Exhibition and BBQ Competition (ONE MEAT RIBS)
+9/26/2026 - 9/26/2026
+Szerencs, 3900
+HUNGARY
+Reps: ANDREAS SCHNOELL, EVA SCHNOELL
+Results Not In
+===
+Gladfest Smokefest (ONE MEAT RIBS)
+10/2/2026 - 10/3/2026
+Gladstone, MO 64118
+UNITED STATES
+Reps: CLARA WILLIAMS, JONATHAN B WILLIAMS
+Results Not In
+===
+La Belle MO Show Me BBQ Showdown
+10/2/2026 - 10/3/2026
+La Belle, MO 63447
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: FORREST BRUCE, PATRICK DILLER
+Results Not In
+===
+Big Creek BBQ Bash (BACKYARD ONLY)
+10/2/2026 - 10/3/2026
+Pleasant Hill, MO 64080
+UNITED STATES
+Reps: BUNNY TUTTLE, RICH TUTTLE
+Results Not In
+===
+Octoberfest (BACKYARD ONLY)
+10/2/2026 - 10/3/2026
+Argos, IN 46501
+UNITED STATES
+Reps: BECKY DRUETZLER, DAVE DRUETZLER
+Results Not In
+===
+MD State BBQ Bash
+10/9/2026 - 10/10/2026
+Bel Air , MD 21014
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: ROBERT MCKEE, BILL JONES
+Prize Money: $12,500.00
+Results Not In
+===
+Scottsboro BBQ Festival (BACKYARD ONLY)
+10/9/2026 - 10/10/2026
+Scottsboro, AL 35768
+UNITED STATES
+Reps: ROBERT VANDERIPE, LYGIA (LEX) VANEGAS
+Results Not In
+===
+Jack Daniel's World Championship Invitational Barbecue (Competitor's Series) (JUDGES BY INVITATION ONLY)
+10/9/2026 - 10/10/2026
+Lynchburg, TN 37352
+UNITED STATES
+Reps: CHARLIE BRINZA, CAROLYN WELLS, ROXANNE GOULD
+Results Not In
+===
+The Big Blue BBQ at the Station
+10/9/2026 - 10/10/2026
+Kansas City, MO 64108
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVE ROGERS, PEG ROGERS
+Results Not In
+===
+Stover Rock Island Festival (BACKYARD ONLY)
+10/10/2026 - 10/10/2026
+Stover, MO 65078
+UNITED STATES
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+Happy Basset 6th Annual BBQ Contest
+10/16/2026 - 10/17/2026
+Topeka, KS 66609
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Prize Money: $4,210.00
+Results Not In
+===
+WhistleStop BBQ Festival (BACKYARD ONLY)
+10/16/2026 - 10/17/2026
+Huntsville, AL 35806
+UNITED STATES
+Reps: CAROL BIGLER, RANDY G BIGLER
+Results Not In
+===
+King of the Corn
+10/16/2026 - 10/17/2026
+Ottumwa, IA 52501
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: CINDY JUHL, TOM JUHL
+Prize Money: $10,000.00
+Results Not In
+===
+Red White & Que - CAMPGROUND BBQ SERIES (Day 1)
+10/23/2026 - 10/24/2026
+Jackson, NJ 08527
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: REGINA BODNAR, JEFF CHAMBERS
+Results Not In
+===
+Red White & Que - CAMPGROUND BBQ SERIES (ONE MEAT CHICKEN)
+10/23/2026 - 10/23/2026
+Jackson, NJ 08527
+UNITED STATES
+Reps: REGINA BODNAR, JEFF CHAMBERS
+Results Not In
+===
+VPD Back the Blue BBQ Competition
+10/23/2026 - 10/24/2026
+Vidalia , LA 71373
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: MARIA LOHMAN, WAYNE LOHMAN
+Prize Money: $10,000.00
+Results Not In
+===
+Rock Lane Presents Grills Gone Wild
+10/23/2026 - 10/24/2026
+Branson, MO 65616
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: EUGENE WICKHAM, SARAH WICKHAM
+Results Not In
+===
+The Butcher's Smoke & Flames Barbeque Cookoff (BACKYARD ONLY)
+10/23/2026 - 10/24/2026
+Cullman, AL 35058
+UNITED STATES
+Reps: CAROL BIGLER, RANDY G BIGLER
+Prize Money: $3,950.00
+Results Not In
+===
+Foothills Smoke-Off Challenge
+10/23/2026 - 10/24/2026
+Lenoir, NC 28645
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DOUG REID, ALAN ROTHROCK
+Results Not In
+===
+Red White & Que - CAMPGROUND BBQ SERIES (Day 2)
+10/24/2026 - 10/25/2026
+Jackson, NJ 08527
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: REGINA BODNAR, JEFF CHAMBERS
+Results Not In
+===
+Red White & Que - CAMPGROUND BBQ SERIES (ONE MEAT RIBS)
+10/24/2026 - 10/24/2026
+Jackson, NJ 08527
+UNITED STATES
+Reps: REGINA BODNAR, JEFF CHAMBERS
+Results Not In
+===
+Certified Barbeque Judging Class - Monticello, KY
+10/29/2026 - 10/29/2026
+Monticello, KY 42633
+UNITED STATES
+Reps: CHARLIE BRINZA
+===
+Boo-B-Que BBQ Championship (Day 1)
+10/30/2026 - 10/31/2026
+Oak Grove, MO 64075
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVE ROGERS, PEG ROGERS, FORREST BRUCE
+Results Not In
+===
+Spooky Q 1792 (CANCELLED)
+10/30/2026 - 10/31/2026
+Monticello, KY 42633
+UNITED STATES
+Reps: BECKY DRUETZLER, DAVE DRUETZLER
+Results Not In
+===
+Spooky Q 1792 (ONE MEAT RIBS) (CANCELLED)
+10/30/2026 - 10/30/2026
+Monticello, KY 42633
+UNITED STATES
+Reps: BECKY DRUETZLER, DAVE DRUETZLER
+Results Not In
+===
+Boo-B-Que BBQ Championship (Day 2)
+10/31/2026 - 11/1/2026
+Oak Grove, MO 64075
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: DAVE ROGERS, PEG ROGERS, FORREST BRUCE
+Results Not In
+===
+Frosty Butts BBQ Throwdown
+11/6/2026 - 11/7/2026
+Mt. Jackson, VA 22842
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: BILL JONES, ALEX JR BROWN
+Results Not In
+===
+BBQ Jackpot
+11/20/2026 - 11/21/2026
+Las Vegas, NV 89015
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: MICHAEL SANTIAGO, RHONDA SANTIAGO, KATHLEEN MCINTOSH, KELLY MCINTOSH
+Results Not In
+===
+Hog Drop
+12/29/2026 - 12/31/2026
+Unadilla, GA 31091
+UNITED STATES
+STATE CHAMPIONSHIP
+Reps: JEANNE TITUS, CAROLYN WELLS
+Results Not In

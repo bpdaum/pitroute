@@ -49,7 +49,7 @@ async function main() {
         });
     }
 
-    const scratchpadPath = 'C:\\Users\\bpdau\\.gemini\\antigravity\\brain\\3feaac9f-bdd2-4706-9e74-63e212b6fc38\\browser\\scratchpad_ohq0e21m.md';
+    const scratchpadPath = 'scripts/kcbs-jun-dec.md';
     const text = fs.readFileSync(scratchpadPath, 'utf8');
     const events = parseBlocks(text);
 

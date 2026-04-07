@@ -51,8 +51,8 @@ async function main() {
     console.log('Created KCBS org');
   }
 
-  const scratchpad1 = 'C:\\Users\\bpdau\\.gemini\\antigravity\\brain\\3feaac9f-bdd2-4706-9e74-63e212b6fc38\\browser\\scratchpad_pdfu4t8g.md';
-  const scratchpad2 = 'C:\\Users\\bpdau\\.gemini\\antigravity\\brain\\3feaac9f-bdd2-4706-9e74-63e212b6fc38\\browser\\scratchpad_osa1m949.md';
+  const scratchpad1 = 'scripts/kcbs-jan-apr.md';
+  const scratchpad2 = 'scripts/kcbs-may.md';
 
   // Parse scratchpad1 (Jan-Apr): convert structured list format
   const text1 = fs.readFileSync(scratchpad1, 'utf8');
