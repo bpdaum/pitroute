@@ -44,7 +44,7 @@ export class IBCAScraper implements Scraper {
                     for (const link of uniqueLinks) {
                         try {
                             const detailPage = await browser.newPage();
-                            await detailPage.goto(link, { waitUntil: 'networkidle', timeout: 45000 });
+                            await detailPage.goto(link, { waitUntil: 'domcontentloaded', timeout: 15000 });
 
                             const name = await detailPage.locator('h1').first().innerText().catch(() => '');
                             const dateStr = await detailPage.locator('.contest-date').first().innerText().catch(() => '');

@@ -21,12 +21,9 @@ export class CTBAScraper implements Scraper {
             const bodyText = await page.locator('body').innerText();
             const lines = bodyText.split('\n').map(l => l.trim()).filter(Boolean);
 
-            // CTBA has a header usually saying "UPCOMING EVENTS (YYYY)"
-            let currentYear = new Date().getFullYear();
-            const yearMatch = bodyText.match(/UPCOMING EVENTS\s*\((\d{4})\)/i);
-            if (yearMatch) {
-                currentYear = parseInt(yearMatch[1]);
-            }
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth();
 
             const monthAbbrs = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -43,7 +40,12 @@ export class CTBAScraper implements Scraper {
 
                     if (monthIdx !== -1) {
                         try {
-                            const date = new Date(currentYear, monthIdx, day);
+                            let targetYear = currentYear;
+                            if (monthIdx < currentMonth - 2) {
+                                targetYear++;
+                            }
+
+                            const date = new Date(targetYear, monthIdx, day);
 
                             // The location/name is on the lines following the month
                             let j = i + 2;

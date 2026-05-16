@@ -17,6 +17,7 @@ async function verify() {
 
     const sample = await prisma.event.findMany({
         take: 5,
+        where: { date: { gte: new Date() } },
         orderBy: { date: 'asc' },
         include: { organization: true }
     });

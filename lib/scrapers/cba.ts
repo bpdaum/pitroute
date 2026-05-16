@@ -26,6 +26,8 @@ export class CBAScraper implements Scraper {
 
             const monthAbbrs = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
+            const uniqueEvents = new Map<string, ScrapedEvent>();
+
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
                 const dateMatch = line.match(/^(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+(\d{1,2})(?:\s*-\s*(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+(\d{1,2}))?$/i);
@@ -46,12 +48,15 @@ export class CBAScraper implements Scraper {
                         const location = lines[i + 2] || '';
 
                         if (name && location) {
-                            events.push({
-                                name: name.trim(),
-                                date,
-                                location: location.trim(),
-                                url: this.url
-                            });
+                            const key = `${name.trim()}_${date.getTime()}`;
+                            if (!uniqueEvents.has(key)) {
+                                uniqueEvents.set(key, {
+                                    name: name.trim(),
+                                    date,
+                                    location: location.trim(),
+                                    url: this.url
+                                });
+                            }
                             i += 2; // Skip the next two lines as we've consumed them
                         }
                     } catch (e) {
@@ -59,6 +64,7 @@ export class CBAScraper implements Scraper {
                     }
                 }
             }
+            events.push(...uniqueEvents.values());
             console.log(`Found ${events.length} total events for CBA`);
 
         } catch (error: any) {
