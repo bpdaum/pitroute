@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Bebas_Neue } from "next/font/google";
+import { Inter, Outfit, Space_Mono } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,10 +7,15 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const bebasNeue = Bebas_Neue({
-  variable: "--font-bebas",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
-  weight: "400",
+});
+
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -24,8 +29,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.variable} ${bebasNeue.variable} antialiased bg-zinc-950 text-zinc-100`}>
+    <html lang="en">
+      <body className={`${inter.variable} ${outfit.variable} ${spaceMono.variable} antialiased bg-[#111111] text-[#F5F5F0] font-inter selection:bg-[#E85D04] selection:text-[#F5F5F0] overflow-hidden`}>
         <Providers>
           {children}
         </Providers>
@@ -33,3 +38,4 @@ export default function RootLayout({
     </html>
   );
 }
+

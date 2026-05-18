@@ -1,18 +1,24 @@
 @import "tailwindcss";
 
-:root {
-  --ember: #FF5C00;
-  --ember-dim: #cc4900;
-  --smoke: #1a1a1a;
-  --ash: #2a2a2a;
-  --zinc-950: #0d0d0d;
+@theme {
+  --font-inter: var(--font-inter);
+  --font-outfit: var(--font-outfit);
+  --font-space-mono: var(--font-space-mono);
+  
+  --color-smoke: #111111;
+  --color-charcoal: #1C1C1C;
+  --color-ash: #333333;
+  --color-bone: #F5F5F0;
+  --color-ember: #E85D04;
+  --color-ember-hover: #F4511E;
+}
 
-  /* Org colors */
-  --kcbs: #3b82f6;
-  --mbn: #ef4444;
-  --sca: #f97316;
-  --fba: #22c55e;
-  --ibca: #a855f7;
+:root {
+  --smoke: #111111;
+  --charcoal: #1C1C1C;
+  --ash: #333333;
+  --bone: #F5F5F0;
+  --ember: #E85D04;
 }
 
 * {
@@ -22,102 +28,154 @@
 html, body {
   height: 100%;
   margin: 0;
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-inter), sans-serif;
+  background-color: var(--smoke);
+  color: var(--bone);
+  color-scheme: dark;
+}
+
+/* Typography Classes */
+.font-display {
+  font-family: var(--font-outfit), sans-serif;
+}
+.font-sans {
+  font-family: var(--font-inter), sans-serif;
+}
+.font-mono {
+  font-family: var(--font-space-mono), monospace;
+}
+
+/* Glass Panels / Cards */
+.glass-panel {
+  background: var(--charcoal);
+  border: 1px solid var(--ash);
+  border-radius: 1rem;
+}
+
+/* Interactive Elements */
+.ember-button {
+  background: var(--ember);
+  color: var(--bone);
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border-radius: 0.75rem;
+}
+
+.ember-button:hover {
+  background: var(--color-ember-hover);
+  transform: translateY(-1px);
+}
+
+.ghost-button {
+  background: transparent;
+  color: #A0A0A0;
+  border: 1px solid var(--ash);
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.ghost-button:hover {
+  background: var(--ash);
+  color: var(--bone);
 }
 
 /* Scrollbar styling */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #1a1a1a; }
-::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #FF5C00; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--smoke); }
+::-webkit-scrollbar-thumb { background: var(--ash); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ember); }
 
-/* react-big-calendar dark theme overrides */
+/* react-big-calendar Dark Theme Overrides */
 .rbc-calendar {
-  background: #1a1a1a;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #2a2a2a;
+  background: transparent;
+  border: none;
   font-family: var(--font-inter), sans-serif;
 }
 .rbc-header {
-  background: #111;
-  color: #888;
+  background: var(--charcoal);
+  color: var(--bone);
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 10px 6px;
-  border-bottom: 1px solid #2a2a2a;
+  padding: 12px 6px;
+  border-bottom: 1px solid var(--ash);
+  border-left: 1px solid var(--ash);
 }
-.rbc-month-view, .rbc-time-view { border: none; }
-.rbc-day-bg { border-left: 1px solid #222 !important; }
-.rbc-off-range-bg { background: #111 !important; }
-.rbc-today { background: #1f1200 !important; }
-.rbc-date-cell { color: #666; font-size: 0.8rem; padding: 4px 8px; }
-.rbc-date-cell.rbc-now { color: #FF5C00; font-weight: 700; }
+.rbc-month-view, .rbc-time-view { border: 1px solid var(--ash); border-top: none; }
+.rbc-day-bg { border-left: 1px solid var(--ash) !important; transition: background 0.1s; }
+.rbc-day-bg:hover { background: var(--charcoal) !important; }
+.rbc-off-range-bg { background: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(51,51,51,0.2) 2px, rgba(51,51,51,0.2) 4px) !important; }
+.rbc-today { background: var(--charcoal) !important; }
+.rbc-date-cell { color: #A0A0A0; font-size: 0.8rem; padding: 6px 8px; font-weight: 500; }
+.rbc-today .rbc-date-cell { color: var(--bone); font-weight: 700; }
+.rbc-date-cell.rbc-now { color: var(--ember); }
 .rbc-event {
   border-radius: 4px !important;
   padding: 2px 6px !important;
   font-size: 0.7rem !important;
   font-weight: 600 !important;
-  border: none !important;
-  opacity: 0.92;
-  cursor: pointer;
+  border: 1px solid var(--ember) !important;
+  background: rgba(232, 93, 4, 0.1) !important;
+  color: var(--ember) !important;
+  transition: all 0.2s !important;
 }
-.rbc-event:hover { opacity: 1; transform: scale(1.02); }
+.rbc-event:hover { transform: translateY(-1px); background: var(--ember) !important; color: var(--bone) !important; }
 .rbc-event-label { display: none; }
-.rbc-show-more { color: #FF5C00; font-size: 0.7rem; }
+.rbc-show-more { color: var(--ember); font-size: 0.75rem; font-weight: 600; }
 .rbc-toolbar {
-  margin-bottom: 12px;
+  margin-bottom: 24px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  padding: 0;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--ash);
+  padding-bottom: 16px;
 }
 .rbc-toolbar button {
-  background: #2a2a2a;
-  color: #aaa;
-  border: 1px solid #333;
-  border-radius: 6px;
-  padding: 6px 14px;
+  background: var(--charcoal);
+  color: var(--bone);
+  border: 1px solid var(--ash);
+  border-radius: 8px;
+  padding: 8px 16px;
   font-size: 0.8rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 .rbc-toolbar button:hover, .rbc-toolbar button.rbc-active {
-  background: #FF5C00;
-  color: #fff;
-  border-color: #FF5C00;
+  background: var(--ember);
+  border-color: var(--ember);
+  color: var(--bone);
 }
 .rbc-toolbar-label {
-  color: #fff;
-  font-weight: 700;
-  font-size: 1rem;
-  flex: 1;
-  text-align: center;
+  color: var(--bone);
+  font-weight: 600;
+  font-size: 1.5rem;
+  font-family: var(--font-outfit), sans-serif;
 }
-.rbc-month-row { border-top: 1px solid #222; }
+.rbc-month-row { border-top: 1px solid var(--ash); }
 
-/* Leaflet dark overrides */
+/* Leaflet dark theme overrides */
 .leaflet-container {
-  background: #1a1a1a !important;
-  border-radius: 12px;
+  background: var(--smoke) !important;
+  border: none;
 }
-.leaflet-tile { filter: brightness(0.6) saturate(0.5); }
+.leaflet-tile { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
 .leaflet-popup-content-wrapper {
-  background: #1e1e1e;
-  color: #fff;
-  border: 1px solid #333;
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  background: var(--charcoal) !important;
+  color: var(--bone) !important;
+  border: 1px solid var(--ash) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
 }
-.leaflet-popup-tip { background: #1e1e1e; }
-.leaflet-popup-close-button { color: #888 !important; }
+.leaflet-popup-tip { background: var(--charcoal) !important; }
+.leaflet-popup-close-button { color: #A0A0A0 !important; }
 
-/* Animations */
-@keyframes fadeSlideIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Micro-Animations */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
-.fade-in { animation: fadeSlideIn 0.2s ease; }
+.animate-reveal { animation: fadeIn 0.4s ease forwards; opacity: 0; }
+.delay-1 { animation-delay: 0.05s; }
+.delay-2 { animation-delay: 0.1s; }
+.delay-3 { animation-delay: 0.15s; }
